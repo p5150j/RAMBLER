@@ -120,33 +120,6 @@ const InfoSection = styled.div`
   }
 `;
 
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-top: 40px;
-`;
-
-const SocialLink = styled(motion.a)`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.colors.surface};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  text-decoration: none;
-  font-size: 1.5rem;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const ContactInfo = styled.div`
   margin-top: 30px;
   padding-top: 30px;
@@ -223,41 +196,6 @@ function Contact() {
               <p>📧 info@rambler500.com</p>
               <p>📞 (555) 123-4567</p>
             </ContactInfo>
-
-            {/* <SocialLinks>
-              <SocialLink
-                href="#"
-                target="_blank"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                FB
-              </SocialLink>
-              <SocialLink
-                href="#"
-                target="_blank"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                IG
-              </SocialLink>
-              <SocialLink
-                href="#"
-                target="_blank"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                YT
-              </SocialLink>
-              <SocialLink
-                href="#"
-                target="_blank"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                TW
-              </SocialLink>
-            </SocialLinks> */}
           </motion.div>
         </InfoSection>
 
