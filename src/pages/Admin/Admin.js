@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 
 import EventsManager from "../../components/admin/EventsManager";
+import MerchManager from "../../components/admin/MerchManager";
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -83,32 +84,6 @@ const Button = styled(motion.button)`
     background: ${({ theme }) => theme.colors.primaryDark};
   }
 `;
-
-const MerchManager = () => (
-  <div>
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "20px",
-      }}
-    >
-      <Title>Manage Merchandise</Title>
-      <Button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-        Add New Product
-      </Button>
-    </div>
-    <Card>
-      <h3>Active Products</h3>
-      {/* Product list and management UI will go here */}
-    </Card>
-    <Card>
-      <h3>Out of Stock</h3>
-      {/* Out of stock products */}
-    </Card>
-  </div>
-);
 
 function Admin() {
   const [activeSection, setActiveSection] = useState("events");

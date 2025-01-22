@@ -1,8 +1,9 @@
 // pages/Merch/Merch.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { motion } from "framer-motion";
 import styled, { useTheme } from "styled-components";
+import { merchService } from "../../utils/merchService";
 
 const MerchContainer = styled.div`
   min-height: 100vh;
@@ -129,46 +130,29 @@ const AddToCartButton = styled(motion.button)`
   }
 `;
 
-// Sample product data
-const products = [
-  {
-    id: 5,
-    title: "Limited Edition Crew",
-    description:
-      "Special edition crewneck celebrating 5 years of Rambler Racing.",
-    price: 49.99,
-    image:
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000",
-    badge: "Limited",
-    sizes: ["S", "M", "L", "XL"],
-    inStock: true,
-  },
-  {
-    id: 6,
-    title: "Race Day Tank",
-    description: "Breathable cotton tank with classic Rambler logo.",
-    price: 24.99,
-    image:
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000",
-    sizes: ["S", "M", "L", "XL"],
-    inStock: true,
-  },
-
-  {
-    id: 7,
-    title: "Race Day Tank 2",
-    description: "Breathable cotton tank with classic Rambler logo.",
-    price: 24.99,
-    image:
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000",
-    sizes: ["S", "M", "L", "XL"],
-    inStock: true,
-  },
-];
-
 function Merch() {
-  const theme = useTheme(); // Add this line to access theme
+  const theme = useTheme();
   const [selectedSizes, setSelectedSizes] = useState({});
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const fetchedProducts = await merchService.getAllMerch();
+      setProducts(fetchedProducts);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("Failed to load products");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSizeChange = (productId, size) => {
     setSelectedSizes({
@@ -182,6 +166,52 @@ function Merch() {
     console.log(`Added ${product.title} (${size}) to cart`);
     // Add cart functionality here
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Loading products...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "red",
+        }}
+      >
+        {error}
+      </div>
+    );
+  }
+
+  if (!products.length) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        No products available.
+      </div>
+    );
+  }
 
   return (
     <MerchContainer>

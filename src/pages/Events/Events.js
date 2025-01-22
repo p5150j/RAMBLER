@@ -232,7 +232,7 @@ const FeaturedBackground = styled.div`
   bottom: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.3);
+  filter: brightness(0.5);
 
   &::after {
     content: "";
