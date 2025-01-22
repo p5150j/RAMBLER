@@ -1,6 +1,8 @@
 // src/firebaseConfig.js
 
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -11,9 +13,6 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-console.log("Firebase Config:", {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY ? "exists" : "missing",
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ? "exists" : "missing",
-  // ... etc
-});
 export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const storage = getStorage(app);

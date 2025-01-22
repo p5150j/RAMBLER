@@ -1,7 +1,212 @@
 // pages/Events/Events.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import { eventService } from "../../utils/eventService";
+function Events() {
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [featuredEvent, setFeaturedEvent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setIsLoading(true);
+      const fetchedEvents = await eventService.getAllEvents();
+
+      // Add these console logs to debug
+      console.log("All events:", fetchedEvents);
+      const featured = fetchedEvents.find((event) => event.featured);
+      console.log("Featured event:", featured);
+
+      setFeaturedEvent(featured || fetchedEvents[0]);
+      setEvents(fetchedEvents);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+      setError("Failed to load events");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Loading events...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "red",
+        }}
+      >
+        {error}
+      </div>
+    );
+  }
+
+  if (!events.length) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        No events found.
+      </div>
+    );
+  }
+  return (
+    <EventsContainer>
+      {featuredEvent && (
+        <FeaturedEvent>
+          {console.log("Rendering featured event:", featuredEvent)}
+          <FeaturedBackground
+            style={{
+              backgroundImage: `url("${featuredEvent.image}")`,
+            }}
+          />
+          <FeaturedContent>
+            <EventStatus $status="active">Featured Event</EventStatus>
+            <h1 style={{ fontSize: "3rem", marginBottom: "20px" }}>
+              {featuredEvent.title}
+            </h1>
+            <p style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
+              {featuredEvent.description}
+            </p>
+            <RegisterButton
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedEvent(featuredEvent)}
+            >
+              Register Now
+            </RegisterButton>
+          </FeaturedContent>
+        </FeaturedEvent>
+      )}
+
+      <EventsGrid>
+        {events
+          .filter((event) => !event.featured) // Filter out featured events
+          .map((event) => (
+            <EventCard
+              key={event.id}
+              onClick={() => setSelectedEvent(event)}
+              whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <EventImage
+                style={{ backgroundImage: `url("${event.image}")` }} // Fixed image rendering
+              />
+              <EventContent>
+                <EventStatus $status={event.status}>
+                  {event.status === "active"
+                    ? "Registration Open"
+                    : "Past Event"}
+                </EventStatus>
+                <EventDate>{event.date}</EventDate>
+                <h3 style={{ marginBottom: "10px" }}>{event.title}</h3>
+                <p style={{ color: "#B0B0B0", marginBottom: "10px" }}>
+                  {event.location}
+                </p>
+                <p style={{ color: "#B0B0B0" }}>Starting at {event.price}</p>
+              </EventContent>
+            </EventCard>
+          ))}
+      </EventsGrid>
+
+      <AnimatePresence>
+        {selectedEvent && (
+          <EventModal
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 30 }}
+          >
+            <ModalContent>
+              <ModalHeader>
+                <div>
+                  <EventStatus $status={selectedEvent.status}>
+                    {selectedEvent.status === "active"
+                      ? "Registration Open"
+                      : "Past Event"}
+                  </EventStatus>
+                  <h2 style={{ marginBottom: "10px" }}>
+                    {selectedEvent.title}
+                  </h2>
+                  <EventDate>{selectedEvent.date}</EventDate>
+                </div>
+                <ModalClose onClick={() => setSelectedEvent(null)}>
+                  ×
+                </ModalClose>
+              </ModalHeader>
+
+              <div style={{ marginBottom: "20px" }}>
+                <h3 style={{ marginBottom: "10px" }}>Event Details</h3>
+                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
+                  {selectedEvent.details}
+                </p>
+
+                <h3 style={{ marginBottom: "10px" }}>Location</h3>
+                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
+                  {selectedEvent.location}
+                </p>
+
+                <h3 style={{ marginBottom: "10px" }}>Capacity</h3>
+                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
+                  {selectedEvent.capacity}
+                </p>
+
+                <h3 style={{ marginBottom: "10px" }}>Requirements</h3>
+                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
+                  {selectedEvent.requirements}
+                </p>
+
+                <h3 style={{ marginBottom: "10px" }}>Entry Fee</h3>
+                <p style={{ color: "#B0B0B0" }}>
+                  Starting at {selectedEvent.price}
+                </p>
+              </div>
+
+              {selectedEvent.status === "active" && (
+                <RegisterButton
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Register for Event
+                </RegisterButton>
+              )}
+            </ModalContent>
+          </EventModal>
+        )}
+      </AnimatePresence>
+    </EventsContainer>
+  );
+}
 
 const EventsContainer = styled.div`
   min-height: 100vh;
@@ -25,7 +230,6 @@ const FeaturedBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("https://images.unsplash.com/photo-1618312980084-67efa94d67b6?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
   background-size: cover;
   background-position: center;
   filter: brightness(0.3);
@@ -72,7 +276,6 @@ const EventCard = styled(motion.div)`
 
 const EventImage = styled.div`
   height: 200px;
-  background-image: url(${(props) => props.src});
   background-size: cover;
   background-position: center;
 `;
@@ -158,180 +361,5 @@ const RegisterButton = styled(motion.button)`
     background: ${({ theme }) => theme.colors.primaryDark};
   }
 `;
-
-// Sample event data
-const events = [
-  {
-    id: 1,
-    title: "Summer Rambler 500",
-    date: "July 15, 2025",
-    location: "Rocky Mountains, CO",
-    image:
-      "https://images.unsplash.com/photo-1618312980084-67efa94d67b6?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    status: "active",
-    price: "$250",
-    description:
-      "Trust fund readymade flexitarian fashion axe roof party post-ironic hoodie enamel pin ramps ethical ascot 90's shaman. Pickled taiyaki aesthetic, microdosing narwhal hammock hexagon shabby chic.",
-    details:
-      "Pork belly schlitz keytar kickstarter church-key neutra lumbersexual dreamcatcher street art banh mi tattooed mixtape ennui kogi master cleanse. Trust fund readymade flexitarian fashion axe.",
-    capacity: "50 teams",
-    requirements:
-      "Vehicle under $3,000, valid driver's license, safety equipment",
-  },
-  {
-    id: 2,
-    title: "Winter Challenge",
-    date: "December 10, 2025",
-    location: "Aspen, CO",
-    image:
-      "https://plus.unsplash.com/premium_photo-1683140866854-fc31cf78e4e4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dß",
-    status: "active",
-    price: "$300",
-    description:
-      "DIY trust fund hexagon vexillologist pickled fit gentrify listicle fashion axe wayfarers hella pok pok yes plz man braid whatever.",
-    details:
-      "Meditation everyday carry cloud bread, tilde VHS sus offal disrupt blue bottle biodiesel normcore.",
-    capacity: "30 teams",
-    requirements:
-      "Winter-ready vehicle under $3,000, snow chains, emergency kit",
-  },
-  {
-    id: 3,
-    title: "Spring Desert Run",
-    date: "March 5, 2025",
-    location: "Moab, UT",
-    image:
-      "https://images.unsplash.com/photo-1676018368021-195887b8bf5c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    status: "past",
-    price: "$200",
-    description:
-      "Selvage hexagon lo-fi, portland craft beer gastropub copper mug occupy swag etsy iPhone coloring book hella trust fund chia.",
-    details:
-      "Listicle bushwick tumblr health goth Brooklyn raw denim. Neutral milk hotel +1 chicharrones coloring book.",
-    capacity: "40 teams",
-    requirements: "Desert-ready vehicle under $3,000, extra water, GPS",
-  },
-];
-
-const featuredEvent = events[0]; // Using first event as featured
-
-function Events() {
-  const [selectedEvent, setSelectedEvent] = useState(null);
-
-  return (
-    <EventsContainer>
-      <FeaturedEvent>
-        <FeaturedBackground />
-        <FeaturedContent>
-          <EventStatus $status="active">Featured Event</EventStatus>
-          <h1 style={{ fontSize: "3rem", marginBottom: "20px" }}>
-            {featuredEvent.title}
-          </h1>
-          <p style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
-            {featuredEvent.description}
-          </p>
-          <RegisterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setSelectedEvent(featuredEvent)}
-          >
-            Register Now
-          </RegisterButton>
-        </FeaturedContent>
-      </FeaturedEvent>
-
-      <EventsGrid>
-        {events.map((event) => (
-          <EventCard
-            key={event.id}
-            onClick={() => setSelectedEvent(event)}
-            whileHover={{ y: -5 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <EventImage src={event.image} />
-            <EventContent>
-              <EventStatus $status={event.status}>
-                {event.status === "active" ? "Registration Open" : "Past Event"}
-              </EventStatus>
-              <EventDate>{event.date}</EventDate>
-              <h3 style={{ marginBottom: "10px" }}>{event.title}</h3>
-              <p style={{ color: "#B0B0B0", marginBottom: "10px" }}>
-                {event.location}
-              </p>
-              <p style={{ color: "#B0B0B0" }}>Starting at {event.price}</p>
-            </EventContent>
-          </EventCard>
-        ))}
-      </EventsGrid>
-
-      <AnimatePresence>
-        {selectedEvent && (
-          <EventModal
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 30 }}
-          >
-            <ModalContent>
-              <ModalHeader>
-                <div>
-                  <EventStatus $status={selectedEvent.status}>
-                    {selectedEvent.status === "active"
-                      ? "Registration Open"
-                      : "Past Event"}
-                  </EventStatus>
-                  <h2 style={{ marginBottom: "10px" }}>
-                    {selectedEvent.title}
-                  </h2>
-                  <EventDate>{selectedEvent.date}</EventDate>
-                </div>
-                <ModalClose onClick={() => setSelectedEvent(null)}>
-                  ×
-                </ModalClose>
-              </ModalHeader>
-
-              <div style={{ marginBottom: "20px" }}>
-                <h3 style={{ marginBottom: "10px" }}>Event Details</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.details}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Location</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.location}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Capacity</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.capacity}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Requirements</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.requirements}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Entry Fee</h3>
-                <p style={{ color: "#B0B0B0" }}>
-                  Starting at {selectedEvent.price}
-                </p>
-              </div>
-
-              {selectedEvent.status === "active" && (
-                <RegisterButton
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Register for Event
-                </RegisterButton>
-              )}
-            </ModalContent>
-          </EventModal>
-        )}
-      </AnimatePresence>
-    </EventsContainer>
-  );
-}
 
 export default Events;

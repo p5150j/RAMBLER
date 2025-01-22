@@ -13,10 +13,13 @@ import Merch from "./pages/Merch/Merch";
 import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
+import Admin from "./pages/Admin/Admin";
 
 // Components
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import { AuthProvider } from "./context/AuthContext";
 
@@ -71,6 +74,14 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <Admin />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </MainContent>
             <Footer />
