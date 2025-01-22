@@ -7,7 +7,6 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { app } from "../firebaseConfig";
 
 const AuthContext = createContext();
@@ -20,31 +19,10 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const auth = getAuth(app);
-  const db = getFirestore(app);
 
-  // Signup function
-  const signup = async (email, password, userData) => {
-    try {
-      // Create auth user
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Create user document in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        ...userData,
-        email,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-
-      return user;
-    } catch (error) {
-      throw error;
-    }
+  // Signup function - simplified to only handle auth
+  const signup = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
   // Login function

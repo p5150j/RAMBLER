@@ -2,28 +2,38 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { userService } from "../../utils/userService";
 import { eventService } from "../../utils/eventService";
+
 function Events() {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [featuredEvent, setFeaturedEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userRegistrations, setUserRegistrations] = useState([]);
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+  // Define functions first
+  const fetchUserRegistrations = async () => {
+    try {
+      const registrations = await userService.getUserRegistrations(
+        currentUser.uid
+      );
+      setUserRegistrations(registrations);
+    } catch (err) {
+      console.error("Error fetching user registrations:", err);
+    }
+  };
 
   const fetchEvents = async () => {
     try {
       setIsLoading(true);
       const fetchedEvents = await eventService.getAllEvents();
-
-      // Add these console logs to debug
-      console.log("All events:", fetchedEvents);
       const featured = fetchedEvents.find((event) => event.featured);
-      console.log("Featured event:", featured);
-
       setFeaturedEvent(featured || fetchedEvents[0]);
       setEvents(fetchedEvents);
     } catch (err) {
@@ -33,6 +43,56 @@ function Events() {
       setIsLoading(false);
     }
   };
+
+  const isRegisteredForEvent = (eventId) => {
+    return userRegistrations.some((reg) => reg.eventId === eventId);
+  };
+
+  const handleRegister = async (event) => {
+    if (!currentUser) {
+      navigate("/login", {
+        state: {
+          returnTo: "/events",
+          action: "register",
+          eventId: event.id,
+        },
+      });
+      return;
+    }
+
+    try {
+      await userService.registerForEvent(currentUser.uid, event.id);
+      setUserRegistrations((prev) => [
+        ...prev,
+        {
+          eventId: event.id,
+          title: event.title,
+          date: event.date,
+          price: event.price,
+          location: event.location,
+          registeredAt: new Date().toISOString(),
+          status: "registered",
+        },
+      ]);
+      alert("Successfully registered for event!");
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Failed to register for event");
+    }
+  };
+
+  // Effects
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchUserRegistrations();
+    } else {
+      setUserRegistrations([]);
+    }
+  }, [currentUser]);
 
   if (isLoading) {
     return (
@@ -79,11 +139,11 @@ function Events() {
       </div>
     );
   }
+
   return (
     <EventsContainer>
       {featuredEvent && (
         <FeaturedEvent>
-          {console.log("Rendering featured event:", featuredEvent)}
           <FeaturedBackground
             style={{
               backgroundImage: `url("${featuredEvent.image}")`,
@@ -98,11 +158,22 @@ function Events() {
               {featuredEvent.description}
             </p>
             <RegisterButton
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSelectedEvent(featuredEvent)}
+              whileHover={
+                !isRegisteredForEvent(featuredEvent.id) ? { scale: 1.05 } : {}
+              }
+              whileTap={
+                !isRegisteredForEvent(featuredEvent.id) ? { scale: 0.95 } : {}
+              }
+              onClick={() =>
+                !isRegisteredForEvent(featuredEvent.id) &&
+                handleRegister(featuredEvent)
+              }
+              disabled={isRegisteredForEvent(featuredEvent.id)}
+              $isRegistered={isRegisteredForEvent(featuredEvent.id)}
             >
-              Register Now
+              {isRegisteredForEvent(featuredEvent.id)
+                ? "Registered"
+                : "Register Now"}
             </RegisterButton>
           </FeaturedContent>
         </FeaturedEvent>
@@ -110,7 +181,7 @@ function Events() {
 
       <EventsGrid>
         {events
-          .filter((event) => !event.featured) // Filter out featured events
+          .filter((event) => !event.featured)
           .map((event) => (
             <EventCard
               key={event.id}
@@ -120,11 +191,13 @@ function Events() {
               animate={{ opacity: 1, y: 0 }}
             >
               <EventImage
-                style={{ backgroundImage: `url("${event.image}")` }} // Fixed image rendering
+                style={{ backgroundImage: `url("${event.image}")` }}
               />
               <EventContent>
                 <EventStatus $status={event.status}>
-                  {event.status === "active"
+                  {isRegisteredForEvent(event.id)
+                    ? "Registered"
+                    : event.status === "active"
                     ? "Registration Open"
                     : "Past Event"}
                 </EventStatus>
@@ -151,7 +224,9 @@ function Events() {
               <ModalHeader>
                 <div>
                   <EventStatus $status={selectedEvent.status}>
-                    {selectedEvent.status === "active"
+                    {isRegisteredForEvent(selectedEvent.id)
+                      ? "Registered"
+                      : selectedEvent.status === "active"
                       ? "Registration Open"
                       : "Past Event"}
                   </EventStatus>
@@ -194,10 +269,26 @@ function Events() {
 
               {selectedEvent.status === "active" && (
                 <RegisterButton
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={
+                    !isRegisteredForEvent(selectedEvent.id)
+                      ? { scale: 1.02 }
+                      : {}
+                  }
+                  whileTap={
+                    !isRegisteredForEvent(selectedEvent.id)
+                      ? { scale: 0.98 }
+                      : {}
+                  }
+                  onClick={() =>
+                    !isRegisteredForEvent(selectedEvent.id) &&
+                    handleRegister(selectedEvent)
+                  }
+                  disabled={isRegisteredForEvent(selectedEvent.id)}
+                  $isRegistered={isRegisteredForEvent(selectedEvent.id)}
                 >
-                  Register for Event
+                  {isRegisteredForEvent(selectedEvent.id)
+                    ? "Registered"
+                    : "Register for Event"}
                 </RegisterButton>
               )}
             </ModalContent>
@@ -208,6 +299,7 @@ function Events() {
   );
 }
 
+// Styled components
 const EventsContainer = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.background};
@@ -346,19 +438,27 @@ const ModalClose = styled.button`
 `;
 
 const RegisterButton = styled(motion.button)`
-  background: ${({ theme }) => theme.colors.primary};
+  background: ${({ theme, $isRegistered }) =>
+    $isRegistered ? theme.colors.textMuted : theme.colors.primary};
   color: white;
   border: none;
   padding: 15px 30px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 1rem;
-  cursor: pointer;
+  cursor: ${({ $isRegistered }) => ($isRegistered ? "default" : "pointer")};
   width: 100%;
   margin-top: 20px;
+  opacity: ${({ $isRegistered }) => ($isRegistered ? 0.7 : 1)};
+  transition: background 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
+    background: ${({ theme, $isRegistered }) =>
+      $isRegistered ? theme.colors.textMuted : theme.colors.primaryDark};
+  }
+
+  &:disabled {
+    cursor: default;
   }
 `;
 

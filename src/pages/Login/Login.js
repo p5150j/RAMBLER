@@ -1,7 +1,9 @@
 // pages/Login/Login.js
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { userService } from "../../utils/userService";
+
 import {
   AuthContainer,
   AuthCard,
@@ -16,14 +18,19 @@ import {
 } from "../../components/auth/AuthStyles";
 
 function Login() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { login } = useAuth();
+  const returnTo = location.state?.returnTo || "/";
+  const action = location.state?.action;
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,8 +67,42 @@ function Login() {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
       try {
-        await login(formData.email, formData.password);
-        navigate("/"); // Redirect to home page after successful login
+        // The login function returns the user credential
+        const userCredential = await login(formData.email, formData.password);
+        const user = userCredential.user; // Get the user from the credential
+
+        // Handle post-login actions
+        if (action) {
+          setActionLoading(true);
+          try {
+            if (action === "register" && location.state?.eventId) {
+              await userService.registerForEvent(
+                user.uid,
+                location.state.eventId
+              );
+            } else if (action === "addToCart" && location.state?.productId) {
+              await userService.addToCart(user.uid, {
+                productId: location.state.productId,
+                size: location.state.size,
+                quantity: 1,
+                addedAt: new Date().toISOString(),
+              });
+            }
+          } catch (actionError) {
+            console.error("Post-login action error:", actionError);
+            setErrors({
+              submit:
+                action === "register"
+                  ? "Failed to register for event"
+                  : "Failed to add item to cart",
+            });
+            return;
+          } finally {
+            setActionLoading(false);
+          }
+        }
+
+        navigate(returnTo);
       } catch (error) {
         console.error("Login error:", error);
         let errorMessage = "Failed to log in";
@@ -96,6 +137,19 @@ function Login() {
         transition={{ duration: 0.5 }}
       >
         <AuthTitle>Welcome Back</AuthTitle>
+        {action && (
+          <p
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+              color: "#B0B0B0",
+            }}
+          >
+            {action === "register"
+              ? "Sign in to register for this event"
+              : "Sign in to add items to your cart"}
+          </p>
+        )}
 
         <AuthForm onSubmit={handleSubmit}>
           <FormGroup>
@@ -108,6 +162,7 @@ function Login() {
               onChange={handleChange}
               placeholder="Enter your email"
               autoComplete="email"
+              disabled={isLoading || actionLoading}
             />
             {errors.email && <ErrorText>{errors.email}</ErrorText>}
           </FormGroup>
@@ -122,6 +177,7 @@ function Login() {
               onChange={handleChange}
               placeholder="Enter your password"
               autoComplete="current-password"
+              disabled={isLoading || actionLoading}
             />
             {errors.password && <ErrorText>{errors.password}</ErrorText>}
           </FormGroup>
@@ -130,11 +186,17 @@ function Login() {
 
           <SubmitButton
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || actionLoading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading
+              ? "Signing in..."
+              : actionLoading
+              ? action === "register"
+                ? "Registering..."
+                : "Adding to cart..."
+              : "Sign In"}
           </SubmitButton>
         </AuthForm>
 
