@@ -70,16 +70,74 @@ export const userService = {
 
   addToCart: async (userId, productData) => {
     const userRef = doc(db, "users", userId);
+
+    // Ensure price is a number
+    const price = Number(productData.price);
+
     const orderItem = {
-      items: [productData],
+      items: [
+        {
+          productId: productData.productId,
+          title: productData.title,
+          price: price, // Stored as number
+          image: productData.image,
+          size: productData.size,
+          quantity: productData.quantity,
+          addedAt: new Date().toISOString(),
+        },
+      ],
       orderedAt: new Date().toISOString(),
       status: "pending",
+      totalAmount: price * productData.quantity, // Calculated from number
     };
 
     return updateDoc(userRef, {
       orders: arrayUnion(orderItem),
       updatedAt: new Date().toISOString(),
     });
+  },
+
+  addToExistingCart: async (userId, productData) => {
+    const userRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.data();
+
+    // Find pending order (cart)
+    let pendingOrder = userData.orders?.find(
+      (order) => order.status === "pending"
+    );
+
+    if (pendingOrder) {
+      // Add to existing pending order
+      pendingOrder.items.push({
+        productId: productData.productId,
+        title: productData.title,
+        price: Number(productData.price),
+        image: productData.image,
+        size: productData.size,
+        quantity: productData.quantity,
+        addedAt: new Date().toISOString(),
+      });
+
+      // Recalculate total
+      pendingOrder.totalAmount = pendingOrder.items.reduce(
+        (total, item) => total + Number(item.price) * item.quantity,
+        0
+      );
+
+      // Update the order in Firestore
+      const updatedOrders = userData.orders.map((order) =>
+        order.orderedAt === pendingOrder.orderedAt ? pendingOrder : order
+      );
+
+      return updateDoc(userRef, {
+        orders: updatedOrders,
+        updatedAt: new Date().toISOString(),
+      });
+    } else {
+      // No pending order exists, create new one
+      return this.addToCart(userId, productData);
+    }
   },
 
   getUserRegistrations: async (userId) => {

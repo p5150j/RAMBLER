@@ -1,9 +1,11 @@
 // pages/Merch/Merch.js
 import React, { useState, useEffect } from "react";
-
 import { motion } from "framer-motion";
 import styled, { useTheme } from "styled-components";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { merchService } from "../../utils/merchService";
+import { userService } from "../../utils/userService";
 
 const MerchContainer = styled.div`
   min-height: 100vh;
@@ -132,6 +134,8 @@ const AddToCartButton = styled(motion.button)`
 
 function Merch() {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [selectedSizes, setSelectedSizes] = useState({});
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -161,10 +165,40 @@ function Merch() {
     });
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     const size = selectedSizes[product.id];
-    console.log(`Added ${product.title} (${size}) to cart`);
-    // Add cart functionality here
+
+    if (!currentUser) {
+      // Redirect to login with return state
+      navigate("/login", {
+        state: {
+          returnTo: "/merch",
+          action: "addToCart",
+          productId: product.id,
+          size: size,
+          quantity: 1,
+        },
+      });
+      return;
+    }
+
+    try {
+      // Add to cart in Firestore
+      await userService.addToCart(currentUser.uid, {
+        productId: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        size: size,
+        quantity: 1,
+        addedAt: new Date().toISOString(),
+      });
+
+      alert("Successfully added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add item to cart");
+    }
   };
 
   if (isLoading) {
