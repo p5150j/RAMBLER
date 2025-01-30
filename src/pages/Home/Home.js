@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
+// Hero Section Styles
 const HeroSection = styled.section`
   position: relative;
-  height: 70vh;
+  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,28 +44,6 @@ const HeroBackground = styled(motion.div)`
     );
     z-index: 1;
   }
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    right: -50%;
-    bottom: -50%;
-    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,0.08)' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 2;
-    animation: moveBackground 30s linear infinite;
-    opacity: 0.6;
-  }
-
-  @keyframes moveBackground {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
 `;
 
 const HeroContent = styled(motion.div)`
@@ -76,21 +55,79 @@ const HeroContent = styled(motion.div)`
 
 const Title = styled(motion.h1)`
   font-family: "Racing Sans One", "Poppins", sans-serif;
-
   font-size: clamp(3rem, 8vw, 5rem);
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: 20px;
   text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-
-  color: ${({ theme }) => theme.colors.textPrimary};
 `;
 
 const SubTitle = styled(motion.p)`
   font-size: clamp(1.2rem, 3vw, 1.5rem);
   color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 30px;
-  max-width: 600px;
   margin: 0 auto 30px;
+  max-width: 600px;
+`;
+
+const SmokeEffect = styled(motion.div)`
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.08;
+`;
+
+const AnimatedBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+`;
+
+const AnimatedCircle = styled.div`
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: floatAnimation 20s infinite ease-in-out;
+
+  @keyframes floatAnimation {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(50px, 50px) scale(1.1);
+    }
+    50% {
+      transform: translate(100px, -50px) scale(1);
+    }
+    75% {
+      transform: translate(-50px, 100px) scale(1.2);
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+`;
+
+// Layout Components
+const Section = styled.section`
+  position: relative;
+  padding: 80px 20px;
+  background: ${({ theme, alt }) =>
+    alt ? theme.colors.surface : theme.colors.background};
+  overflow: hidden;
+`;
+
+const Container = styled.div`
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  z-index: 1;
 `;
 
 const Button = styled(motion(Link))`
@@ -128,43 +165,206 @@ const Button = styled(motion(Link))`
   }
 `;
 
-const Section = styled.section`
-  padding: 80px 20px;
-  background: ${({ theme, alt }) =>
-    alt ? theme.colors.surface : theme.colors.background};
-`;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Grid = styled.div`
+// Feature Card Components
+const FeatureCard = styled(motion.div)`
+  position: relative;
+  background: ${({ theme }) => theme.colors.surfaceAlt}CC;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 60px;
+  margin-bottom: 100px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-  margin-top: 60px;
-`;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 
-const Card = styled.div`
-  background: ${({ theme }) => theme.colors.surfaceAlt};
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 30px;
+  }
 
-  &:hover {
-    transform: translateY(-10px);
+  &:nth-child(even) {
+    direction: rtl;
+    @media (max-width: 768px) {
+      direction: ltr;
+    }
   }
 `;
 
-const CardImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+const FeatureContent = styled.div`
+  direction: ltr;
+  position: relative;
+  z-index: 1;
+
+  h3 {
+    color: ${({ theme }) => theme.colors.textPrimary};
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-family: "Racing Sans One", "Poppins", sans-serif;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      width: 60%;
+      height: 4px;
+      background: ${({ theme }) => theme.colors.primary};
+      border-radius: 2px;
+    }
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textSecondary};
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
 `;
 
-const CardContent = styled.div`
-  padding: 20px;
+const FeatureImage = styled(motion.div)`
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16/9;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      ${({ theme }) => theme.colors.primary}33,
+      transparent
+    );
+    z-index: 1;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+const TimelineContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  position: relative;
+  padding: 60px;
+  background: ${({ theme }) => theme.colors.surfaceAlt}CC;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  min-height: calc(100vh - 100px); // Added to ensure container is tall enough
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+`;
+
+const TimelineImage = styled(motion.div)`
+  position: sticky;
+  top: 100px;
+  height: 100%; // This was previously fixed at 600px
+  min-height: calc(100vh - 200px); // This ensures a good minimum height
+  border-radius: 12px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute; // Added to ensure full coverage
+    top: 0;
+    left: 0;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      ${({ theme }) => theme.colors.primary}33,
+      transparent
+    );
+    z-index: 1;
+  }
+
+  @media (max-width: 968px) {
+    position: relative;
+    top: 0;
+    height: 300px;
+    min-height: unset;
+  }
+`;
+
+const TimelineContent = styled.div`
+  position: relative;
+  padding-left: 30px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: ${({ theme }) => theme.colors.primary};
+  }
+
+  h3 {
+    color: ${({ theme }) => theme.colors.textPrimary};
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-family: "Racing Sans One", "Poppins", sans-serif;
+  }
+`;
+
+const TimelineItem = styled(motion.div)`
+  margin-bottom: 60px;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -34px;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 8px ${({ theme }) => theme.colors.primary}33;
+  }
+
+  h4 {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 1.8rem;
+    font-family: "Racing Sans One", "Poppins", sans-serif;
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textSecondary};
+    line-height: 1.8;
+    font-size: 1.1rem;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -172,6 +372,7 @@ const SectionTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
   text-align: center;
   margin-bottom: 20px;
+  font-family: "Racing Sans One", "Poppins", sans-serif;
 `;
 
 const SectionText = styled.p`
@@ -185,13 +386,11 @@ const SectionText = styled.p`
 function Home() {
   const { scrollY } = useScroll();
 
-  // Smooth parallax effect
   const y = useSpring(useTransform(scrollY, [0, 1000], [0, 300]), {
     damping: 15,
     mass: 0.1,
   });
 
-  // Smooth scale effect
   const scale = useSpring(useTransform(scrollY, [0, 1000], [1.1, 1.3]), {
     damping: 15,
     mass: 0.1,
@@ -213,25 +412,13 @@ function Home() {
             />
           </video>
         </HeroBackground>
-        <HeroContent
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <Title
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            ROCKY MOUNTAIN RAMBLER 500
-          </Title>
-          <SubTitle
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            Where creativity meets the track. Build it under $3K, race it like
-            there's no tomorrow.
+        <HeroContent>
+          <Title>ROCKY MOUNTAIN RAMBLER 500</Title>
+          <SubTitle>
+            is a one-of-a-kind annual event where creativity, grit, and
+            automotive chaos collide. It's more than just a car show or off-road
+            adventure; it's a celebration of ingenuity and good-humored
+            determination.
           </SubTitle>
           <Button
             whileHover={{
@@ -239,9 +426,6 @@ function Home() {
               boxShadow: "0 5px 15px rgba(255, 62, 62, 0.3)",
             }}
             whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
             to="/events"
           >
             Join The Race
@@ -250,71 +434,163 @@ function Home() {
       </HeroSection>
 
       <Section>
+        <AnimatedBackground>
+          {/* Large red circle */}
+          <AnimatedCircle
+            style={{
+              width: "1000px",
+              height: "1000px",
+              top: "-20%",
+              right: "-10%",
+              opacity: 0.3,
+              animationDuration: "25s",
+              background:
+                "linear-gradient(45deg, rgba(255, 62, 62, 0.6), rgba(255, 62, 62, 0.1))",
+            }}
+          />
+
+          {/* Purple circle */}
+          <AnimatedCircle
+            style={{
+              width: "800px",
+              height: "800px",
+              top: "30%",
+              left: "-20%",
+              opacity: 0.25,
+              animationDelay: "-10s",
+              animationDuration: "20s",
+              background:
+                "linear-gradient(45deg, rgba(147, 51, 234, 0.5), rgba(147, 51, 234, 0.1))",
+            }}
+          />
+
+          {/* Gray circle */}
+          <AnimatedCircle
+            style={{
+              width: "600px",
+              height: "600px",
+              bottom: "10%",
+              right: "20%",
+              opacity: 0.2,
+              animationDelay: "-5s",
+              animationDuration: "15s",
+              background:
+                "linear-gradient(45deg, rgba(75, 85, 99, 0.4), rgba(75, 85, 99, 0.1))",
+            }}
+          />
+
+          {/* Dark red circle */}
+          <AnimatedCircle
+            style={{
+              width: "400px",
+              height: "400px",
+              top: "40%",
+              left: "30%",
+              opacity: 0.25,
+              animationDelay: "-15s",
+              animationDuration: "18s",
+              background:
+                "linear-gradient(45deg, rgba(220, 38, 38, 0.5), rgba(220, 38, 38, 0.1))",
+            }}
+          />
+        </AnimatedBackground>
+
         <Container>
-          <SectionTitle>Unleash Your Inner Engineer</SectionTitle>
-          <SectionText>
-            Trust fund readymade flexitarian fashion axe roof party post-ironic
-            hoodie enamel pin ramps ethical ascot 90's shaman. Pickled taiyaki
-            aesthetic, microdosing narwhal hammock hexagon shabby chic.
-          </SectionText>
-          <Grid>
-            <Card>
-              <CardImage
+          <SectionTitle>Here's what makes it unique:</SectionTitle>
+
+          <FeatureCard
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <FeatureContent>
+              <h3>The "Shitbox" Challenge</h3>
+              <p>
+                At the heart of the Rambler is the requirement for participants
+                to use "shitboxes" — old, rundown vehicles purchased for $500 or
+                less. These cars, often held together by duct tape,
+                determination, and a healthy dose of humor, are customized by
+                their owners to take on the Rambler's challenges.
+              </p>
+            </FeatureContent>
+            <FeatureImage
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1591278169792-6f1cbf1d2762"
+                alt="Shitbox Challenge"
+              />
+            </FeatureImage>
+          </FeatureCard>
+
+          <TimelineContainer>
+            <TimelineImage
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <img
                 src="https://images.unsplash.com/photo-1618312980084-67efa94d67b6?q=80&w=1470"
-                alt="Race car"
+                alt="Three Day Extravaganza"
               />
-              <CardContent>
-                <h3 style={{ color: "#fff", marginBottom: "10px" }}>
-                  Budget Builds
-                </h3>
-                <p style={{ color: "#B0B0B0" }}>
-                  DIY trust fund hexagon vexillologist pickled fit gentrify
-                  listicle fashion axe wayfarers hella pok pok.
+            </TimelineImage>
+
+            <TimelineContent>
+              <h3>A Three-Day Extravaganza</h3>
+              <TimelineItem
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <h4>Day 1: Car Show</h4>
+                <p>
+                  Participants proudly display their creations. From wild paint
+                  jobs to outrageous custom modifications, the car show is a
+                  feast for automotive enthusiasts and spectators alike.
                 </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardImage
-                src="https://images.unsplash.com/photo-1591278169792-6f1cbf1d2762?w=500"
-                alt="Race car"
-              />
-              <CardContent>
-                <h3 style={{ color: "#fff", marginBottom: "10px" }}>
-                  Epic Races
-                </h3>
-                <p style={{ color: "#B0B0B0" }}>
-                  Selvage hexagon lo-fi, portland craft beer gastropub copper
-                  mug occupy swag etsy iPhone coloring book.
+              </TimelineItem>
+
+              <TimelineItem
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                viewport={{ once: true }}
+              >
+                <h4>Day 2: Adventure Course</h4>
+                <p>
+                  This is where the fun truly begins. The adventure course tests
+                  the durability of both the cars and their drivers with a mix
+                  of on-road and off-road challenges. It's as much about keeping
+                  the cars running as it is about navigating the unpredictable
+                  terrain.
                 </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardImage
-                src="https://images.unsplash.com/photo-1702146713882-2579afb0bfba?q=80&w=1470"
-                alt="Race car"
-              />
-              <CardContent>
-                <h3 style={{ color: "#fff", marginBottom: "10px" }}>
-                  Community
-                </h3>
-                <p style={{ color: "#B0B0B0" }}>
-                  Meditation everyday carry cloud bread, tilde VHS sus offal
-                  disrupt blue bottle biodiesel normcore.
+              </TimelineItem>
+
+              <TimelineItem
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <h4>Day 3: Trophy Ceremony</h4>
+                <p>
+                  The event culminates in a lively awards ceremony, celebrating
+                  not just winners but also the most creative, resilient, and
+                  downright hilarious participants.
                 </p>
-              </CardContent>
-            </Card>
-          </Grid>
+              </TimelineItem>
+            </TimelineContent>
+          </TimelineContainer>
         </Container>
       </Section>
 
       <Section alt>
         <Container>
           <SectionTitle>Join The Adventure</SectionTitle>
-          <SectionText>
-            Pork belly schlitz keytar kickstarter church-key neutra lumbersexual
-            dreamcatcher street art banh mi tattooed mixtape ennui kogi master
-            cleanse. Trust fund readymade flexitarian fashion axe.
-          </SectionText>
           <div style={{ textAlign: "center", marginTop: "40px" }}>
             <Button to="/signup">Register Now</Button>
           </div>

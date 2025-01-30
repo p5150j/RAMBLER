@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { userService } from "../../utils/userService";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import WaiverModal from "../../components/WaiverModal";
 
 import {
   AuthContainer,
@@ -16,6 +19,38 @@ import {
   ErrorText,
   AuthLink,
 } from "../../components/auth/AuthStyles";
+
+const CheckboxContainer = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  align-items: start;
+  gap: 10px;
+`;
+
+const Checkbox = styled.input`
+  margin-top: 4px;
+`;
+
+const CheckboxLabel = styled.label`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  line-height: 1.4;
+`;
+
+const WaiverLink = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.primary};
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
+`;
 
 function Signup() {
   const location = useLocation();
@@ -33,6 +68,8 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showWaiver, setShowWaiver] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +77,6 @@ function Signup() {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -69,6 +105,9 @@ function Signup() {
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
+    if (!agreedToTerms) {
+      newErrors.terms = "You must agree to the terms and waiver to continue";
+    }
     return newErrors;
   };
 
@@ -90,6 +129,8 @@ function Signup() {
           createdAt: new Date().toISOString(),
           registeredEvents: [],
           orders: [],
+          agreedToTerms: true,
+          agreedToTermsAt: new Date().toISOString(),
         });
 
         // Handle post-signup actions
@@ -128,7 +169,6 @@ function Signup() {
         console.error("Signup error:", error);
         let errorMessage = "Failed to create account";
 
-        // Handle specific Firebase auth errors
         switch (error.code) {
           case "auth/email-already-in-use":
             errorMessage = "Email is already registered";
@@ -239,13 +279,30 @@ function Signup() {
             )}
           </FormGroup>
 
+          <CheckboxContainer>
+            <Checkbox
+              type="checkbox"
+              id="terms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              disabled={isLoading || actionLoading}
+            />
+            <CheckboxLabel htmlFor="terms">
+              I have read and agree to the{" "}
+              <WaiverLink type="button" onClick={() => setShowWaiver(true)}>
+                terms and waiver
+              </WaiverLink>
+            </CheckboxLabel>
+          </CheckboxContainer>
+          {errors.terms && <ErrorText>{errors.terms}</ErrorText>}
+
           {errors.submit && <ErrorText>{errors.submit}</ErrorText>}
 
           <SubmitButton
             type="submit"
-            disabled={isLoading || actionLoading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            disabled={isLoading || actionLoading || !agreedToTerms}
+            whileHover={{ scale: agreedToTerms ? 1.02 : 1 }}
+            whileTap={{ scale: agreedToTerms ? 0.98 : 1 }}
           >
             {isLoading
               ? "Creating account..."
@@ -261,6 +318,8 @@ function Signup() {
           Already have an account? <Link to="/login">Sign In</Link>
         </AuthLink>
       </AuthCard>
+
+      <WaiverModal isOpen={showWaiver} onClose={() => setShowWaiver(false)} />
     </AuthContainer>
   );
 }
