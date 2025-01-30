@@ -68,16 +68,6 @@ const SubTitle = styled(motion.p)`
   max-width: 600px;
 `;
 
-const SmokeEffect = styled(motion.div)`
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.08;
-`;
-
 const AnimatedBackground = styled.div`
   position: absolute;
   top: 0;
@@ -202,8 +192,8 @@ const FeatureContent = styled.div`
 
   h3 {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: 2.5rem;
-    margin-bottom: 30px;
+    font-size: 2rem; // Changed from 2.5rem
+    margin-bottom: 25px; // Adjusted for new size
     font-family: "Racing Sans One", "Poppins", sans-serif;
     position: relative;
     display: inline-block;
@@ -212,9 +202,9 @@ const FeatureContent = styled.div`
       content: "";
       position: absolute;
       left: 0;
-      bottom: -10px;
+      bottom: -8px; // Adjusted for new size
       width: 60%;
-      height: 4px;
+      height: 3px; // Made slightly smaller
       background: ${({ theme }) => theme.colors.primary};
       border-radius: 2px;
     }
@@ -331,8 +321,8 @@ const TimelineContent = styled.div`
 
   h3 {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: 2.5rem;
-    margin-bottom: 30px;
+    font-size: 2rem; // Changed from 2.5rem
+    margin-bottom: 25px; // Adjusted for new size
     font-family: "Racing Sans One", "Poppins", sans-serif;
   }
 `;
@@ -355,15 +345,15 @@ const TimelineItem = styled(motion.div)`
 
   h4 {
     color: ${({ theme }) => theme.colors.primary};
-    font-size: 1.8rem;
+    font-size: 1.5rem; // Changed from 1.8rem
     font-family: "Racing Sans One", "Poppins", sans-serif;
-    margin-bottom: 20px;
+    margin-bottom: 15px; // Adjusted for new size
   }
 
   p {
     color: ${({ theme }) => theme.colors.textSecondary};
-    line-height: 1.8;
-    font-size: 1.1rem;
+    line-height: 1.7; // Slightly reduced
+    font-size: 1rem; // Changed from 1.1rem
   }
 `;
 
@@ -381,6 +371,35 @@ const SectionText = styled.p`
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
+`;
+
+const SponsorsSection = styled.section`
+  padding: 80px 0;
+  background: ${({ theme }) => theme.colors.surface};
+`;
+
+const SponsorsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  align-items: center;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+`;
+
+const SponsorLogo = styled.img`
+  height: 60px;
+  width: auto;
+  filter: grayscale(100%) contrast(0.8) brightness(1.2);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+
+  &:hover {
+    filter: grayscale(0%) contrast(1) brightness(1);
+    opacity: 1;
+  }
 `;
 
 function Home() {
@@ -587,6 +606,30 @@ function Home() {
           </TimelineContainer>
         </Container>
       </Section>
+
+      <SponsorsSection>
+        <Container>
+          <SectionTitle>Our Sponsors</SectionTitle>
+          <SponsorsGrid>
+            <SponsorLogo
+              src="https://placehold.co/200x80?text=Sponsor+1"
+              alt="Sponsor 1"
+            />
+            <SponsorLogo
+              src="https://placehold.co/200x80?text=Sponsor+2"
+              alt="Sponsor 2"
+            />
+            <SponsorLogo
+              src="https://placehold.co/200x80?text=Sponsor+3"
+              alt="Sponsor 3"
+            />
+            <SponsorLogo
+              src="https://placehold.co/200x80?text=Sponsor+4"
+              alt="Sponsor 4"
+            />
+          </SponsorsGrid>
+        </Container>
+      </SponsorsSection>
 
       <Section alt>
         <Container>
