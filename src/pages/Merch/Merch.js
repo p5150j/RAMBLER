@@ -132,6 +132,42 @@ const AddToCartButton = styled(motion.button)`
   }
 `;
 
+const ComingSoonOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+`;
+
+const ComingSoonCard = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textSecondary};
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+`;
+
 function Merch() {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -313,6 +349,30 @@ function Merch() {
           </ProductCard>
         ))}
       </ProductGrid>
+
+      <ComingSoonOverlay>
+        <ComingSoonCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2>Coming Soon</h2>
+          <p>
+            Our merchandise store is currently under construction. Get ready to
+            rep your favorite $3K racing series with our official gear. Sign up
+            for our newsletter to be notified when we launch!
+          </p>
+          <AddToCartButton
+            as="a"
+            href="mailto:subscribe@rambler.com"
+            style={{ display: "inline-block", textDecoration: "none" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Get Notified
+          </AddToCartButton>
+        </ComingSoonCard>
+      </ComingSoonOverlay>
     </MerchContainer>
   );
 }

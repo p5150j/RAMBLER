@@ -433,10 +433,10 @@ function Home() {
         <HeroContent>
           <Title>ROCKY MOUNTAIN RAMBLER 500</Title>
           <SubTitle>
-            is a one-of-a-kind annual event where creativity, grit, and
-            automotive chaos collide. It's more than just a car show or off-road
-            adventure; it's a celebration of ingenuity and good-humored
-            determination.
+            is an annual event where people take their beater cars, fix them up
+            just enough to run, and put them to the test. It’s all about fun,
+            creativity, and seeing just how far you can push a junker with a
+            bunch of like-minded gearheads.
           </SubTitle>
           <Button
             whileHover={{
@@ -523,11 +523,11 @@ function Home() {
             viewport={{ once: true }}
           >
             <FeatureContent>
-              <h3>The "Shitbox" Challenge</h3>
+              <h3>The "Beater" Challenge</h3>
               <p>
                 At the heart of the Rambler is the requirement for participants
-                to use "shitboxes" — old, rundown vehicles purchased for $500 or
-                less. These cars, often held together by duct tape,
+                to use "beaters" — old, rundown vehicles purchased for as cheap
+                as possible. These cars, often held together by duct tape,
                 determination, and a healthy dose of humor, are customized by
                 their owners to take on the Rambler's challenges.
               </p>
