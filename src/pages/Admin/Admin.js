@@ -5,6 +5,52 @@ import { motion } from "framer-motion";
 
 import EventsManager from "../../components/admin/EventsManager";
 import MerchManager from "../../components/admin/MerchManager";
+import GalleryManager from "../../components/admin/GalleryManager";
+
+function Admin() {
+  const [activeSection, setActiveSection] = useState("events");
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "events":
+        return <EventsManager />;
+      case "merch":
+        return <MerchManager />;
+      case "gallery":
+        return <GalleryManager />;
+      default:
+        return <EventsManager />;
+    }
+  };
+
+  return (
+    <AdminContainer>
+      <AdminWrapper>
+        <Sidebar>
+          <NavItem
+            $active={activeSection === "events"}
+            onClick={() => setActiveSection("events")}
+          >
+            Events
+          </NavItem>
+          <NavItem
+            $active={activeSection === "merch"}
+            onClick={() => setActiveSection("merch")}
+          >
+            Merchandise
+          </NavItem>
+          <NavItem
+            $active={activeSection === "gallery"}
+            onClick={() => setActiveSection("gallery")}
+          >
+            Gallery
+          </NavItem>
+        </Sidebar>
+        <MainContent>{renderContent()}</MainContent>
+      </AdminWrapper>
+    </AdminContainer>
+  );
+}
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -29,6 +75,8 @@ const Sidebar = styled.div`
   border-radius: 12px;
   padding: 20px;
   height: fit-content;
+  position: sticky;
+  top: 100px;
 `;
 
 const MainContent = styled.div`
@@ -50,76 +98,19 @@ const NavItem = styled.button`
   cursor: pointer;
   margin-bottom: 8px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
   &:hover {
     background: ${({ $active, theme }) =>
       $active ? theme.colors.primary : theme.colors.surfaceAlt};
   }
-`;
 
-const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 30px;
-  color: ${({ theme }) => theme.colors.textPrimary};
-`;
-
-const Card = styled(motion.div)`
-  background: ${({ theme }) => theme.colors.surfaceAlt};
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-`;
-
-const Button = styled(motion.button)`
-  padding: 12px 24px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 20px;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
+  &::before {
+    content: ${({ $active }) => ($active ? '"→"' : '""')};
+    font-family: monospace;
   }
 `;
-
-function Admin() {
-  const [activeSection, setActiveSection] = useState("events");
-
-  const renderContent = () => {
-    switch (activeSection) {
-      case "events":
-        return <EventsManager />;
-      case "merch":
-        return <MerchManager />;
-      default:
-        return <EventsManager />;
-    }
-  };
-
-  return (
-    <AdminContainer>
-      <AdminWrapper>
-        <Sidebar>
-          <NavItem
-            $active={activeSection === "events"} // Change active to $active
-            onClick={() => setActiveSection("events")}
-          >
-            Events
-          </NavItem>
-          <NavItem
-            $active={activeSection === "merch"} // Change active to $active
-            onClick={() => setActiveSection("merch")}
-          >
-            Merchandise
-          </NavItem>
-        </Sidebar>
-        <MainContent>{renderContent()}</MainContent>
-      </AdminWrapper>
-    </AdminContainer>
-  );
-}
 
 export default Admin;

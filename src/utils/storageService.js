@@ -33,4 +33,24 @@ export const storageService = {
       throw error;
     }
   },
+
+  uploadGalleryMedia: async (file) => {
+    try {
+      const isVideo = file.type.startsWith("video/");
+      const folderName = isVideo ? "gallery/videos" : "gallery/images";
+      const fileName = `${folderName}/${Date.now()}-${file.name}`;
+      const storageRef = ref(storage, fileName);
+
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      return {
+        url: downloadURL,
+        type: isVideo ? "video" : "image",
+      };
+    } catch (error) {
+      console.error("Error uploading media:", error);
+      throw error;
+    }
+  },
 };

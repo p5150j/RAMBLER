@@ -2,6 +2,225 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import { galleryService } from "../../utils/galleryService";
+
+const LazyVideo = ({ src, ...props }) => {
+  const videoRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "100px",
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  const handleLoadedData = () => {
+    setIsLoading(false);
+  };
+
+  return (
+    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
+      {isVisible && (
+        <>
+          <video
+            ref={videoRef}
+            src={src}
+            muted
+            loop
+            playsInline
+            autoPlay
+            onLoadedData={handleLoadedData}
+            {...props}
+          />
+          {isLoading && (
+            <LoadingOverlay>
+              <LoadingSpinner
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+            </LoadingOverlay>
+          )}
+        </>
+      )}
+      {!isVisible && (
+        <LoadingOverlay>
+          <span>Loading...</span>
+        </LoadingOverlay>
+      )}
+    </div>
+  );
+};
+
+const LazyImage = ({ src, ...props }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <>
+      <img src={src} onLoad={() => setIsLoading(false)} {...props} />
+      {isLoading && (
+        <LoadingOverlay>
+          <LoadingSpinner
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+        </LoadingOverlay>
+      )}
+    </>
+  );
+};
+
+function Gallery() {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchGalleryItems();
+  }, []);
+
+  const fetchGalleryItems = async () => {
+    try {
+      setIsLoading(true);
+      const fetchedItems = await galleryService.getAllItems();
+      setItems(fetchedItems);
+    } catch (err) {
+      console.error("Error fetching gallery items:", err);
+      setError("Failed to load gallery items");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedItem(null);
+  };
+
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <LoadingSpinner
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+      </LoadingContainer>
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer>
+        <p>{error}</p>
+        <RetryButton onClick={fetchGalleryItems}>Retry</RetryButton>
+      </ErrorContainer>
+    );
+  }
+
+  if (!items.length) {
+    return (
+      <EmptyContainer>
+        <p>No gallery items available.</p>
+      </EmptyContainer>
+    );
+  }
+
+  return (
+    <GalleryContainer>
+      <GalleryGrid>
+        {items.map((item) => (
+          <GalleryItem
+            key={item.id}
+            className={item.size}
+            onClick={() => setSelectedItem(item)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <MediaContent>
+              {item.type === "image" ? (
+                <LazyImage
+                  src={item.url}
+                  alt={item.title || `Gallery item ${item.id}`}
+                />
+              ) : (
+                <LazyVideo src={item.url} />
+              )}
+              <Overlay>
+                {item.title ? (
+                  <OverlayContent>
+                    <span className="title">{item.title}</span>
+                    {item.description && (
+                      <span className="description">{item.description}</span>
+                    )}
+                  </OverlayContent>
+                ) : (
+                  <span>+</span>
+                )}
+              </Overlay>
+            </MediaContent>
+          </GalleryItem>
+        ))}
+      </GalleryGrid>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <Modal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModal}
+          >
+            <CloseButton onClick={closeModal}>×</CloseButton>
+            <ModalContent>
+              {selectedItem.type === "image" ? (
+                <img
+                  src={selectedItem.url}
+                  alt={selectedItem.title || `Gallery item ${selectedItem.id}`}
+                />
+              ) : (
+                <video
+                  src={selectedItem.url}
+                  controls
+                  autoPlay
+                  loop
+                  playsInline
+                />
+              )}
+              {(selectedItem.title || selectedItem.description) && (
+                <ModalInfo>
+                  {selectedItem.title && <h3>{selectedItem.title}</h3>}
+                  {selectedItem.description && (
+                    <p>{selectedItem.description}</p>
+                  )}
+                </ModalInfo>
+              )}
+            </ModalContent>
+          </Modal>
+        )}
+      </AnimatePresence>
+    </GalleryContainer>
+  );
+}
+
+// Add these styled components after the imports and before the LazyVideo component
 
 const GalleryContainer = styled.div`
   padding: 20px;
@@ -137,201 +356,82 @@ const CloseButton = styled.button`
   z-index: 1001;
 `;
 
-const LazyVideo = ({ src, ...props }) => {
-  const videoRef = useRef(null);
-  const containerRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const LoadingContainer = styled.div`
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "100px",
-      }
-    );
+const ErrorContainer = styled.div`
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: ${({ theme }) => theme.colors.textPrimary};
+`;
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+const EmptyContainer = styled.div`
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.textMuted};
+`;
 
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
-    };
-  }, []);
+const RetryButton = styled.button`
+  padding: 10px 20px;
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 
-  const handleLoadedData = () => {
-    setIsLoading(false);
-  };
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryDark};
+  }
+`;
 
-  return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
-      {isVisible && (
-        <>
-          <video
-            ref={videoRef}
-            src={src}
-            muted
-            loop
-            playsInline
-            autoPlay
-            onLoadedData={handleLoadedData}
-            {...props}
-          />
-          {isLoading && (
-            <LoadingOverlay>
-              <LoadingSpinner
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              />
-            </LoadingOverlay>
-          )}
-        </>
-      )}
-      {!isVisible && (
-        <LoadingOverlay>
-          <span>Loading...</span>
-        </LoadingOverlay>
-      )}
-    </div>
-  );
-};
+const OverlayContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
 
-const LazyImage = ({ src, ...props }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
 
-  return (
-    <>
-      <img src={src} onLoad={() => setIsLoading(false)} {...props} />
-      {isLoading && (
-        <LoadingOverlay>
-          <LoadingSpinner
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-        </LoadingOverlay>
-      )}
-    </>
-  );
-};
+  .description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+`;
 
-// Gallery data array
-const galleryItems = [
-  {
-    id: 1,
-    type: "image",
-    src: "https://images.unsplash.com/photo-1591278169757-deac26e49555",
-    size: "normal",
-  },
-  {
-    id: 2,
-    type: "video",
-    src: "https://www.shutterstock.com/shutterstock/videos/1058028727/preview/stock-footage-attractive-young-woman-mechanical-worker-repairing-a-vintage-car-in-old-garage.webm",
-    size: "wide",
-  },
-  {
-    id: 3,
-    type: "video",
-    src: "https://www.shutterstock.com/shutterstock/videos/1058028727/preview/stock-footage-attractive-young-woman-mechanical-worker-repairing-a-vintage-car-in-old-garage.webm",
-    size: "tall",
-  },
-  {
-    id: 4,
-    type: "image",
-    src: "https://images.unsplash.com/photo-1591278169792-6f1cbf1d2762",
-    size: "large",
-  },
-  {
-    id: 5,
-    type: "video",
-    src: "https://www.shutterstock.com/shutterstock/videos/1058028727/preview/stock-footage-attractive-young-woman-mechanical-worker-repairing-a-vintage-car-in-old-garage.webm",
-    size: "normal",
-  },
-].concat(
-  // Generate more items by duplicating and modifying the existing ones
-  Array.from({ length: 15 }, (_, index) => ({
-    id: index + 6,
-    type: index % 2 === 0 ? "video" : "image",
-    src:
-      index % 2 === 0
-        ? "https://www.shutterstock.com/shutterstock/videos/1058028727/preview/stock-footage-attractive-young-woman-mechanical-worker-repairing-a-vintage-car-in-old-garage.webm"
-        : [
-            "https://images.unsplash.com/photo-1591278169757-deac26e49555",
-            "https://images.unsplash.com/photo-1591278169792-6f1cbf1d2762",
-            "https://images.unsplash.com/photo-1702146713882-2579afb0bfba",
-          ][index % 3],
-    size: ["normal", "wide", "tall", "large"][Math.floor(Math.random() * 4)],
-  }))
-);
+const ModalInfo = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
 
-function Gallery() {
-  const [selectedItem, setSelectedItem] = useState(null);
+  h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+  }
 
-  const closeModal = () => {
-    setSelectedItem(null);
-  };
-
-  return (
-    <GalleryContainer>
-      <GalleryGrid>
-        {galleryItems.map((item) => (
-          <GalleryItem
-            key={item.id}
-            className={item.size}
-            onClick={() => setSelectedItem(item)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <MediaContent>
-              {item.type === "image" ? (
-                <LazyImage src={item.src} alt={`Gallery item ${item.id}`} />
-              ) : (
-                <LazyVideo src={item.src} />
-              )}
-              <Overlay>
-                <span>+</span>
-              </Overlay>
-            </MediaContent>
-          </GalleryItem>
-        ))}
-      </GalleryGrid>
-
-      <AnimatePresence>
-        {selectedItem && (
-          <Modal
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeModal}
-          >
-            <CloseButton onClick={closeModal}>×</CloseButton>
-            <ModalContent>
-              {selectedItem.type === "image" ? (
-                <img
-                  src={selectedItem.src}
-                  alt={`Gallery item ${selectedItem.id}`}
-                />
-              ) : (
-                <video
-                  src={selectedItem.src}
-                  controls
-                  autoPlay
-                  loop
-                  playsInline
-                />
-              )}
-            </ModalContent>
-          </Modal>
-        )}
-      </AnimatePresence>
-    </GalleryContainer>
-  );
-}
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+`;
 
 export default Gallery;

@@ -161,7 +161,7 @@ const FeatureCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.surfaceAlt}CC;
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  padding: 60px;
+  padding: 0px;
   margin-bottom: 100px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -192,8 +192,8 @@ const FeatureContent = styled.div`
 
   h3 {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: 2rem; // Changed from 2.5rem
-    margin-bottom: 25px; // Adjusted for new size
+    font-size: 2rem;
+    margin-bottom: 25px;
     font-family: "Racing Sans One", "Poppins", sans-serif;
     position: relative;
     display: inline-block;
@@ -202,9 +202,9 @@ const FeatureContent = styled.div`
       content: "";
       position: absolute;
       left: 0;
-      bottom: -8px; // Adjusted for new size
+      bottom: -8px;
       width: 60%;
-      height: 3px; // Made slightly smaller
+      height: 3px;
       background: ${({ theme }) => theme.colors.primary};
       border-radius: 2px;
     }
@@ -250,16 +250,15 @@ const TimelineContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   position: relative;
-  padding: 60px;
+  padding: 0px;
   background: ${({ theme }) => theme.colors.surfaceAlt}CC;
   backdrop-filter: blur(10px);
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  min-height: calc(100vh - 100px); // Added to ensure container is tall enough
-
-  @media (max-width: 968px) {
+  min-height: calc(100vh - 100px);
+  / @media (max-width: 968px) {
     grid-template-columns: 1fr;
     min-height: unset;
   }
@@ -268,8 +267,8 @@ const TimelineContainer = styled.div`
 const TimelineImage = styled(motion.div)`
   position: sticky;
   top: 100px;
-  height: 100%; // This was previously fixed at 600px
-  min-height: calc(100vh - 200px); // This ensures a good minimum height
+  height: 100%;
+  min-height: calc(100vh - 200px);
   border-radius: 12px;
   overflow: hidden;
 
@@ -277,7 +276,7 @@ const TimelineImage = styled(motion.div)`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    position: absolute; // Added to ensure full coverage
+    position: absolute;
     top: 0;
     left: 0;
   }
@@ -321,8 +320,8 @@ const TimelineContent = styled.div`
 
   h3 {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: 2rem; // Changed from 2.5rem
-    margin-bottom: 25px; // Adjusted for new size
+    font-size: 2rem;
+    margin-bottom: 25px;
     font-family: "Racing Sans One", "Poppins", sans-serif;
   }
 `;
@@ -345,15 +344,15 @@ const TimelineItem = styled(motion.div)`
 
   h4 {
     color: ${({ theme }) => theme.colors.primary};
-    font-size: 1.5rem; // Changed from 1.8rem
+    font-size: 1.5rem;
     font-family: "Racing Sans One", "Poppins", sans-serif;
-    margin-bottom: 15px; // Adjusted for new size
+    margin-bottom: 15px;
   }
 
   p {
     color: ${({ theme }) => theme.colors.textSecondary};
-    line-height: 1.7; // Slightly reduced
-    font-size: 1rem; // Changed from 1.1rem
+    line-height: 1.7;
+    font-size: 1rem;
   }
 `;
 
