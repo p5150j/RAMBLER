@@ -391,10 +391,12 @@ const SponsorsGrid = styled.div`
 `;
 
 const SponsorLogo = styled.img`
-  height: 60px;
+  height: 260px;
   width: auto;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   filter: grayscale(100%) contrast(0.8) brightness(1.2);
-  opacity: 0.6;
+  opacity: 0.4;
   transition: all 0.3s ease;
 
   &:hover {
@@ -613,21 +615,21 @@ function Home() {
           <SectionTitle>Our Sponsors</SectionTitle>
           <SponsorsGrid>
             <SponsorLogo
-              src="https://placehold.co/200x80?text=Sponsor+1"
+              src="https://arusimages.s3.us-west-2.amazonaws.com/logo1.png"
               alt="Sponsor 1"
             />
             <SponsorLogo
-              src="https://placehold.co/200x80?text=Sponsor+2"
+              src="https://arusimages.s3.us-west-2.amazonaws.com/logo2.png"
               alt="Sponsor 2"
             />
-            <SponsorLogo
+            {/* <SponsorLogo
               src="https://placehold.co/200x80?text=Sponsor+3"
               alt="Sponsor 3"
             />
             <SponsorLogo
               src="https://placehold.co/200x80?text=Sponsor+4"
               alt="Sponsor 4"
-            />
+            /> */}
           </SponsorsGrid>
         </Container>
       </SponsorsSection>
