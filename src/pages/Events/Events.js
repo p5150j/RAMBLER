@@ -363,7 +363,8 @@ const FeaturedContent = styled.div`
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  background: ${({ theme }) => `${theme.colors.surface}44`};
+  background: ${({ theme }) => `${theme.colors.surface}CC`};
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   padding: 40px;

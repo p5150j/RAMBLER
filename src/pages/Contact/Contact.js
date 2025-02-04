@@ -160,7 +160,7 @@ function Contact() {
     <ContactContainer>
       <MapHero>
         <Map
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d196281.12937380151!2d-104.99519523164063!3d39.76451867941243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876b80aa231f17cf%3A0x118ef4f8278a36d6!2sDenver%2C%20CO!5e0!3m2!1sen!2sus!4v1643824816278!5m2!1sen!2sus"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d49878.86066862415!2d-105.20611552089843!3d38.74679!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8714a8a600eb7c37%3A0x7c6c19a9c9c3f330!2sCripple%20Creek%2C%20CO!5e0!3m2!1sen!2sus!4v1707091183577!5m2!1sen!2sus"
           allowFullScreen=""
           loading="lazy"
         />
@@ -192,9 +192,9 @@ function Contact() {
 
             <ContactInfo>
               <h3>Contact Information</h3>
-              <p>📍 Denver, Colorado</p>
-              <p>📧 info@rambler500.com</p>
-              <p>📞 (555) 123-4567</p>
+              <p>📍 Cripple Creek, Colorado</p>
+              <p>📧 rockymountainrambler500@gmail.com</p>
+              {/* <p>📞 (555) 123-4567</p> */}
             </ContactInfo>
           </motion.div>
         </InfoSection>
