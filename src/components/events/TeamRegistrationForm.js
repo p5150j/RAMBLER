@@ -4,10 +4,17 @@ import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 
 const TeamRegistrationForm = ({ event, onSubmit, onClose }) => {
-  const [teamMembers, setTeamMembers] = useState([
-    { name: "", email: "", phone: "", shirtSize: "" },
-    { name: "", email: "", phone: "", shirtSize: "" },
-  ]);
+  const [teamMembers, setTeamMembers] = useState(
+    // Create array with length of minTeamSize, fill with empty member objects
+    Array(event.minTeamSize)
+      .fill()
+      .map(() => ({
+        name: "",
+        email: "",
+        phone: "",
+        shirtSize: "",
+      }))
+  );
   const [error, setError] = useState("");
 
   const calculateTotal = () => {

@@ -218,7 +218,7 @@ function Events() {
                     marginBottom: "15px",
                     lineHeight: "1.4",
                     display: "-webkit-box",
-                    WebkitLineClamp: "2",
+                    // WebkitLineClamp: "3",
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                   }}
@@ -250,12 +250,12 @@ function Events() {
                       color: "#B0B0B0",
                       lineHeight: "1.4",
                       display: "-webkit-box",
-                      WebkitLineClamp: "2",
+                      //   WebkitLineClamp: "2",
                       WebkitBoxOrient: "vertical",
                       overflow: "hidden",
                     }}
                   >
-                    <strong>Requirements:</strong> {event.requirements}
+                    <strong>Requirements: </strong> {event.requirements}
                   </p>
                 </div>
 
