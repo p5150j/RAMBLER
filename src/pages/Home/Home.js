@@ -13,6 +13,7 @@ const HeroSection = styled.section`
   text-align: center;
   overflow: hidden;
   clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  z-index: 2;
 `;
 
 const HeroBackground = styled(motion.div)`
@@ -106,6 +107,7 @@ const AnimatedCircle = styled.div`
 
 // Layout Components
 const Section = styled.section`
+  margin-top: -60px;
   position: relative;
   padding: 80px 20px;
   background: ${({ theme, alt }) =>

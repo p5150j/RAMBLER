@@ -105,8 +105,8 @@ function Footer() {
           <h3>Contact Info</h3>
           <div style={{ color: "#B0B0B0" }}>
             <p>Rocky Mountains, CO</p>
-            <p>Email: info@rambler500.com</p>
-            <p>Tel: (555) 123-4567</p>
+            <p>Email: rockymountainrambler500@gmail.com</p>
+            {/* <p>Tel: (555) 123-4567</p> */}
           </div>
         </FooterSection>
       </FooterContent>

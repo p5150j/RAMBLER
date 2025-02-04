@@ -1,53 +1,59 @@
 // pages/Events/Events.js
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { userService } from "../../utils/userService";
 import { eventService } from "../../utils/eventService";
+import TeamRegistrationForm from "../../components/events/TeamRegistrationForm";
 
 function Events() {
   const [events, setEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [featuredEvent, setFeaturedEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRegistrations, setUserRegistrations] = useState([]);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [registrationEvent, setRegistrationEvent] = useState(null);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  // Define functions first
-  const fetchUserRegistrations = async () => {
+  // Single fetch function to get all needed data
+  const fetchData = async () => {
+    setIsLoading(true);
     try {
-      const registrations = await userService.getUserRegistrations(
-        currentUser.uid
-      );
-      setUserRegistrations(registrations);
-    } catch (err) {
-      console.error("Error fetching user registrations:", err);
-    }
-  };
-
-  const fetchEvents = async () => {
-    try {
-      setIsLoading(true);
+      // Get events
       const fetchedEvents = await eventService.getAllEvents();
       const featured = fetchedEvents.find((event) => event.featured);
       setFeaturedEvent(featured || fetchedEvents[0]);
       setEvents(fetchedEvents);
+
+      // Get registrations if user is logged in
+      if (currentUser) {
+        const registrations = await eventService.getUserRegistrations(
+          currentUser.uid
+        );
+        setUserRegistrations(registrations);
+      } else {
+        setUserRegistrations([]);
+      }
     } catch (err) {
-      console.error("Error fetching events:", err);
+      console.error("Error fetching data:", err);
       setError("Failed to load events");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Check if user is registered for an event
   const isRegisteredForEvent = (eventId) => {
-    return userRegistrations.some((reg) => reg.eventId === eventId);
+    if (!userRegistrations || !Array.isArray(userRegistrations)) return false;
+    return userRegistrations.some(
+      (registration) => registration.eventId === eventId
+    );
   };
 
+  // Handle registration button click
   const handleRegister = async (event) => {
     if (!currentUser) {
       navigate("/login", {
@@ -60,85 +66,42 @@ function Events() {
       return;
     }
 
+    setRegistrationEvent(event);
+    setShowRegistrationForm(true);
+  };
+
+  // Handle registration form submission
+  const handleRegistrationSubmit = async (teamData) => {
     try {
-      await userService.registerForEvent(currentUser.uid, event.id);
-      setUserRegistrations((prev) => [
-        ...prev,
+      const registration = await eventService.registerTeam(
+        registrationEvent.id,
         {
-          eventId: event.id,
-          title: event.title,
-          date: event.date,
-          price: event.price,
-          location: event.location,
-          registeredAt: new Date().toISOString(),
-          status: "registered",
-        },
-      ]);
+          userId: currentUser.uid,
+          ...teamData,
+        }
+      );
+
+      setUserRegistrations((prev) => [...prev, registration]);
+      setShowRegistrationForm(false);
+      setRegistrationEvent(null);
+
+      // Refresh data to update registered teams count
+      fetchData();
       alert("Successfully registered for event!");
     } catch (error) {
       console.error("Registration error:", error);
-      alert("Failed to register for event");
+      alert(error.message || "Failed to register for event");
     }
   };
 
-  // Effects
+  // Initial data fetch
   useEffect(() => {
-    fetchEvents();
-  }, []);
+    fetchData();
+  }, [currentUser?.uid]); // Re-fetch when user changes
 
-  useEffect(() => {
-    if (currentUser) {
-      fetchUserRegistrations();
-    } else {
-      setUserRegistrations([]);
-    }
-  }, [currentUser]);
-
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        Loading events...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "red",
-        }}
-      >
-        {error}
-      </div>
-    );
-  }
-
-  if (!events.length) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        No events found.
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingState>Loading events...</LoadingState>;
+  if (error) return <ErrorState>{error}</ErrorState>;
+  if (!events.length) return <EmptyState>No events found.</EmptyState>;
 
   return (
     <EventsContainer>
@@ -151,18 +114,59 @@ function Events() {
           />
           <FeaturedContent>
             <EventStatus $status="active">Featured Event</EventStatus>
-            <h1 style={{ fontSize: "3rem", marginBottom: "20px" }}>
+            <EventDate>
+              {new Date(featuredEvent.date).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </EventDate>
+            <h1 style={{ fontSize: "2.5rem", margin: "20px 0" }}>
               {featuredEvent.title}
             </h1>
-            <p style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
+            <p
+              style={{
+                fontSize: "1.1rem",
+                marginBottom: "20px",
+                lineHeight: "1.6",
+              }}
+            >
               {featuredEvent.description}
             </p>
+
+            <EventStats>
+              <StatItem>
+                <div className="label">Team Size</div>
+                <div className="value">
+                  {featuredEvent.minTeamSize}-{featuredEvent.maxTeamSize}{" "}
+                  members
+                </div>
+              </StatItem>
+              <StatItem>
+                <div className="label">Base Price</div>
+                <div className="value">${featuredEvent.basePrice}</div>
+              </StatItem>
+              <StatItem>
+                <div className="label">Teams Registered</div>
+                <div className="value">
+                  {featuredEvent.registeredTeams} / {featuredEvent.capacity}
+                </div>
+              </StatItem>
+            </EventStats>
+            <h3 style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
+              Requirements
+            </h3>
+            <p style={{ color: "#B0B0B0", lineHeight: "1.6" }}>
+              {featuredEvent.requirements}
+            </p>
+
             <RegisterButton
               whileHover={
-                !isRegisteredForEvent(featuredEvent.id) ? { scale: 1.05 } : {}
+                !isRegisteredForEvent(featuredEvent.id) ? { scale: 1.02 } : {}
               }
               whileTap={
-                !isRegisteredForEvent(featuredEvent.id) ? { scale: 0.95 } : {}
+                !isRegisteredForEvent(featuredEvent.id) ? { scale: 0.98 } : {}
               }
               onClick={() =>
                 !isRegisteredForEvent(featuredEvent.id) &&
@@ -185,7 +189,6 @@ function Events() {
           .map((event) => (
             <EventCard
               key={event.id}
-              onClick={() => setSelectedEvent(event)}
               whileHover={{ y: -5 }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -201,119 +204,132 @@ function Events() {
                     ? "Registration Open"
                     : "Past Event"}
                 </EventStatus>
-                <EventDate>{event.date}</EventDate>
-                <h3 style={{ marginBottom: "10px" }}>{event.title}</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "10px" }}>
-                  {event.location}
+                <EventDate>
+                  {new Date(event.date).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </EventDate>
+                <h3 style={{ margin: "10px 0" }}>{event.title}</h3>
+                <p
+                  style={{
+                    color: "#B0B0B0",
+                    marginBottom: "15px",
+                    lineHeight: "1.4",
+                    display: "-webkit-box",
+                    WebkitLineClamp: "2",
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {event.description}
                 </p>
-                <p style={{ color: "#B0B0B0" }}>Starting at {event.price}</p>
+
+                <EventCardStats>
+                  <div>
+                    <div className="stat-label">Team Size</div>
+                    <div className="stat-value">
+                      {event.minTeamSize}-{event.maxTeamSize}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="stat-label">Base Price</div>
+                    <div className="stat-value">${event.basePrice}</div>
+                  </div>
+                  <div>
+                    <div className="stat-label">Teams</div>
+                    <div className="stat-value">
+                      {event.registeredTeams}/{event.capacity}
+                    </div>
+                  </div>
+                </EventCardStats>
+                <div style={{ flex: 1 }}>
+                  <p
+                    style={{
+                      color: "#B0B0B0",
+                      lineHeight: "1.4",
+                      display: "-webkit-box",
+                      WebkitLineClamp: "2",
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <strong>Requirements:</strong> {event.requirements}
+                  </p>
+                </div>
+
+                {event.status === "active" && (
+                  <RegisterButton
+                    whileHover={
+                      !isRegisteredForEvent(event.id) ? { scale: 1.02 } : {}
+                    }
+                    whileTap={
+                      !isRegisteredForEvent(event.id) ? { scale: 0.98 } : {}
+                    }
+                    onClick={() =>
+                      !isRegisteredForEvent(event.id) && handleRegister(event)
+                    }
+                    disabled={isRegisteredForEvent(event.id)}
+                    $isRegistered={isRegisteredForEvent(event.id)}
+                  >
+                    {isRegisteredForEvent(event.id)
+                      ? "Registered"
+                      : "Register Now"}
+                  </RegisterButton>
+                )}
               </EventContent>
             </EventCard>
           ))}
       </EventsGrid>
 
-      <AnimatePresence>
-        {selectedEvent && (
-          <EventModal
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 30 }}
-          >
-            <ModalContent>
-              <ModalHeader>
-                <div>
-                  <EventStatus $status={selectedEvent.status}>
-                    {isRegisteredForEvent(selectedEvent.id)
-                      ? "Registered"
-                      : selectedEvent.status === "active"
-                      ? "Registration Open"
-                      : "Past Event"}
-                  </EventStatus>
-                  <h2 style={{ marginBottom: "10px" }}>
-                    {selectedEvent.title}
-                  </h2>
-                  <EventDate>{selectedEvent.date}</EventDate>
-                </div>
-                <ModalClose onClick={() => setSelectedEvent(null)}>
-                  ×
-                </ModalClose>
-              </ModalHeader>
-
-              <div style={{ marginBottom: "20px" }}>
-                <h3 style={{ marginBottom: "10px" }}>Event Details</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.details}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Location</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.location}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Capacity</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.capacity}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Requirements</h3>
-                <p style={{ color: "#B0B0B0", marginBottom: "20px" }}>
-                  {selectedEvent.requirements}
-                </p>
-
-                <h3 style={{ marginBottom: "10px" }}>Entry Fee</h3>
-                <p style={{ color: "#B0B0B0" }}>
-                  Starting at {selectedEvent.price}
-                </p>
-              </div>
-
-              {selectedEvent.status === "active" && (
-                <RegisterButton
-                  whileHover={
-                    !isRegisteredForEvent(selectedEvent.id)
-                      ? { scale: 1.02 }
-                      : {}
-                  }
-                  whileTap={
-                    !isRegisteredForEvent(selectedEvent.id)
-                      ? { scale: 0.98 }
-                      : {}
-                  }
-                  onClick={() =>
-                    !isRegisteredForEvent(selectedEvent.id) &&
-                    handleRegister(selectedEvent)
-                  }
-                  disabled={isRegisteredForEvent(selectedEvent.id)}
-                  $isRegistered={isRegisteredForEvent(selectedEvent.id)}
-                >
-                  {isRegisteredForEvent(selectedEvent.id)
-                    ? "Registered"
-                    : "Register for Event"}
-                </RegisterButton>
-              )}
-            </ModalContent>
-          </EventModal>
-        )}
-      </AnimatePresence>
+      {showRegistrationForm && registrationEvent && (
+        <TeamRegistrationForm
+          event={registrationEvent}
+          onSubmit={handleRegistrationSubmit}
+          onClose={() => {
+            setShowRegistrationForm(false);
+            setRegistrationEvent(null);
+          }}
+        />
+      )}
     </EventsContainer>
   );
 }
-
-// Styled components
+// Styled Components
 const EventsContainer = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.background};
 `;
 
+const LoadingState = styled.div`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ErrorState = styled(LoadingState)`
+  color: ${({ theme }) => theme.colors.error};
+`;
+
+const EmptyState = styled(LoadingState)``;
+
 const FeaturedEvent = styled.div`
   position: relative;
-  height: 70vh;
+  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${({ theme }) => theme.colors.textPrimary};
   overflow: hidden;
   margin-bottom: 60px;
+  padding: 60px 20px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    min-height: auto;
+    padding: 40px 20px;
+  }
 `;
 
 const FeaturedBackground = styled.div`
@@ -344,36 +360,100 @@ const FeaturedBackground = styled.div`
 const FeaturedContent = styled.div`
   position: relative;
   z-index: 2;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: ${({ theme }) => `${theme.colors.surface}44`};
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 40px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding: 20px;
+  }
+`;
+
+const EventStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+  padding: 20px 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const StatItem = styled.div`
   text-align: center;
-  max-width: 800px;
-  padding: 0 20px;
+
+  .label {
+    font-size: 0.9rem;
+    color: ${({ theme }) => theme.colors.textMuted};
+    margin-bottom: 4px;
+  }
+
+  .value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
 `;
 
 const EventsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
   gap: 30px;
-  max-width: 1200px;
+  max-width: 1000px; /* Adjusted from 1200px to better fit 2 columns */
   margin: 0 auto;
   padding: 0 20px 60px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    grid-template-columns: 1fr; /* Single column on tablet/mobile */
+  }
 `;
 
 const EventCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.surface};
   border-radius: 12px;
   overflow: hidden;
-  cursor: pointer;
   border: 1px solid ${({ theme }) => theme.colors.border};
+  display: flex;
+  flex-direction: column;
 `;
 
 const EventImage = styled.div`
-  height: 200px;
+  height: 220px;
   background-size: cover;
   background-position: center;
 `;
 
 const EventContent = styled.div`
   padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const EventCardStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 15px 0;
+  padding: 15px 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: ${({ theme }) => theme.colors.textMuted};
+    margin-bottom: 2px;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
 `;
 
 const EventStatus = styled.span`
@@ -402,41 +482,6 @@ const EventDate = styled.div`
   margin-bottom: 8px;
 `;
 
-const EventModal = styled(motion.div)`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: ${({ theme }) => theme.colors.surface};
-  z-index: 1000;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  max-height: 90vh;
-  overflow-y: auto;
-`;
-
-const ModalContent = styled.div`
-  padding: 30px;
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  margin-bottom: 20px;
-`;
-
-const ModalClose = styled.button`
-  background: none;
-  border: none;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 10px;
-`;
-
 const RegisterButton = styled(motion.button)`
   background: ${({ theme, $isRegistered }) =>
     $isRegistered ? theme.colors.textMuted : theme.colors.primary};
@@ -448,7 +493,7 @@ const RegisterButton = styled(motion.button)`
   font-size: 1rem;
   cursor: ${({ $isRegistered }) => ($isRegistered ? "default" : "pointer")};
   width: 100%;
-  margin-top: 20px;
+  margin-top: auto;
   opacity: ${({ $isRegistered }) => ($isRegistered ? 0.7 : 1)};
   transition: background 0.2s ease;
 

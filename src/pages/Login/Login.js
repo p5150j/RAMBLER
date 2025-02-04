@@ -75,12 +75,8 @@ function Login() {
         if (action) {
           setActionLoading(true);
           try {
-            if (action === "register" && location.state?.eventId) {
-              await userService.registerForEvent(
-                user.uid,
-                location.state.eventId
-              );
-            } else if (action === "addToCart" && location.state?.productId) {
+            // For "addToCart", perform the required action
+            if (action === "addToCart" && location.state?.productId) {
               await userService.addToCart(user.uid, {
                 productId: location.state.productId,
                 size: location.state.size,
@@ -88,12 +84,20 @@ function Login() {
                 addedAt: new Date().toISOString(),
               });
             }
+            // For "register", do nothing here because the registration
+            // will now be handled by the event registration form on the events page.
+            // (You can optionally log a message for debugging purposes)
+            if (action === "register") {
+              console.log(
+                "User logged in - now redirecting to registration form"
+              );
+            }
           } catch (actionError) {
             console.error("Post-login action error:", actionError);
             setErrors({
               submit:
                 action === "register"
-                  ? "Failed to register for event"
+                  ? "Failed to complete the registration process"
                   : "Failed to add item to cart",
             });
             return;
@@ -102,6 +106,7 @@ function Login() {
           }
         }
 
+        // Redirect to the page the user was coming from
         navigate(returnTo);
       } catch (error) {
         console.error("Login error:", error);

@@ -364,7 +364,7 @@ function Merch() {
           </p>
           <AddToCartButton
             as="a"
-            href="mailto:subscribe@rambler.com"
+            href="mailto:rockymountainrambler500@gmail.com"
             style={{ display: "inline-block", textDecoration: "none" }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

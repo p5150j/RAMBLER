@@ -10,7 +10,10 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
       title: "",
       date: "",
       location: "",
-      price: "",
+      basePrice: "", // Base price for 2 members
+      extraMemberPrice: "", // Price per extra member
+      maxTeamSize: 4, // Default max team size
+      minTeamSize: 2, // Default min team size (base team)
       status: "active",
       description: "",
       details: "",
@@ -18,6 +21,8 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
       requirements: "",
       image: "",
       featured: false,
+      shirtSizes: ["XS", "S", "M", "L", "XL", "2XL"], // Available shirt sizes
+      includesShirt: true, // Free shirt flag
     }
   );
 
@@ -106,14 +111,92 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
       </FormGroup>
 
       <FormGroup>
-        <Label>Price</Label>
+        <Label>Base Price (includes {formData.minTeamSize} members)</Label>
         <Input
-          name="price"
-          value={formData.price}
+          name="basePrice"
+          value={formData.basePrice}
           onChange={handleChange}
-          placeholder="$250"
+          placeholder="$500"
           required
         />
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Extra Member Price</Label>
+        <Input
+          name="extraMemberPrice"
+          value={formData.extraMemberPrice}
+          onChange={handleChange}
+          placeholder="$150"
+          required
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Team Size Limits</Label>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <Input
+            name="minTeamSize"
+            value={formData.minTeamSize}
+            onChange={handleChange}
+            placeholder="2"
+            type="number"
+            min="2"
+            style={{ width: "80px" }}
+            required
+          />
+          <span style={{ lineHeight: "40px" }}>to</span>
+          <Input
+            name="maxTeamSize"
+            value={formData.maxTeamSize}
+            onChange={handleChange}
+            placeholder="4"
+            type="number"
+            min="2"
+            style={{ width: "80px" }}
+            required
+          />
+          <span style={{ lineHeight: "40px" }}>members</span>
+        </div>
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Available Shirt Sizes</Label>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {["XS", "S", "M", "L", "XL", "2XL"].map((size) => (
+            <label
+              key={size}
+              style={{ display: "flex", alignItems: "center", gap: "5px" }}
+            >
+              <input
+                type="checkbox"
+                checked={formData.shirtSizes.includes(size)}
+                onChange={(e) => {
+                  const newSizes = e.target.checked
+                    ? [...formData.shirtSizes, size]
+                    : formData.shirtSizes.filter((s) => s !== size);
+                  setFormData((prev) => ({
+                    ...prev,
+                    shirtSizes: newSizes,
+                  }));
+                }}
+              />
+              {size}
+            </label>
+          ))}
+        </div>
+      </FormGroup>
+
+      <FormGroup>
+        <Label>
+          <Input
+            type="checkbox"
+            name="includesShirt"
+            checked={formData.includesShirt}
+            onChange={handleChange}
+          />
+          Includes free T-shirt for each team member
+        </Label>
       </FormGroup>
 
       <FormGroup>
