@@ -252,7 +252,7 @@ const TimelineContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   position: relative;
-  padding: 0px;
+  padding: 30px;
   background: ${({ theme }) => theme.colors.surfaceAlt}CC;
   backdrop-filter: blur(10px);
   border-radius: 12px;
@@ -260,9 +260,12 @@ const TimelineContainer = styled.div`
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   z-index: 1;
   min-height: calc(100vh - 100px);
-  / @media (max-width: 968px) {
+
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 30px;
     min-height: unset;
+    padding: 20px;
   }
 `;
 
@@ -274,35 +277,18 @@ const TimelineImage = styled(motion.div)`
   border-radius: 12px;
   overflow: hidden;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      45deg,
-      ${({ theme }) => theme.colors.primary}33,
-      transparent
-    );
-    z-index: 1;
-  }
-
-  @media (max-width: 968px) {
+  @media (max-width: 768px) {
     position: relative;
     top: 0;
     height: 300px;
     min-height: unset;
+    margin-bottom: 20px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -388,20 +374,22 @@ const SponsorsGrid = styled.div`
   max-width: 1200px;
   margin: 40px auto 0;
   padding: 0 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
 `;
 
 const SponsorLogo = styled.img`
-  height: 260px;
-  width: auto;
+  height: auto;
+  width: 100%;
+  max-width: 260px;
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.border};
-  filter: grayscale(100%) contrast(0.8) brightness(1.2);
-  opacity: 0.4;
-  transition: all 0.3s ease;
 
-  &:hover {
-    filter: grayscale(0%) contrast(1) brightness(1);
-    opacity: 1;
+  @media (max-width: 768px) {
+    max-width: 100%;
   }
 `;
 
