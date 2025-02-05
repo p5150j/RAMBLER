@@ -83,8 +83,8 @@ const AnimatedBackground = styled.div`
 const AnimatedCircle = styled.div`
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
-  animation: floatAnimation 20s infinite ease-in-out;
+  filter: blur(99px);
+  animation: floatAnimation 10s infinite ease-in-out;
 
   @keyframes floatAnimation {
     0% {
@@ -110,8 +110,7 @@ const Section = styled.section`
   margin-top: -60px;
   position: relative;
   padding: 80px 20px;
-  background: ${({ theme, alt }) =>
-    alt ? theme.colors.surface : theme.colors.background};
+
   overflow: hidden;
 `;
 
@@ -160,9 +159,10 @@ const Button = styled(motion(Link))`
 // Feature Card Components
 const FeatureCard = styled(motion.div)`
   position: relative;
-  background: ${({ theme }) => theme.colors.surfaceAlt}CC;
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
+  background: ${({ theme }) => `${theme.colors.surface}CC`};
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
   padding: 0px;
   margin-bottom: 100px;
   display: grid;
@@ -253,9 +253,10 @@ const TimelineContainer = styled.div`
   gap: 60px;
   position: relative;
   padding: 30px;
-  background: ${({ theme }) => theme.colors.surfaceAlt}CC;
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
+  background: ${({ theme }) => `${theme.colors.surface}CC`};
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -445,62 +446,28 @@ function Home() {
 
       <Section>
         <AnimatedBackground>
-          {/* Large red circle */}
+          {/* Purple Accent Circle (positioned on the left) */}
           <AnimatedCircle
             style={{
               width: "1000px",
               height: "1000px",
-              top: "-20%",
-              right: "-10%",
-              opacity: 0.3,
-              animationDuration: "25s",
+              top: "20%",
+              left: "-25%",
               background:
-                "linear-gradient(45deg, rgba(255, 62, 62, 0.6), rgba(255, 62, 62, 0.1))",
+                "linear-gradient(45deg, rgba(147,51,234,0.7), rgba(147,51,234,0.3))",
+              opacity: 0.6,
             }}
-          />
-
-          {/* Purple circle */}
-          <AnimatedCircle
-            style={{
-              width: "800px",
-              height: "800px",
-              top: "30%",
-              left: "-20%",
-              opacity: 0.25,
-              animationDelay: "-10s",
-              animationDuration: "20s",
-              background:
-                "linear-gradient(45deg, rgba(147, 51, 234, 0.5), rgba(147, 51, 234, 0.1))",
+            animate={{
+              x: [0, -80, 80, -50, 50, 0],
+              y: [0, 80, -80, 50, -50, 0],
+              scale: [1, 1.3, 1.5, 1.3, 1.1, 1],
+              rotate: [0, -25, 25, -25, 25, 0],
             }}
-          />
-
-          {/* Gray circle */}
-          <AnimatedCircle
-            style={{
-              width: "600px",
-              height: "600px",
-              bottom: "10%",
-              right: "20%",
-              opacity: 0.2,
-              animationDelay: "-5s",
-              animationDuration: "15s",
-              background:
-                "linear-gradient(45deg, rgba(75, 85, 99, 0.4), rgba(75, 85, 99, 0.1))",
-            }}
-          />
-
-          {/* Dark red circle */}
-          <AnimatedCircle
-            style={{
-              width: "400px",
-              height: "400px",
-              top: "40%",
-              left: "30%",
-              opacity: 0.25,
-              animationDelay: "-15s",
-              animationDuration: "18s",
-              background:
-                "linear-gradient(45deg, rgba(220, 38, 38, 0.5), rgba(220, 38, 38, 0.1))",
+            transition={{
+              duration: 25,
+              ease: "easeInOut",
+              repeat: Infinity,
+              delay: 2,
             }}
           />
         </AnimatedBackground>
@@ -529,7 +496,7 @@ function Home() {
               transition={{ duration: 0.3 }}
             >
               <img
-                src="https://images.unsplash.com/photo-1591278169792-6f1cbf1d2762"
+                src="https://cdn.midjourney.com/007615c1-a1b4-4c06-94bd-d9f1121e2b9a/0_1.png"
                 alt="Shitbox Challenge"
               />
             </FeatureImage>
@@ -543,7 +510,7 @@ function Home() {
               viewport={{ once: true }}
             >
               <img
-                src="https://images.unsplash.com/photo-1618312980084-67efa94d67b6?q=80&w=1470"
+                src="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
                 alt="Three Day Extravaganza"
               />
             </TimelineImage>
