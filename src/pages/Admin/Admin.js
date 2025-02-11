@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { FaCalendarAlt, FaShoppingBag, FaImages } from "react-icons/fa";
 
 import EventsManager from "../../components/admin/EventsManager";
 import MerchManager from "../../components/admin/MerchManager";
@@ -25,29 +26,35 @@ function Admin() {
 
   return (
     <AdminContainer>
-      <AdminWrapper>
-        <Sidebar>
-          <NavItem
-            $active={activeSection === "events"}
-            onClick={() => setActiveSection("events")}
-          >
-            Events
-          </NavItem>
-          <NavItem
-            $active={activeSection === "merch"}
-            onClick={() => setActiveSection("merch")}
-          >
-            Merchandise
-          </NavItem>
-          <NavItem
-            $active={activeSection === "gallery"}
-            onClick={() => setActiveSection("gallery")}
-          >
-            Gallery
-          </NavItem>
-        </Sidebar>
-        <MainContent>{renderContent()}</MainContent>
-      </AdminWrapper>
+      <AdminHeader>
+        <HeaderTitle>Admin Dashboard</HeaderTitle>
+      </AdminHeader>
+
+      <AdminNav>
+        <NavButton
+          $active={activeSection === "events"}
+          onClick={() => setActiveSection("events")}
+        >
+          <FaCalendarAlt />
+          <span>Events</span>
+        </NavButton>
+        <NavButton
+          $active={activeSection === "merch"}
+          onClick={() => setActiveSection("merch")}
+        >
+          <FaShoppingBag />
+          <span>Merch</span>
+        </NavButton>
+        <NavButton
+          $active={activeSection === "gallery"}
+          onClick={() => setActiveSection("gallery")}
+        >
+          <FaImages />
+          <span>Gallery</span>
+        </NavButton>
+      </AdminNav>
+
+      <ContentArea>{renderContent()}</ContentArea>
     </AdminContainer>
   );
 }
@@ -55,61 +62,96 @@ function Admin() {
 const AdminContainer = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.background};
-  padding: 100px 20px 40px;
 `;
 
-const AdminWrapper = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  gap: 40px;
+const AdminHeader = styled.header`
+  background: ${({ theme }) => theme.colors.surface};
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
+const HeaderTitle = styled.h1`
+  font-size: 1.5rem;
+  margin: 0;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.textPrimary};
+`;
+
+const AdminNav = styled.nav`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background: ${({ theme }) => theme.colors.surface};
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    flex-direction: column;
+    padding: 90px 10px 20px;
+    border-right: 1px solid ${({ theme }) => theme.colors.border};
+    border-bottom: none;
   }
 `;
 
-const Sidebar = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  border-radius: 12px;
-  padding: 20px;
-  height: fit-content;
-  position: sticky;
-  top: 100px;
-`;
-
-const MainContent = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  border-radius: 12px;
-  padding: 30px;
-`;
-
-const NavItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
+const NavButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
   background: ${({ $active, theme }) =>
     $active ? theme.colors.primary : "transparent"};
   color: ${({ $active, theme }) =>
     $active ? "white" : theme.colors.textPrimary};
-  border: none;
-  border-radius: 8px;
-  text-align: left;
   cursor: pointer;
-  margin-bottom: 8px;
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  min-width: 80px;
+
+  svg {
+    font-size: 1.5rem;
+  }
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
 
   &:hover {
     background: ${({ $active, theme }) =>
       $active ? theme.colors.primary : theme.colors.surfaceAlt};
   }
 
-  &::before {
-    content: ${({ $active }) => ($active ? '"→"' : '""')};
-    font-family: monospace;
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    width: 100%;
+    padding: 15px 10px;
+  }
+`;
+
+const ContentArea = styled.main`
+  padding: 140px 20px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding: 20px 20px 20px 100px;
   }
 `;
 

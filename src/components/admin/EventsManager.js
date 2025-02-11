@@ -115,45 +115,47 @@ function EventsManager() {
       <EventsList>
         {events.map((event) => (
           <EventItem key={event.id}>
-            <EventImageThumb src={event.image} />
-            <EventInfo>
-              <EventTitle>
-                {event.title}
-                {event.featured && <Badge type="featured">Featured</Badge>}
-                <Badge type={event.status === "active" ? "active" : "past"}>
-                  {event.status === "active" ? "Active" : "Past"}
-                </Badge>
-              </EventTitle>
+            <EventContent>
+              <EventImageThumb src={event.image} />
+              <EventInfo>
+                <EventTitle>
+                  {event.title}
+                  {event.featured && <Badge type="featured">Featured</Badge>}
+                  <Badge type={event.status === "active" ? "active" : "past"}>
+                    {event.status === "active" ? "Active" : "Past"}
+                  </Badge>
+                </EventTitle>
 
-              <EventMeta>
-                <span>📅 {event.date}</span>
-                <span>📍 {event.location}</span>
-                <span>💰 {event.price}</span>
-              </EventMeta>
+                <EventMeta>
+                  <span>📅 {event.date}</span>
+                  <span>📍 {event.location}</span>
+                  <span>💰 {event.basePrice}</span>
+                </EventMeta>
 
-              <p
-                style={{
-                  color: theme.colors.textSecondary,
-                  fontSize: "0.9rem",
-                  margin: "4px 0",
-                  display: "-webkit-box",
-                  WebkitLineClamp: "2",
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}
-              >
-                {event.description}
-              </p>
+                <p
+                  style={{
+                    color: theme.colors.textSecondary,
+                    fontSize: "0.9rem",
+                    margin: "4px 0",
+                    display: "-webkit-box",
+                    WebkitLineClamp: "2",
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {event.description}
+                </p>
 
-              <div
-                style={{
-                  color: theme.colors.textMuted,
-                  fontSize: "0.8rem",
-                }}
-              >
-                Capacity: {event.capacity}
-              </div>
-            </EventInfo>
+                <div
+                  style={{
+                    color: theme.colors.textMuted,
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  Capacity: {event.capacity}
+                </div>
+              </EventInfo>
+            </EventContent>
 
             <ActionButtons>
               <ActionButton
@@ -162,16 +164,16 @@ function EventsManager() {
                   setSelectedEvent(event);
                   setIsModalOpen(true);
                 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Edit
               </ActionButton>
               <ActionButton
                 variant="delete"
                 onClick={() => confirmDelete(event)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Delete
               </ActionButton>
@@ -261,21 +263,34 @@ const EventsList = styled.div`
 `;
 
 const EventItem = styled.div`
-  display: grid;
-  grid-template-columns: 120px 1fr auto;
-  gap: 20px;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
   background: ${({ theme }) => theme.colors.background};
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.colors.border};
+  overflow: hidden;
+`;
+
+const EventContent = styled.div`
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    grid-template-columns: 120px 1fr;
+  }
 `;
 
 const EventImageThumb = styled.img`
-  width: 120px;
+  width: 100%;
   height: 120px;
   border-radius: 4px;
   object-fit: cover;
   object-position: center;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    width: 120px;
+  }
 `;
 
 const EventInfo = styled.div`
@@ -319,22 +334,36 @@ const Badge = styled.span`
 `;
 
 const ActionButtons = styled.div`
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: ${({ theme }) => theme.colors.border};
+  margin-top: auto;
 `;
 
 const ActionButton = styled(motion.button)`
-  padding: 8px 16px;
+  padding: 12px;
   background: ${({ variant, theme }) =>
     variant === "delete"
-      ? "#ff4444"
+      ? theme.colors.error
+      : variant === "edit"
+      ? theme.colors.surface
+      : theme.colors.surface};
+  color: ${({ variant, theme }) =>
+    variant === "delete"
+      ? "black"
       : variant === "edit"
       ? theme.colors.primary
-      : theme.colors.surface};
-  color: white;
+      : theme.colors.textPrimary};
   border: none;
-  border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: ${({ variant, theme }) =>
+      variant === "delete" ? theme.colors.errorDark : theme.colors.surfaceAlt};
+  }
 `;
 
 const Modal = styled(motion.div)`

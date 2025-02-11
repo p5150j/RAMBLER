@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useSpring,
+} from "framer-motion";
+import { galleryService } from "../../utils/galleryService";
+
+const getTimelineDescription = (day) => {
+  switch (day) {
+    case "Car Show":
+      return "Participants proudly display their creations. From wild paint jobs to outrageous custom modifications, the car show is a feast for automotive enthusiasts and spectators alike.";
+    case "Adventure Course":
+      return "This is where the fun truly begins. The adventure course tests the durability of both the cars and their drivers with a mix of on-road and off-road challenges.";
+    case "Trophy Ceremony":
+      return "The event culminates in a lively awards ceremony, celebrating not just winners but also the most creative, resilient, and downright hilarious participants.";
+    default:
+      return "";
+  }
+};
 
 // Hero Section Styles
 const HeroSection = styled.section`
@@ -23,7 +43,7 @@ const HeroBackground = styled(motion.div)`
   right: -50px;
   bottom: -100px;
   overflow: hidden;
-  filter: brightness(0.6);
+  filter: brightness(0.4);
 
   video {
     width: 100%;
@@ -107,18 +127,22 @@ const AnimatedCircle = styled.div`
 
 // Layout Components
 const Section = styled.section`
-  margin-top: -60px;
   position: relative;
-  padding: 80px 20px;
-
+  padding: 100px 20px;
+  background: ${({ alt, theme }) =>
+    alt ? theme.colors.surface : "transparent"};
   overflow: hidden;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding: 60px 20px;
+  }
 `;
 
 const Container = styled.div`
-  position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  z-index: 1;
+  position: relative;
+  z-index: 2;
 `;
 
 const Button = styled(motion(Link))`
@@ -160,28 +184,30 @@ const Button = styled(motion(Link))`
 const FeatureCard = styled(motion.div)`
   position: relative;
   background: ${({ theme }) => `${theme.colors.surface}CC`};
-  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-radius: 16px;
-  padding: 0px;
-  margin-bottom: 100px;
+  padding: 40px;
+  margin-bottom: 80px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 40px;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.colors.border};
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 768px) {
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     grid-template-columns: 1fr;
-    text-align: center;
     padding: 30px;
+    gap: 30px;
   }
 
   &:nth-child(even) {
     direction: rtl;
-    @media (max-width: 768px) {
+    @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
       direction: ltr;
     }
   }
@@ -189,34 +215,21 @@ const FeatureCard = styled(motion.div)`
 
 const FeatureContent = styled.div`
   direction: ltr;
-  position: relative;
-  z-index: 1;
+  max-width: 500px;
+  margin: 0 auto;
 
   h3 {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: 2rem;
-    margin-bottom: 25px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 20px;
     font-family: "Racing Sans One", "Poppins", sans-serif;
-    position: relative;
-    display: inline-block;
-
-    &::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -8px;
-      width: 60%;
-      height: 3px;
-      background: ${({ theme }) => theme.colors.primary};
-      border-radius: 2px;
-    }
   }
 
   p {
     color: ${({ theme }) => theme.colors.textSecondary};
-    line-height: 1.8;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 0;
   }
 `;
 
@@ -225,21 +238,7 @@ const FeatureImage = styled(motion.div)`
   overflow: hidden;
   position: relative;
   aspect-ratio: 16/9;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      45deg,
-      ${({ theme }) => theme.colors.primary}33,
-      transparent
-    );
-    z-index: 1;
-  }
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 
   img {
     width: 100%;
@@ -247,118 +246,84 @@ const FeatureImage = styled(motion.div)`
     object-fit: cover;
   }
 `;
+
+// Timeline Components
 const TimelineContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
-  position: relative;
-  padding: 30px;
-  background: ${({ theme }) => `${theme.colors.surface}CC`};
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  min-height: calc(100vh - 100px);
+  align-items: center;
+  margin-top: 100px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     grid-template-columns: 1fr;
-    gap: 30px;
-    min-height: unset;
-    padding: 20px;
+    gap: 40px;
   }
 `;
 
 const TimelineImage = styled(motion.div)`
-  position: sticky;
-  top: 100px;
-  height: 100%;
-  min-height: calc(100vh - 200px);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-
-  @media (max-width: 768px) {
-    position: relative;
-    top: 0;
-    height: 300px;
-    min-height: unset;
-    margin-bottom: 20px;
-  }
+  aspect-ratio: 4/3;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    aspect-ratio: 16/9;
+  }
 `;
 
 const TimelineContent = styled.div`
-  position: relative;
-  padding-left: 30px;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: ${({ theme }) => theme.colors.primary};
-  }
-
   h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: 2rem;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     font-family: "Racing Sans One", "Poppins", sans-serif;
   }
 `;
 
 const TimelineItem = styled(motion.div)`
-  margin-bottom: 60px;
-  position: relative;
+  margin-bottom: 30px;
+  padding-left: 20px;
+  border-left: 2px solid ${({ theme }) => theme.colors.primary};
 
-  &::before {
-    content: "";
-    position: absolute;
-    left: -34px;
-    top: 5px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 8px ${({ theme }) => theme.colors.primary}33;
+  &:last-child {
+    margin-bottom: 0;
   }
 
   h4 {
     color: ${({ theme }) => theme.colors.primary};
-    font-size: 1.5rem;
-    font-family: "Racing Sans One", "Poppins", sans-serif;
-    margin-bottom: 15px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
   }
 
   p {
     color: ${({ theme }) => theme.colors.textSecondary};
-    line-height: 1.7;
+    line-height: 1.6;
     font-size: 1rem;
   }
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 4vw, 2.5rem);
   color: ${({ theme }) => theme.colors.textPrimary};
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   font-family: "Racing Sans One", "Poppins", sans-serif;
 `;
 
 const SectionText = styled.p`
   color: ${({ theme }) => theme.colors.textSecondary};
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 700px;
+  margin: 0 auto 60px;
   line-height: 1.6;
+  font-size: 1.1rem;
 `;
 
 const SponsorsSection = styled.section`
@@ -394,6 +359,197 @@ const SponsorLogo = styled.img`
   }
 `;
 
+// Add these styled components
+const StatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin: 60px 0;
+  text-align: center;
+`;
+
+const StatItem = styled(motion.div)`
+  padding: 30px 20px;
+  background: ${({ theme }) => `${theme.colors.surface}CC`};
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
+  h3 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: ${({ theme }) => theme.colors.primary};
+    font-family: "Racing Sans One", "Poppins", sans-serif;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textSecondary};
+    font-size: 1rem;
+  }
+`;
+
+const HighlightsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 40px 0;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+`;
+
+const HighlightItem = styled(motion.div)`
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+
+  &:hover img,
+  &:hover video {
+    transform: scale(1.05);
+  }
+`;
+
+const HighlightMedia = styled.div`
+  width: 100%;
+  height: 100%;
+
+  img,
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+`;
+
+const Modal = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+`;
+
+const ModalContent = styled(motion.div)`
+  max-width: 90vw;
+  max-height: 90vh;
+  position: relative;
+
+  img,
+  video {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+`;
+
+const FaqGrid = styled.div`
+  display: grid;
+  gap: 20px;
+  max-width: 800px;
+  margin: 40px auto;
+`;
+
+const FaqItem = styled(motion.div)`
+  background: ${({ theme }) => `${theme.colors.surface}CC`};
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
+  h4 {
+    color: ${({ theme }) => theme.colors.textPrimary};
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textSecondary};
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+`;
+
+// Add these styled components
+const ContentBreak = styled.div`
+  text-align: center;
+  margin: 80px 0;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 20px;
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+`;
+
+const CtaSection = styled.section`
+  position: relative;
+  padding: 120px 20px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  text-align: center;
+  color: white;
+`;
+
+const CtaContent = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 20px;
+    font-family: "Racing Sans One", "Poppins", sans-serif;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+`;
+
+const CtaButton = styled(Button)`
+  font-size: 1.2rem;
+  padding: 15px 40px;
+  background: ${({ theme }) => theme.colors.primary};
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+`;
+
 function Home() {
   const { scrollY } = useScroll();
 
@@ -406,6 +562,29 @@ function Home() {
     damping: 15,
     mass: 0.1,
   });
+
+  const [highlights, setHighlights] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  useEffect(() => {
+    const fetchHighlights = async () => {
+      try {
+        const items = await galleryService.getAllItems(1, 4); // Get first 4 items
+        setHighlights(items);
+      } catch (error) {
+        console.error("Error fetching highlights:", error);
+      }
+    };
+
+    fetchHighlights();
+  }, []);
+
+  const renderMedia = (item) => {
+    if (item.type === "video") {
+      return <video src={item.url} muted loop playsInline autoPlay />;
+    }
+    return <img src={item.url} alt={item.title || "Community Highlight"} />;
+  };
 
   return (
     <>
@@ -426,8 +605,8 @@ function Home() {
         <HeroContent>
           <Title>ROCKY MOUNTAIN RAMBLER 500</Title>
           <SubTitle>
-            is an annual event where people take their beater cars, fix them up
-            just enough to run, and put them to the test. It’s all about fun,
+            ...is an annual event where people take their beater cars, fix them
+            up just enough to run, and put them to the test. It's all about fun,
             creativity, and seeing just how far you can push a junker with a
             bunch of like-minded gearheads.
           </SubTitle>
@@ -476,10 +655,10 @@ function Home() {
           <SectionTitle>Here's what makes it unique:</SectionTitle>
 
           <FeatureCard
-            initial={{ opacity: 0, y: 100 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: "-100px" }}
           >
             <FeatureContent>
               <h3>The "Beater" Challenge</h3>
@@ -492,76 +671,85 @@ function Home() {
               </p>
             </FeatureContent>
             <FeatureImage
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
               <img
                 src="https://cdn.midjourney.com/007615c1-a1b4-4c06-94bd-d9f1121e2b9a/0_1.png"
-                alt="Shitbox Challenge"
+                alt="Beater Challenge"
               />
             </FeatureImage>
           </FeatureCard>
 
           <TimelineContainer>
             <TimelineImage
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: "-100px" }}
             >
               <img
                 src="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-                alt="Three Day Extravaganza"
+                alt="Three Day Event"
               />
             </TimelineImage>
 
             <TimelineContent>
               <h3>A Three-Day Extravaganza</h3>
-              <TimelineItem
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                <h4>Day 1: Car Show</h4>
-                <p>
-                  Participants proudly display their creations. From wild paint
-                  jobs to outrageous custom modifications, the car show is a
-                  feast for automotive enthusiasts and spectators alike.
-                </p>
-              </TimelineItem>
-
-              <TimelineItem
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <h4>Day 2: Adventure Course</h4>
-                <p>
-                  This is where the fun truly begins. The adventure course tests
-                  the durability of both the cars and their drivers with a mix
-                  of on-road and off-road challenges. It's as much about keeping
-                  the cars running as it is about navigating the unpredictable
-                  terrain.
-                </p>
-              </TimelineItem>
-
-              <TimelineItem
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                viewport={{ once: true }}
-              >
-                <h4>Day 3: Trophy Ceremony</h4>
-                <p>
-                  The event culminates in a lively awards ceremony, celebrating
-                  not just winners but also the most creative, resilient, and
-                  downright hilarious participants.
-                </p>
-              </TimelineItem>
+              {["Car Show", "Adventure Course", "Trophy Ceremony"].map(
+                (day, index) => (
+                  <TimelineItem
+                    key={day}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                  >
+                    <h4>
+                      Day {index + 1}: {day}
+                    </h4>
+                    <p>{getTimelineDescription(day)}</p>
+                  </TimelineItem>
+                )
+              )}
             </TimelineContent>
           </TimelineContainer>
+        </Container>
+      </Section>
+
+      <Section>
+        <Container>
+          <SectionTitle>By The Numbers</SectionTitle>
+          <StatsGrid>
+            {[
+              { number: "500+", label: "Miles Covered" },
+              { number: "50+", label: "Beaters Transformed" },
+              { number: "$1000s", label: "in Prizes" },
+              { number: "∞", label: "Memories Made" },
+            ].map((stat, index) => (
+              <StatItem
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <h3>{stat.number}</h3>
+                <p>{stat.label}</p>
+              </StatItem>
+            ))}
+          </StatsGrid>
+
+          <ContentBreak>
+            <h3>More Than Just Racing</h3>
+            <p>
+              The Rocky Mountain Rambler 500 is where automotive passion meets
+              adventure. Every beater has a story, and every driver becomes part
+              of our growing community.
+            </p>
+          </ContentBreak>
+
+          <CommunityHighlights />
         </Container>
       </Section>
 
@@ -577,26 +765,125 @@ function Home() {
               src="https://arusimages.s3.us-west-2.amazonaws.com/logo2.png"
               alt="Sponsor 2"
             />
-            {/* <SponsorLogo
-              src="https://placehold.co/200x80?text=Sponsor+3"
-              alt="Sponsor 3"
-            />
-            <SponsorLogo
-              src="https://placehold.co/200x80?text=Sponsor+4"
-              alt="Sponsor 4"
-            /> */}
           </SponsorsGrid>
         </Container>
       </SponsorsSection>
 
-      <Section alt>
-        <Container>
-          <SectionTitle>Join The Adventure</SectionTitle>
-          <div style={{ textAlign: "center", marginTop: "40px" }}>
-            <Button to="/signup">Register Now</Button>
-          </div>
-        </Container>
-      </Section>
+      <CtaSection>
+        <CtaContent>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            Ready to Join the Adventure?
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            Don't miss out on the most exciting budget racing event in the
+            Rockies. Grab your beater and join us for an unforgettable
+            experience.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <CtaButton
+              to="/signup"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Register Now
+            </CtaButton>
+          </motion.div>
+        </CtaContent>
+      </CtaSection>
+    </>
+  );
+}
+
+function CommunityHighlights() {
+  const [highlights, setHighlights] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  useEffect(() => {
+    const fetchHighlights = async () => {
+      try {
+        const items = await galleryService.getAllItems(1, 8);
+        setHighlights(items.slice(0, 8)); // Explicitly limit to 8 items
+      } catch (error) {
+        console.error("Error fetching highlights:", error);
+      }
+    };
+
+    fetchHighlights();
+  }, []);
+
+  const renderMedia = (item) => {
+    if (item.type === "video") {
+      return <video src={item.url} muted loop playsInline autoPlay />;
+    }
+    return <img src={item.url} alt={item.title || "Community Highlight"} />;
+  };
+
+  return (
+    <>
+      <SectionTitle>Community Highlights</SectionTitle>
+      <HighlightsGrid>
+        {highlights.map((item, index) => (
+          <HighlightItem
+            key={item.id}
+            onClick={() => setSelectedItem(item)}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true }}
+          >
+            <HighlightMedia>{renderMedia(item)}</HighlightMedia>
+          </HighlightItem>
+        ))}
+      </HighlightsGrid>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <Modal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedItem(null)}
+          >
+            <ModalContent
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+            >
+              <CloseButton onClick={() => setSelectedItem(null)}>×</CloseButton>
+              {selectedItem.type === "video" ? (
+                <video
+                  src={selectedItem.url}
+                  autoPlay
+                  controls
+                  loop
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={selectedItem.url}
+                  alt={selectedItem.title || "Gallery image"}
+                />
+              )}
+            </ModalContent>
+          </Modal>
+        )}
+      </AnimatePresence>
     </>
   );
 }

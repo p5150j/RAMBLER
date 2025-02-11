@@ -1,11 +1,109 @@
 // pages/Events/Events.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { eventService } from "../../utils/eventService";
 import TeamRegistrationForm from "../../components/events/TeamRegistrationForm";
+
+// Memoized Event Card Component
+const EventCard = memo(({ event, onRegister, isRegistered }) => {
+  return (
+    <StyledEventCard
+      whileHover={{ y: -5 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <EventImage>
+        <img
+          src={event.image}
+          alt={event.title}
+          loading="lazy"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+      </EventImage>
+      <EventContent>
+        <EventStatus $status={event.status}>
+          {isRegistered
+            ? "Registered"
+            : event.status === "active"
+            ? "Registration Open"
+            : "Past Event"}
+        </EventStatus>
+        <EventDate>
+          {new Date(event.date).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </EventDate>
+        <EventTitle>{event.title}</EventTitle>
+        <EventDescription>{event.description}</EventDescription>
+
+        <EventCardStats>
+          <StatItem>
+            <StatLabel>Team Size</StatLabel>
+            <StatValue>
+              {event.minTeamSize}-{event.maxTeamSize}
+            </StatValue>
+          </StatItem>
+          <StatItem>
+            <StatLabel>Base Price</StatLabel>
+            <StatValue>${event.basePrice}</StatValue>
+          </StatItem>
+          <StatItem>
+            <StatLabel>Teams</StatLabel>
+            <StatValue>
+              {event.registeredTeams}/{event.capacity}
+            </StatValue>
+          </StatItem>
+        </EventCardStats>
+
+        <Requirements>
+          <strong>Requirements: </strong> {event.requirements}
+        </Requirements>
+
+        {event.status === "active" && (
+          <RegisterButton
+            whileHover={!isRegistered ? { scale: 1.02 } : {}}
+            whileTap={!isRegistered ? { scale: 0.98 } : {}}
+            onClick={() => !isRegistered && onRegister(event)}
+            disabled={isRegistered}
+            $isRegistered={isRegistered}
+          >
+            {isRegistered ? "Registered" : "Register Now"}
+          </RegisterButton>
+        )}
+      </EventContent>
+    </StyledEventCard>
+  );
+});
+
+// Memoized Featured Event Component
+const FeaturedEventCard = memo(({ event, onRegister, isRegistered }) => {
+  return (
+    <FeaturedEvent>
+      <FeaturedBackground>
+        <img
+          src={event.image}
+          alt={event.title}
+          loading="eager" // Load immediately as it's above the fold
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+      </FeaturedBackground>
+      {/* Rest of your featured event content */}
+    </FeaturedEvent>
+  );
+});
 
 function Events() {
   const [events, setEvents] = useState([]);
@@ -18,40 +116,37 @@ function Events() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  // Single fetch function to get all needed data
-  const fetchData = async () => {
+  // Memoized fetch function
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Get events
-      const fetchedEvents = await eventService.getAllEvents();
+      const [fetchedEvents, registrations] = await Promise.all([
+        eventService.getAllEvents(),
+        currentUser ? eventService.getUserRegistrations(currentUser.uid) : [],
+      ]);
+
       const featured = fetchedEvents.find((event) => event.featured);
       setFeaturedEvent(featured || fetchedEvents[0]);
       setEvents(fetchedEvents);
-
-      // Get registrations if user is logged in
-      if (currentUser) {
-        const registrations = await eventService.getUserRegistrations(
-          currentUser.uid
-        );
-        setUserRegistrations(registrations);
-      } else {
-        setUserRegistrations([]);
-      }
+      setUserRegistrations(registrations);
     } catch (err) {
       console.error("Error fetching data:", err);
       setError("Failed to load events");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentUser]);
 
-  // Check if user is registered for an event
-  const isRegisteredForEvent = (eventId) => {
-    if (!userRegistrations || !Array.isArray(userRegistrations)) return false;
-    return userRegistrations.some(
-      (registration) => registration.eventId === eventId
-    );
-  };
+  // Memoized registration check
+  const isRegisteredForEvent = useCallback(
+    (eventId) => {
+      if (!userRegistrations || !Array.isArray(userRegistrations)) return false;
+      return userRegistrations.some(
+        (registration) => registration.eventId === eventId
+      );
+    },
+    [userRegistrations]
+  );
 
   // Handle registration button click
   const handleRegister = async (event) => {
@@ -189,97 +284,10 @@ function Events() {
           .map((event) => (
             <EventCard
               key={event.id}
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <EventImage
-                style={{ backgroundImage: `url("${event.image}")` }}
-              />
-              <EventContent>
-                <EventStatus $status={event.status}>
-                  {isRegisteredForEvent(event.id)
-                    ? "Registered"
-                    : event.status === "active"
-                    ? "Registration Open"
-                    : "Past Event"}
-                </EventStatus>
-                <EventDate>
-                  {new Date(event.date).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </EventDate>
-                <h3 style={{ margin: "10px 0" }}>{event.title}</h3>
-                <p
-                  style={{
-                    color: "#B0B0B0",
-                    marginBottom: "15px",
-                    lineHeight: "1.4",
-                    display: "-webkit-box",
-                    // WebkitLineClamp: "3",
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {event.description}
-                </p>
-
-                <EventCardStats>
-                  <div>
-                    <div className="stat-label">Team Size</div>
-                    <div className="stat-value">
-                      {event.minTeamSize}-{event.maxTeamSize}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="stat-label">Base Price</div>
-                    <div className="stat-value">${event.basePrice}</div>
-                  </div>
-                  <div>
-                    <div className="stat-label">Teams</div>
-                    <div className="stat-value">
-                      {event.registeredTeams}/{event.capacity}
-                    </div>
-                  </div>
-                </EventCardStats>
-                <div style={{ flex: 1 }}>
-                  <p
-                    style={{
-                      color: "#B0B0B0",
-                      lineHeight: "1.4",
-                      display: "-webkit-box",
-                      //   WebkitLineClamp: "2",
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <strong>Requirements: </strong> {event.requirements}
-                  </p>
-                </div>
-
-                {event.status === "active" && (
-                  <RegisterButton
-                    whileHover={
-                      !isRegisteredForEvent(event.id) ? { scale: 1.02 } : {}
-                    }
-                    whileTap={
-                      !isRegisteredForEvent(event.id) ? { scale: 0.98 } : {}
-                    }
-                    onClick={() =>
-                      !isRegisteredForEvent(event.id) && handleRegister(event)
-                    }
-                    disabled={isRegisteredForEvent(event.id)}
-                    $isRegistered={isRegisteredForEvent(event.id)}
-                  >
-                    {isRegisteredForEvent(event.id)
-                      ? "Registered"
-                      : "Register Now"}
-                  </RegisterButton>
-                )}
-              </EventContent>
-            </EventCard>
+              event={event}
+              onRegister={handleRegister}
+              isRegistered={isRegisteredForEvent(event.id)}
+            />
           ))}
       </EventsGrid>
 
@@ -413,7 +421,7 @@ const EventsGrid = styled.div`
   }
 `;
 
-const EventCard = styled(motion.div)`
+const StyledEventCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.surface};
   border-radius: 12px;
   overflow: hidden;
@@ -506,6 +514,41 @@ const RegisterButton = styled(motion.button)`
   &:disabled {
     cursor: default;
   }
+`;
+
+// Move inline styles to styled components
+const EventTitle = styled.h3`
+  margin: 10px 0;
+`;
+
+const EventDescription = styled.p`
+  color: ${({ theme }) => theme.colors.textMuted};
+  margin-bottom: 15px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+const Requirements = styled.p`
+  color: ${({ theme }) => theme.colors.textMuted};
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+`;
+
+const StatLabel = styled.div`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textMuted};
+  margin-bottom: 2px;
+`;
+
+const StatValue = styled.div`
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.textPrimary};
 `;
 
 export default Events;

@@ -14,20 +14,33 @@ const ProductList = styled.div`
 `;
 
 const ProductItem = styled.div`
-  display: grid;
-  grid-template-columns: 120px 1fr auto;
-  gap: 20px;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
   background: ${({ theme }) => theme.colors.background};
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.colors.border};
+  overflow: hidden;
+`;
+
+const ProductContent = styled.div`
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    grid-template-columns: 120px 1fr;
+  }
 `;
 
 const ProductImageThumb = styled.img`
-  width: 120px;
+  width: 100%;
   height: 120px;
   border-radius: 4px;
   object-fit: cover;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    width: 120px;
+  }
 `;
 
 const ProductInfo = styled.div`
@@ -75,22 +88,36 @@ const Badge = styled.span`
 `;
 
 const ActionButtons = styled.div`
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: ${({ theme }) => theme.colors.border};
+  margin-top: auto;
 `;
 
 const ActionButton = styled(motion.button)`
-  padding: 8px 16px;
+  padding: 12px;
   background: ${({ variant, theme }) =>
     variant === "delete"
-      ? "#ff4444"
+      ? theme.colors.error
+      : variant === "edit"
+      ? theme.colors.surface
+      : theme.colors.surface};
+  color: ${({ variant, theme }) =>
+    variant === "delete"
+      ? "black"
       : variant === "edit"
       ? theme.colors.primary
-      : theme.colors.surface};
-  color: white;
+      : theme.colors.textPrimary};
   border: none;
-  border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: ${({ variant, theme }) =>
+      variant === "delete" ? theme.colors.errorDark : theme.colors.surfaceAlt};
+  }
 `;
 
 const Modal = styled(motion.div)`
@@ -237,42 +264,44 @@ function MerchManager() {
       <ProductList>
         {products.map((product) => (
           <ProductItem key={product.id}>
-            <ProductImageThumb src={product.image} alt={product.title} />
-            <ProductInfo>
-              <ProductTitle>
-                {product.title}
-                {product.badge && <Badge type="badge">{product.badge}</Badge>}
-                <Badge type="stock">
-                  {product.inStock ? "In Stock" : "Out of Stock"}
-                </Badge>
-              </ProductTitle>
+            <ProductContent>
+              <ProductImageThumb src={product.image} alt={product.title} />
+              <ProductInfo>
+                <ProductTitle>
+                  {product.title}
+                  {product.badge && <Badge type="badge">{product.badge}</Badge>}
+                  <Badge type="stock">
+                    {product.inStock ? "In Stock" : "Out of Stock"}
+                  </Badge>
+                </ProductTitle>
 
-              <ProductPrice>
-                <Price>${product.price}</Price>
-                {product.originalPrice && (
-                  <OriginalPrice>${product.originalPrice}</OriginalPrice>
-                )}
-              </ProductPrice>
+                <ProductPrice>
+                  <Price>${product.price}</Price>
+                  {product.originalPrice && (
+                    <OriginalPrice>${product.originalPrice}</OriginalPrice>
+                  )}
+                </ProductPrice>
 
-              <div
-                style={{
-                  fontSize: "0.9rem",
-                  color: theme.colors.textSecondary,
-                }}
-              >
-                {product.description}
-              </div>
+                <div
+                  style={{
+                    fontSize: "0.9rem",
+                    color: theme.colors.textSecondary,
+                  }}
+                >
+                  {product.description}
+                </div>
 
-              <div
-                style={{
-                  fontSize: "0.8rem",
-                  color: theme.colors.textMuted,
-                  marginTop: "4px",
-                }}
-              >
-                Sizes: {product.sizes.join(", ")}
-              </div>
-            </ProductInfo>
+                <div
+                  style={{
+                    fontSize: "0.8rem",
+                    color: theme.colors.textMuted,
+                    marginTop: "4px",
+                  }}
+                >
+                  Sizes: {product.sizes.join(", ")}
+                </div>
+              </ProductInfo>
+            </ProductContent>
 
             <ActionButtons>
               <ActionButton
@@ -281,16 +310,16 @@ function MerchManager() {
                   setSelectedProduct(product);
                   setIsModalOpen(true);
                 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Edit
               </ActionButton>
               <ActionButton
                 variant="delete"
                 onClick={() => confirmDelete(product)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Delete
               </ActionButton>
