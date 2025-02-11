@@ -550,6 +550,124 @@ const CtaButton = styled(Button)`
   }
 `;
 
+// Add these styled components
+const BackgroundLines = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  height: 100%;
+`;
+
+const AnimatedLine = styled(motion.path)`
+  stroke: ${({ theme }) => theme.colors.primary}10;
+  stroke-width: 1;
+  fill: none;
+  stroke-linecap: round;
+  filter: blur(0.5px);
+`;
+
+// Update the SVG component with twisted lines
+const BackgroundAnimation = () => (
+  <BackgroundLines>
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+    >
+      <AnimatedLine
+        d="M20,0 C20,25 80,75 20,100"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          duration: 3,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+      />
+      <AnimatedLine
+        d="M40,0 C40,25 60,75 40,100"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          duration: 3.2,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 0.3,
+        }}
+      />
+      <AnimatedLine
+        d="M60,0 C60,25 40,75 60,100"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          duration: 3.4,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 0.6,
+        }}
+      />
+      <AnimatedLine
+        d="M80,0 C80,25 20,75 80,100"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          duration: 3.6,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 0.9,
+        }}
+      />
+
+      {/* Additional connecting lines for more complexity */}
+      <AnimatedLine
+        d="M30,0 C30,25 70,75 30,100"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          duration: 3.3,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 0.2,
+        }}
+      />
+      <AnimatedLine
+        d="M70,0 C70,25 30,75 70,100"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          duration: 3.5,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 0.7,
+        }}
+      />
+    </svg>
+  </BackgroundLines>
+);
+
+// Update the section to properly contain the background
+const StatsAndHighlightsSection = styled(Section)`
+  position: relative;
+  overflow: hidden;
+
+  & > ${Container} {
+    position: relative;
+    z-index: 2;
+  }
+`;
+
 function Home() {
   const { scrollY } = useScroll();
 
@@ -717,7 +835,8 @@ function Home() {
         </Container>
       </Section>
 
-      <Section>
+      <StatsAndHighlightsSection>
+        <BackgroundAnimation />
         <Container>
           <SectionTitle>By The Numbers</SectionTitle>
           <StatsGrid>
@@ -751,7 +870,7 @@ function Home() {
 
           <CommunityHighlights />
         </Container>
-      </Section>
+      </StatsAndHighlightsSection>
 
       <SponsorsSection>
         <Container>
