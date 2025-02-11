@@ -12,10 +12,38 @@ const GalleryContainer = styled.div`
 
 const GalleryGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 4px;
-  grid-auto-rows: 300px;
-  grid-auto-flow: dense;
+  gap: 20px;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 300px;
+    grid-auto-flow: dense;
+
+    .wide {
+      grid-column: span 2;
+    }
+
+    .tall {
+      grid-row: span 2;
+    }
+
+    .large {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
+    grid-template-columns: 1fr;
+
+    /* Reset all special sizes on mobile */
+    .wide,
+    .tall,
+    .large {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
 `;
 
 const GalleryItem = styled(motion.div)`
@@ -23,22 +51,14 @@ const GalleryItem = styled(motion.div)`
   cursor: pointer;
   overflow: hidden;
   background: ${({ theme }) => theme.colors.surface};
+  border-radius: 12px;
 
-  &.wide {
-    grid-column: span 2;
-  }
-
-  &.tall {
-    grid-row: span 2;
-  }
-
-  &.large {
-    grid-column: span 2;
-    grid-row: span 2;
+  @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
+    aspect-ratio: 4/3; /* Consistent aspect ratio on mobile */
   }
 `;
 
-// Optimized media components
+// Update the media components for better mobile handling
 const LazyImage = ({ src, alt, onClick, ...props }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const { ref, inView } = useInView({
@@ -48,7 +68,15 @@ const LazyImage = ({ src, alt, onClick, ...props }) => {
   });
 
   return (
-    <div ref={ref} style={{ height: "100%", width: "100%" }} onClick={onClick}>
+    <div
+      ref={ref}
+      style={{
+        height: "100%",
+        width: "100%",
+        position: "relative",
+      }}
+      onClick={onClick}
+    >
       {inView && (
         <>
           <img
@@ -79,7 +107,7 @@ const LazyVideo = ({ src, onClick, ...props }) => {
     triggerOnce: true,
     rootMargin: "100px",
   });
-  const videoRef = React.useRef(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     if (inView && videoRef.current) {
@@ -90,7 +118,15 @@ const LazyVideo = ({ src, onClick, ...props }) => {
   }, [inView]);
 
   return (
-    <div ref={ref} style={{ height: "100%", width: "100%" }} onClick={onClick}>
+    <div
+      ref={ref}
+      style={{
+        height: "100%",
+        width: "100%",
+        position: "relative",
+      }}
+      onClick={onClick}
+    >
       {inView && (
         <>
           <video
@@ -117,12 +153,13 @@ const LazyVideo = ({ src, onClick, ...props }) => {
   );
 };
 
+// Update the LoadingPlaceholder for better mobile display
 const LoadingPlaceholder = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background: ${({ theme }) => theme.colors.surface};
   display: flex;
   align-items: center;
