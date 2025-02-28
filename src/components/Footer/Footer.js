@@ -2,6 +2,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaYoutube,
+  FaDiscord,
+  FaTiktok,
+} from "react-icons/fa";
 
 const FooterWrapper = styled.footer`
   background: ${({ theme }) => theme.colors.surface};
@@ -49,6 +56,9 @@ const SocialLink = styled.a`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: 1.5rem;
   transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
@@ -73,14 +83,20 @@ function Footer() {
             Where creativity meets the track. $3K budget racing at its finest.
           </p>
           <SocialLinks>
-            <SocialLink href="#" target="_blank">
-              FB
+            <SocialLink href="#" target="_blank" aria-label="Facebook">
+              <FaFacebook />
             </SocialLink>
-            <SocialLink href="#" target="_blank">
-              IG
+            <SocialLink href="#" target="_blank" aria-label="Instagram">
+              <FaInstagram />
             </SocialLink>
-            <SocialLink href="#" target="_blank">
-              YT
+            <SocialLink href="#" target="_blank" aria-label="YouTube">
+              <FaYoutube />
+            </SocialLink>
+            <SocialLink href="#" target="_blank" aria-label="TikTok">
+              <FaTiktok />
+            </SocialLink>
+            <SocialLink href="#" target="_blank" aria-label="Discord">
+              <FaDiscord />
             </SocialLink>
           </SocialLinks>
         </FooterSection>
