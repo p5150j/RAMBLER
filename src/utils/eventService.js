@@ -36,11 +36,19 @@ export const eventService = {
     // Ensure prices are stored as numbers
     const formattedData = {
       ...eventData,
-      basePrice: Number(eventData.basePrice),
-      extraMemberPrice: Number(eventData.extraMemberPrice),
-      minTeamSize: Number(eventData.minTeamSize),
-      maxTeamSize: Number(eventData.maxTeamSize),
-      registeredTeams: 0, // Counter for registered teams
+      eventType: eventData.eventType || "team", // Default to team event
+      // Format prices based on event type
+      ...(eventData.eventType === "team"
+        ? {
+            basePrice: Number(eventData.basePrice),
+            extraMemberPrice: Number(eventData.extraMemberPrice),
+            minTeamSize: Number(eventData.minTeamSize),
+            maxTeamSize: Number(eventData.maxTeamSize),
+          }
+        : {
+            individualPrice: Number(eventData.individualPrice),
+          }),
+      registeredTeams: 0, // Counter for registered teams/individuals
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -52,10 +60,17 @@ export const eventService = {
     const eventRef = doc(db, EVENTS_COLLECTION, id);
     const formattedData = {
       ...eventData,
-      basePrice: Number(eventData.basePrice),
-      extraMemberPrice: Number(eventData.extraMemberPrice),
-      minTeamSize: Number(eventData.minTeamSize),
-      maxTeamSize: Number(eventData.maxTeamSize),
+      // Format prices based on event type
+      ...(eventData.eventType === "team"
+        ? {
+            basePrice: Number(eventData.basePrice),
+            extraMemberPrice: Number(eventData.extraMemberPrice),
+            minTeamSize: Number(eventData.minTeamSize),
+            maxTeamSize: Number(eventData.maxTeamSize),
+          }
+        : {
+            individualPrice: Number(eventData.individualPrice),
+          }),
       updatedAt: new Date().toISOString(),
     };
     return await updateDoc(eventRef, formattedData);
@@ -67,8 +82,8 @@ export const eventService = {
     return await deleteDoc(eventRef);
   },
 
-  // Register a team for an event
-  registerTeam: async (eventId, teamData) => {
+  // Register a team or individual for an event
+  registerTeam: async (eventId, registrationData) => {
     // First check if event has capacity
     const eventRef = doc(db, EVENTS_COLLECTION, eventId);
     const eventDoc = await getDoc(eventRef);
@@ -82,49 +97,74 @@ export const eventService = {
       throw new Error("Event is at capacity");
     }
 
-    // Calculate total cost
-    const extraMembers = Math.max(
-      0,
-      teamData.members.length - eventData.minTeamSize
-    );
-    const totalCost =
-      eventData.basePrice + extraMembers * eventData.extraMemberPrice;
+    // Calculate total cost based on event type
+    let totalCost = 0;
+
+    if (eventData.eventType === "team") {
+      // For team events, calculate based on team size
+      const extraMembers = Math.max(
+        0,
+        registrationData.members.length - eventData.minTeamSize
+      );
+      totalCost =
+        eventData.basePrice + extraMembers * eventData.extraMemberPrice;
+    } else {
+      // For individual events, use the individual price
+      totalCost = eventData.individualPrice;
+    }
 
     // Create registration record
-    const registrationData = {
+    const formattedRegistrationData = {
       eventId,
-      userId: teamData.userId,
-      members: teamData.members,
+      userId: registrationData.userId,
+      // For team events, use the members array
+      // For individual events, create a single-member array
+      members:
+        eventData.eventType === "team"
+          ? registrationData.members
+          : [
+              {
+                name: registrationData.name,
+                email: registrationData.email,
+                phone: registrationData.phone || "",
+                emergencyContact: registrationData.emergencyContact || "",
+              },
+            ],
       totalCost,
       status: "pending", // pending, confirmed, cancelled
       registeredAt: new Date().toISOString(),
       paymentStatus: "unpaid", // unpaid, paid
-      shirtDetails: eventData.includesShirt
-        ? teamData.members.map((member) => ({
-            memberName: member.name,
-            size: member.shirtSize,
-            collected: false,
-          }))
-        : [],
+      // Only include shirt details for team events with shirts
+      shirtDetails:
+        eventData.eventType === "team" && eventData.includesShirt
+          ? registrationData.members.map((member) => ({
+              memberName: member.name,
+              size: member.shirtSize,
+              collected: false,
+            }))
+          : [],
       eventDetails: {
         title: eventData.title,
         date: eventData.date,
         location: eventData.location,
+        eventType: eventData.eventType,
       },
     };
 
     // Add registration and increment counter atomically
     const registration = await addDoc(
       collection(db, EVENT_REGISTRATIONS_COLLECTION),
-      registrationData
+      formattedRegistrationData
     );
+
+    // Increment the counter by 1 (one team or one individual)
     await updateDoc(eventRef, {
       registeredTeams: increment(1),
     });
 
     return {
       registrationId: registration.id,
-      ...registrationData,
+      ...formattedRegistrationData,
     };
   },
 

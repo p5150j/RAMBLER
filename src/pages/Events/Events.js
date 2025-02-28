@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { eventService } from "../../utils/eventService";
 import TeamRegistrationForm from "../../components/events/TeamRegistrationForm";
+import IndividualRegistrationForm from "../../components/events/IndividualRegistrationForm";
 
 // Memoized Event Card Component
 const EventCard = memo(({ event, onRegister, isRegistered }) => {
@@ -46,22 +47,43 @@ const EventCard = memo(({ event, onRegister, isRegistered }) => {
         <EventDescription>{event.description}</EventDescription>
 
         <EventCardStats>
-          <StatItem>
-            <StatLabel>Team Size</StatLabel>
-            <StatValue>
-              {event.minTeamSize}-{event.maxTeamSize}
-            </StatValue>
-          </StatItem>
-          <StatItem>
-            <StatLabel>Base Price</StatLabel>
-            <StatValue>${event.basePrice}</StatValue>
-          </StatItem>
-          <StatItem>
-            <StatLabel>Teams</StatLabel>
-            <StatValue>
-              {event.registeredTeams}/{event.capacity}
-            </StatValue>
-          </StatItem>
+          {event.eventType === "team" ? (
+            <>
+              <StatItem>
+                <StatLabel>Team Size</StatLabel>
+                <StatValue>
+                  {event.minTeamSize}-{event.maxTeamSize}
+                </StatValue>
+              </StatItem>
+              <StatItem>
+                <StatLabel>Base Price</StatLabel>
+                <StatValue>${event.basePrice}</StatValue>
+              </StatItem>
+              <StatItem>
+                <StatLabel>Teams</StatLabel>
+                <StatValue>
+                  {event.registeredTeams}/{event.capacity}
+                </StatValue>
+              </StatItem>
+            </>
+          ) : (
+            <>
+              <StatItem>
+                <StatLabel>Type</StatLabel>
+                <StatValue>Individual</StatValue>
+              </StatItem>
+              <StatItem>
+                <StatLabel>Price</StatLabel>
+                <StatValue>${event.individualPrice}</StatValue>
+              </StatItem>
+              <StatItem>
+                <StatLabel>Spots</StatLabel>
+                <StatValue>
+                  {event.registeredTeams}/{event.capacity}
+                </StatValue>
+              </StatItem>
+            </>
+          )}
         </EventCardStats>
 
         <Requirements>
@@ -166,14 +188,18 @@ function Events() {
   };
 
   // Handle registration form submission
-  const handleRegistrationSubmit = async (teamData) => {
+  const handleRegistrationSubmit = async (data) => {
     try {
+      // For individual events, the data is already formatted correctly
+      // For team events, we need to pass it as teamData
+      const registrationData =
+        registrationEvent.eventType === "team"
+          ? { userId: currentUser.uid, ...data }
+          : data; // Individual registration data already includes userId
+
       const registration = await eventService.registerTeam(
         registrationEvent.id,
-        {
-          userId: currentUser.uid,
-          ...teamData,
-        }
+        registrationData
       );
 
       setUserRegistrations((prev) => [...prev, registration]);
@@ -231,23 +257,46 @@ function Events() {
             </p>
 
             <EventStats>
-              <StatItem>
-                <div className="label">Team Size</div>
-                <div className="value">
-                  {featuredEvent.minTeamSize}-{featuredEvent.maxTeamSize}{" "}
-                  members
-                </div>
-              </StatItem>
-              <StatItem>
-                <div className="label">Base Price</div>
-                <div className="value">${featuredEvent.basePrice}</div>
-              </StatItem>
-              <StatItem>
-                <div className="label">Teams Registered</div>
-                <div className="value">
-                  {featuredEvent.registeredTeams} / {featuredEvent.capacity}
-                </div>
-              </StatItem>
+              {featuredEvent.eventType === "team" ? (
+                <>
+                  <StatItem>
+                    <div className="label">Team Size</div>
+                    <div className="value">
+                      {featuredEvent.minTeamSize}-{featuredEvent.maxTeamSize}{" "}
+                      members
+                    </div>
+                  </StatItem>
+                  <StatItem>
+                    <div className="label">Base Price</div>
+                    <div className="value">${featuredEvent.basePrice}</div>
+                  </StatItem>
+                  <StatItem>
+                    <div className="label">Teams Registered</div>
+                    <div className="value">
+                      {featuredEvent.registeredTeams} / {featuredEvent.capacity}
+                    </div>
+                  </StatItem>
+                </>
+              ) : (
+                <>
+                  <StatItem>
+                    <div className="label">Event Type</div>
+                    <div className="value">Individual</div>
+                  </StatItem>
+                  <StatItem>
+                    <div className="label">Price</div>
+                    <div className="value">
+                      ${featuredEvent.individualPrice}
+                    </div>
+                  </StatItem>
+                  <StatItem>
+                    <div className="label">Spots Filled</div>
+                    <div className="value">
+                      {featuredEvent.registeredTeams} / {featuredEvent.capacity}
+                    </div>
+                  </StatItem>
+                </>
+              )}
             </EventStats>
             <h3 style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
               Requirements
@@ -291,16 +340,27 @@ function Events() {
           ))}
       </EventsGrid>
 
-      {showRegistrationForm && registrationEvent && (
-        <TeamRegistrationForm
-          event={registrationEvent}
-          onSubmit={handleRegistrationSubmit}
-          onClose={() => {
-            setShowRegistrationForm(false);
-            setRegistrationEvent(null);
-          }}
-        />
-      )}
+      {showRegistrationForm &&
+        registrationEvent &&
+        (registrationEvent.eventType === "team" ? (
+          <TeamRegistrationForm
+            event={registrationEvent}
+            onSubmit={handleRegistrationSubmit}
+            onClose={() => {
+              setShowRegistrationForm(false);
+              setRegistrationEvent(null);
+            }}
+          />
+        ) : (
+          <IndividualRegistrationForm
+            event={registrationEvent}
+            onSuccess={handleRegistrationSubmit}
+            onCancel={() => {
+              setShowRegistrationForm(false);
+              setRegistrationEvent(null);
+            }}
+          />
+        ))}
     </EventsContainer>
   );
 }

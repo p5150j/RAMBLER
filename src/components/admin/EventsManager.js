@@ -124,12 +124,22 @@ function EventsManager() {
                   <Badge type={event.status === "active" ? "active" : "past"}>
                     {event.status === "active" ? "Active" : "Past"}
                   </Badge>
+                  <Badge
+                    type={event.eventType === "team" ? "team" : "individual"}
+                  >
+                    {event.eventType === "team" ? "Team" : "Individual"}
+                  </Badge>
                 </EventTitle>
 
                 <EventMeta>
                   <span>📅 {event.date}</span>
                   <span>📍 {event.location}</span>
-                  <span>💰 {event.basePrice}</span>
+                  <span>
+                    💰{" "}
+                    {event.eventType === "team"
+                      ? `${event.basePrice} (base) + ${event.extraMemberPrice} (per extra)`
+                      : event.individualPrice}
+                  </span>
                 </EventMeta>
 
                 <p

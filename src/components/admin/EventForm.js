@@ -10,10 +10,12 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
       title: "",
       date: "",
       location: "",
+      eventType: "team", // Default to team event type
       basePrice: "", // Base price for 2 members
       extraMemberPrice: "", // Price per extra member
       maxTeamSize: 4, // Default max team size
       minTeamSize: 2, // Default min team size (base team)
+      individualPrice: "", // Price for individual events
       status: "active",
       description: "",
       details: "",
@@ -90,6 +92,23 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
       </FormGroup>
 
       <FormGroup>
+        <Label>Event Type</Label>
+        <Select
+          name="eventType"
+          value={formData.eventType}
+          onChange={handleChange}
+        >
+          <option value="team">Team Event</option>
+          <option value="individual">Individual Event</option>
+        </Select>
+        <HelpText>
+          {formData.eventType === "team"
+            ? "Team events include team sizes, member pricing, and t-shirt options."
+            : "Individual events are simpler with a single registration price per person."}
+        </HelpText>
+      </FormGroup>
+
+      <FormGroup>
         <Label>Date</Label>
         <Input
           type="date"
@@ -110,94 +129,109 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
         />
       </FormGroup>
 
-      <FormGroup>
-        <Label>Base Price (includes {formData.minTeamSize} members)</Label>
-        <Input
-          name="basePrice"
-          value={formData.basePrice}
-          onChange={handleChange}
-          placeholder="$500"
-          required
-        />
-      </FormGroup>
+      {formData.eventType === "team" ? (
+        <>
+          <FormGroup>
+            <Label>Base Price (includes {formData.minTeamSize} members)</Label>
+            <Input
+              name="basePrice"
+              value={formData.basePrice}
+              onChange={handleChange}
+              placeholder="$500"
+              required
+            />
+          </FormGroup>
 
-      <FormGroup>
-        <Label>Extra Member Price</Label>
-        <Input
-          name="extraMemberPrice"
-          value={formData.extraMemberPrice}
-          onChange={handleChange}
-          placeholder="$150"
-          required
-        />
-      </FormGroup>
+          <FormGroup>
+            <Label>Extra Member Price</Label>
+            <Input
+              name="extraMemberPrice"
+              value={formData.extraMemberPrice}
+              onChange={handleChange}
+              placeholder="$150"
+              required
+            />
+          </FormGroup>
 
-      <FormGroup>
-        <Label>Team Size Limits</Label>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <Input
-            name="minTeamSize"
-            value={formData.minTeamSize}
-            onChange={handleChange}
-            placeholder="2"
-            type="number"
-            min="2"
-            style={{ width: "80px" }}
-            required
-          />
-          <span style={{ lineHeight: "40px" }}>to</span>
-          <Input
-            name="maxTeamSize"
-            value={formData.maxTeamSize}
-            onChange={handleChange}
-            placeholder="4"
-            type="number"
-            min="2"
-            style={{ width: "80px" }}
-            required
-          />
-          <span style={{ lineHeight: "40px" }}>members</span>
-        </div>
-      </FormGroup>
-
-      <FormGroup>
-        <Label>Available Shirt Sizes</Label>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-          {["XS", "S", "M", "L", "XL", "2XL"].map((size) => (
-            <label
-              key={size}
-              style={{ display: "flex", alignItems: "center", gap: "5px" }}
-            >
-              <input
-                type="checkbox"
-                checked={formData.shirtSizes.includes(size)}
-                onChange={(e) => {
-                  const newSizes = e.target.checked
-                    ? [...formData.shirtSizes, size]
-                    : formData.shirtSizes.filter((s) => s !== size);
-                  setFormData((prev) => ({
-                    ...prev,
-                    shirtSizes: newSizes,
-                  }));
-                }}
+          <FormGroup>
+            <Label>Team Size Limits</Label>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Input
+                name="minTeamSize"
+                value={formData.minTeamSize}
+                onChange={handleChange}
+                placeholder="2"
+                type="number"
+                min="2"
+                style={{ width: "80px" }}
+                required
               />
-              {size}
-            </label>
-          ))}
-        </div>
-      </FormGroup>
+              <span style={{ lineHeight: "40px" }}>to</span>
+              <Input
+                name="maxTeamSize"
+                value={formData.maxTeamSize}
+                onChange={handleChange}
+                placeholder="4"
+                type="number"
+                min="2"
+                style={{ width: "80px" }}
+                required
+              />
+              <span style={{ lineHeight: "40px" }}>members</span>
+            </div>
+          </FormGroup>
 
-      <FormGroup>
-        <Label>
+          <FormGroup>
+            <Label>Available Shirt Sizes</Label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+              {["XS", "S", "M", "L", "XL", "2XL"].map((size) => (
+                <label
+                  key={size}
+                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.shirtSizes.includes(size)}
+                    onChange={(e) => {
+                      const newSizes = e.target.checked
+                        ? [...formData.shirtSizes, size]
+                        : formData.shirtSizes.filter((s) => s !== size);
+                      setFormData((prev) => ({
+                        ...prev,
+                        shirtSizes: newSizes,
+                      }));
+                    }}
+                  />
+                  {size}
+                </label>
+              ))}
+            </div>
+          </FormGroup>
+
+          <FormGroup>
+            <Label>
+              <Input
+                type="checkbox"
+                name="includesShirt"
+                checked={formData.includesShirt}
+                onChange={handleChange}
+              />
+              Includes free T-shirt for each team member
+            </Label>
+          </FormGroup>
+        </>
+      ) : (
+        <FormGroup>
+          <Label>Individual Registration Price</Label>
           <Input
-            type="checkbox"
-            name="includesShirt"
-            checked={formData.includesShirt}
+            name="individualPrice"
+            value={formData.individualPrice}
             onChange={handleChange}
+            placeholder="$50"
+            required={formData.eventType === "individual"}
           />
-          Includes free T-shirt for each team member
-        </Label>
-      </FormGroup>
+        </FormGroup>
+      )}
 
       <FormGroup>
         <Label>Status</Label>
@@ -233,7 +267,9 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
           name="capacity"
           value={formData.capacity}
           onChange={handleChange}
-          placeholder="50 teams"
+          placeholder={
+            formData.eventType === "team" ? "50 teams" : "100 participants"
+          }
           required
         />
       </FormGroup>
@@ -392,6 +428,12 @@ const ImagePreview = styled.div`
 const ErrorText = styled.span`
   color: ${({ theme }) => theme.colors.primary};
   font-size: 0.85rem;
+`;
+
+const HelpText = styled.p`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin: 0;
 `;
 
 export default EventForm;
