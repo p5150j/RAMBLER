@@ -91,7 +91,12 @@ const EventCard = memo(({ event, onRegister, isRegistered }) => {
         <LocationSection>
           <LocationLabel>📍 {event.location}</LocationLabel>
           <CardMapWrapper>
-            <EventMap location={event.location} height="120px" showPin={true} />
+            <EventMap
+              location={event.location}
+              height="180px"
+              showPin={true}
+              zoom={12}
+            />
           </CardMapWrapper>
         </LocationSection>
 
@@ -349,6 +354,7 @@ function Events() {
                     location={featuredEvent.location}
                     height="100%"
                     showPin={true}
+                    zoom={12}
                   />
                 </SquareMapWrapper>
               </FeaturedMapSection>
@@ -662,8 +668,8 @@ const CardMapWrapper = styled.div`
 `;
 
 const SquareMapWrapper = styled.div`
-  aspect-ratio: 1/1;
   width: 100%;
+  height: 300px;
   overflow: hidden;
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -671,26 +677,20 @@ const SquareMapWrapper = styled.div`
 `;
 
 const FeaturedContentLayout = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 300px;
+  display: flex;
+  flex-direction: column;
   gap: 30px;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const FeaturedMainContent = styled.div`
-  flex: 1;
+  width: 100%;
 `;
 
 const FeaturedMapSection = styled.div`
   display: flex;
   flex-direction: column;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    margin-top: 20px;
-  }
+  width: 100%;
+  margin-top: 20px;
 `;
 
 export default Events;

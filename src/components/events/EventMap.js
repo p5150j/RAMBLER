@@ -2,14 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-const EventMap = ({ location, height = "150px", showPin = true }) => {
+const EventMap = ({
+  location,
+  height = "150px",
+  showPin = true,
+  zoom = 14,
+}) => {
   // Encode the location for the Google Maps embed URL
   const encodedLocation = encodeURIComponent(location);
 
   return (
     <MapContainer style={{ height }}>
       <Map
-        src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d-105.2!3d38.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM4zMCwgLTEwNcKwMTInMDAuMCJX!5e0!3m2!1sen!2sus!4v1707091183577!5m2!1sen!2sus&q=${encodedLocation}`}
+        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodedLocation}&zoom=${zoom}`}
         allowFullScreen=""
         loading="lazy"
         title={`Map showing ${location}`}
