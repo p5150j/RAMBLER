@@ -109,7 +109,7 @@ function Contact() {
             <SocialButtons>
               <SocialButton
                 as="a"
-                href="#"
+                href="https://www.instagram.com/rockymountainrambler500/"
                 target="_blank"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -118,7 +118,7 @@ function Contact() {
               </SocialButton>
               <SocialButton
                 as="a"
-                href="#"
+                href="https://www.facebook.com/share/15zCpQYa84"
                 target="_blank"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -127,7 +127,7 @@ function Contact() {
               </SocialButton>
               <SocialButton
                 as="a"
-                href="#"
+                href="https://www.tiktok.com/@rockymountainrambler500"
                 target="_blank"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}

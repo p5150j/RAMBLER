@@ -8,6 +8,7 @@ import { eventService } from "../../utils/eventService";
 import TeamRegistrationForm from "../../components/events/TeamRegistrationForm";
 import IndividualRegistrationForm from "../../components/events/IndividualRegistrationForm";
 import EventMap from "../../components/events/EventMap";
+import PaymentModal from "../../components/events/PaymentModal";
 
 // Memoized Event Card Component
 const EventCard = memo(({ event, onRegister, isRegistered }) => {
@@ -151,6 +152,8 @@ function Events() {
   const [registrationEvent, setRegistrationEvent] = useState(null);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [currentRegistration, setCurrentRegistration] = useState(null);
 
   // Memoized fetch function
   const fetchData = useCallback(async () => {
@@ -216,16 +219,45 @@ function Events() {
         registrationData
       );
 
-      setUserRegistrations((prev) => [...prev, registration]);
+      // Store the registration data and show payment modal
+      setCurrentRegistration(registration);
       setShowRegistrationForm(false);
-      setRegistrationEvent(null);
-
-      // Refresh data to update registered teams count
-      fetchData();
-      alert("Successfully registered for event!");
+      setShowPaymentModal(true);
     } catch (error) {
       console.error("Registration error:", error);
       alert(error.message || "Failed to register for event");
+    }
+  };
+
+  // Handle successful payment
+  const handlePaymentSuccess = async (paymentResult) => {
+    try {
+      // Update registration with payment details
+      await eventService.updateRegistrationPayment(
+        currentRegistration.registrationId,
+        paymentResult
+      );
+
+      // Update local state
+      setUserRegistrations((prev) => [
+        ...prev,
+        {
+          ...currentRegistration,
+          paymentStatus: "paid",
+          status: "confirmed",
+        },
+      ]);
+
+      // Close payment modal
+      setShowPaymentModal(false);
+      setCurrentRegistration(null);
+
+      // Refresh data to update registered teams count
+      fetchData();
+      alert("Registration and payment successful!");
+    } catch (error) {
+      console.error("Payment success handling error:", error);
+      alert("Payment successful but failed to update registration status");
     }
   };
 
@@ -397,6 +429,19 @@ function Events() {
             }}
           />
         ))}
+
+      {showPaymentModal && currentRegistration && (
+        <PaymentModal
+          event={registrationEvent}
+          registrationData={currentRegistration}
+          totalAmount={currentRegistration.totalCost}
+          onSuccess={handlePaymentSuccess}
+          onCancel={() => {
+            setShowPaymentModal(false);
+            setCurrentRegistration(null);
+          }}
+        />
+      )}
     </EventsContainer>
   );
 }

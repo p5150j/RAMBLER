@@ -83,21 +83,33 @@ function Footer() {
             Where creativity meets the track. $3K budget racing at its finest.
           </p>
           <SocialLinks>
-            <SocialLink href="#" target="_blank" aria-label="Facebook">
+            <SocialLink
+              href="https://www.facebook.com/share/15zCpQYa84"
+              target="_blank"
+              aria-label="Facebook"
+            >
               <FaFacebook />
             </SocialLink>
-            <SocialLink href="#" target="_blank" aria-label="Instagram">
+            <SocialLink
+              href="https://www.instagram.com/rockymountainrambler500/"
+              target="_blank"
+              aria-label="Instagram"
+            >
               <FaInstagram />
             </SocialLink>
-            <SocialLink href="#" target="_blank" aria-label="YouTube">
+            {/* <SocialLink href="#" target="_blank" aria-label="YouTube">
               <FaYoutube />
-            </SocialLink>
-            <SocialLink href="#" target="_blank" aria-label="TikTok">
+            </SocialLink> */}
+            <SocialLink
+              href="https://www.tiktok.com/@rockymountainrambler500"
+              target="_blank"
+              aria-label="TikTok"
+            >
               <FaTiktok />
             </SocialLink>
-            <SocialLink href="#" target="_blank" aria-label="Discord">
+            {/* <SocialLink href="#" target="_blank" aria-label="Discord">
               <FaDiscord />
-            </SocialLink>
+            </SocialLink> */}
           </SocialLinks>
         </FooterSection>
 

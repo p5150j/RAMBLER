@@ -133,7 +133,8 @@ export const eventService = {
       totalCost,
       status: "pending", // pending, confirmed, cancelled
       registeredAt: new Date().toISOString(),
-      paymentStatus: "unpaid", // unpaid, paid
+      paymentStatus: "unpaid", // unpaid, paid, failed
+      paymentDetails: null, // Will be updated after successful payment
       // Only include shirt details for team events with shirts
       shirtDetails:
         eventData.eventType === "team" && eventData.includesShirt
@@ -166,6 +167,31 @@ export const eventService = {
       registrationId: registration.id,
       ...formattedRegistrationData,
     };
+  },
+
+  // Update registration payment status
+  updateRegistrationPayment: async (registrationId, paymentResult) => {
+    const registrationRef = doc(
+      db,
+      EVENT_REGISTRATIONS_COLLECTION,
+      registrationId
+    );
+
+    const paymentDetails = {
+      status: paymentResult.status,
+      transactionId: paymentResult.transactionId,
+      lastFour: paymentResult.lastFour,
+      cardBrand: paymentResult.cardBrand,
+      processedAt: new Date().toISOString(),
+    };
+
+    await updateDoc(registrationRef, {
+      paymentStatus: paymentResult.status === "SUCCESS" ? "paid" : "failed",
+      paymentDetails,
+      status: paymentResult.status === "SUCCESS" ? "confirmed" : "pending",
+    });
+
+    return paymentDetails;
   },
 
   // Get registrations for an event
