@@ -33,16 +33,15 @@ const Nav = styled.nav`
 `;
 
 const Logo = styled(motion(Link))`
-  font-family: "Racing Sans One", sans-serif;
-  font-size: 1.5rem;
-  color: ${({ theme, $scrolled }) =>
-    $scrolled ? theme.colors.textPrimary : "white"};
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  text-shadow: ${({ $scrolled }) =>
-    $scrolled ? "none" : "0 2px 4px rgba(0,0,0,0.3)"};
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
+  img {
+    height: 55px;
+    width: auto;
+    filter: ${({ $scrolled }) => ($scrolled ? "none" : "brightness(1.2)")};
+    transition: filter 0.3s ease;
   }
 `;
 
@@ -227,7 +226,7 @@ function Header() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          RAMBLER 500
+          <img src="./logo.png" alt="Rambler 500 Logo" />
         </Logo>
 
         <NavLinks>
