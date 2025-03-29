@@ -84,10 +84,14 @@ export const eventService = {
 
   // Register a team or individual for an event
   registerTeam: async (eventId, registrationData) => {
+    console.log("Starting team registration:", { eventId, registrationData });
+
     // First check if event has capacity
     const eventRef = doc(db, EVENTS_COLLECTION, eventId);
     const eventDoc = await getDoc(eventRef);
     const eventData = eventDoc.data();
+
+    console.log("Event data retrieved:", eventData);
 
     if (!eventDoc.exists()) {
       throw new Error("Event not found");
@@ -98,30 +102,17 @@ export const eventService = {
     }
 
     // Calculate total cost based on event type
-    let totalCost = 0;
-
-    if (eventData.eventType === "team") {
-      // For team events, calculate based on team size
-      const extraMembers = Math.max(
-        0,
-        registrationData.members.length - eventData.minTeamSize
-      );
-      totalCost =
-        eventData.basePrice + extraMembers * eventData.extraMemberPrice;
-    } else {
-      // For individual events, use the individual price
-      totalCost = eventData.individualPrice;
-    }
+    let totalCost = registrationData.totalCost;
 
     // Create registration record
     const formattedRegistrationData = {
       eventId,
       userId: registrationData.userId,
-      // For team events, use the members array
+      // For team events, use the teamMembers array
       // For individual events, create a single-member array
       members:
         eventData.eventType === "team"
-          ? registrationData.members
+          ? registrationData.teamMembers
           : [
               {
                 name: registrationData.name,
@@ -138,7 +129,7 @@ export const eventService = {
       // Only include shirt details for team events with shirts
       shirtDetails:
         eventData.eventType === "team" && eventData.includesShirt
-          ? registrationData.members.map((member) => ({
+          ? registrationData.teamMembers.map((member) => ({
               memberName: member.name,
               size: member.shirtSize,
               collected: false,
@@ -152,21 +143,32 @@ export const eventService = {
       },
     };
 
-    // Add registration and increment counter atomically
-    const registration = await addDoc(
-      collection(db, EVENT_REGISTRATIONS_COLLECTION),
-      formattedRegistrationData
-    );
+    console.log("Formatted registration data:", formattedRegistrationData);
 
-    // Increment the counter by 1 (one team or one individual)
-    await updateDoc(eventRef, {
-      registeredTeams: increment(1),
-    });
+    try {
+      // Add registration and increment counter atomically
+      const registration = await addDoc(
+        collection(db, EVENT_REGISTRATIONS_COLLECTION),
+        formattedRegistrationData
+      );
 
-    return {
-      registrationId: registration.id,
-      ...formattedRegistrationData,
-    };
+      console.log("Registration document created:", registration.id);
+
+      // Increment the counter by 1 (one team or one individual)
+      await updateDoc(eventRef, {
+        registeredTeams: increment(1),
+      });
+
+      console.log("Event counter incremented successfully");
+
+      return {
+        registrationId: registration.id,
+        ...formattedRegistrationData,
+      };
+    } catch (error) {
+      console.error("Error creating registration:", error);
+      throw new Error(`Failed to create registration: ${error.message}`);
+    }
   },
 
   // Update registration payment status

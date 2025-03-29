@@ -14,6 +14,8 @@ import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 import Admin from "./pages/Admin/Admin";
+import Register from "./pages/Register/Register";
+import RegistrationSuccess from "./pages/Register/RegistrationSuccess";
 
 // Components
 import Header from "./components/Header/Header";
@@ -74,6 +76,11 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/registration-success"
+                  element={<RegistrationSuccess />}
+                />
                 <Route
                   path="/admin"
                   element={

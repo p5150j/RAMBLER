@@ -915,7 +915,7 @@ function Home() {
             viewport={{ once: true }}
           >
             <CtaButton
-              to="/signup"
+              to="/register"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

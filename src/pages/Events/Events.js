@@ -207,42 +207,58 @@ function Events() {
   // Handle registration form submission
   const handleRegistrationSubmit = async (data) => {
     try {
-      // For individual events, the data is already formatted correctly
-      // For team events, we need to pass it as teamData
-      const registrationData =
-        registrationEvent.eventType === "team"
-          ? { userId: currentUser.uid, ...data }
-          : data; // Individual registration data already includes userId
+      console.log("Registration data received:", data);
+      console.log("Registration event:", registrationEvent);
 
-      const registration = await eventService.registerTeam(
-        registrationEvent.id,
-        registrationData
-      );
-
-      // Store the registration data and show payment modal
-      setCurrentRegistration(registration);
       setShowRegistrationForm(false);
       setShowPaymentModal(true);
+
+      const registration = {
+        eventId: registrationEvent.id,
+        userId: currentUser.uid,
+        totalCost: data.totalCost || registrationEvent.basePrice,
+        ...data,
+      };
+
+      console.log("Setting current registration:", registration);
+      setCurrentRegistration(registration);
     } catch (error) {
       console.error("Registration error:", error);
-      alert(error.message || "Failed to register for event");
+      alert(error.message || "Failed to prepare registration");
     }
   };
 
   // Handle successful payment
   const handlePaymentSuccess = async (paymentResult) => {
     try {
-      // Update registration with payment details
-      await eventService.updateRegistrationPayment(
-        currentRegistration.registrationId,
+      console.log(
+        "Starting registration process with payment result:",
         paymentResult
       );
+      console.log("Current registration data:", currentRegistration);
+      console.log("Registration event:", registrationEvent);
+
+      // Now create the registration with payment details
+      console.log("Creating registration in eventService...");
+      const registration = await eventService.registerTeam(
+        registrationEvent.id,
+        currentRegistration
+      );
+      console.log("Registration created:", registration);
+
+      // Update registration with payment details
+      console.log("Updating registration with payment details...");
+      await eventService.updateRegistrationPayment(
+        registration.registrationId,
+        paymentResult
+      );
+      console.log("Payment details updated successfully");
 
       // Update local state
       setUserRegistrations((prev) => [
         ...prev,
         {
-          ...currentRegistration,
+          ...registration,
           paymentStatus: "paid",
           status: "confirmed",
         },
@@ -253,11 +269,19 @@ function Events() {
       setCurrentRegistration(null);
 
       // Refresh data to update registered teams count
-      fetchData();
+      await fetchData();
       alert("Registration and payment successful!");
     } catch (error) {
-      console.error("Payment success handling error:", error);
-      alert("Payment successful but failed to update registration status");
+      console.error("Registration error details:", {
+        error,
+        currentRegistration,
+        registrationEvent,
+        paymentResult,
+      });
+      alert(
+        "Payment successful but failed to complete registration. Error: " +
+          error.message
+      );
     }
   };
 
@@ -437,6 +461,7 @@ function Events() {
           totalAmount={currentRegistration.totalCost}
           onSuccess={handlePaymentSuccess}
           onCancel={() => {
+            console.log("Payment modal cancelled");
             setShowPaymentModal(false);
             setCurrentRegistration(null);
           }}

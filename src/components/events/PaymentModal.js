@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { paymentService } from "../../utils/paymentService";
-import { payments } from "@square/web-sdk";
 
 const PaymentModal = ({
   event,
@@ -11,64 +10,95 @@ const PaymentModal = ({
   onSuccess,
   onCancel,
 }) => {
+  console.log("PaymentModal props:", {
+    event,
+    registrationData,
+    totalAmount,
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [card, setCard] = useState(null);
-  const [paymentRequest, setPaymentRequest] = useState(null);
+  const cardContainerRef = useRef(null);
+  const cardInstanceRef = useRef(null);
 
   useEffect(() => {
+    let mounted = true;
+
+    const initializePayment = async () => {
+      try {
+        console.log("[PaymentModal] Starting payment initialization");
+        setIsLoading(true);
+        setError(null);
+
+        const paymentsInstance = await paymentService.initializePayment();
+        if (!mounted) return;
+
+        if (!cardContainerRef.current) {
+          throw new Error("Card container not found");
+        }
+
+        console.log("[PaymentModal] Creating card instance");
+        const cardInstance = await paymentsInstance.card();
+        if (!mounted) {
+          cardInstance.destroy().catch(console.error);
+          return;
+        }
+
+        console.log("[PaymentModal] Attaching card to container");
+        await cardInstance.attach(cardContainerRef.current);
+        if (!mounted) {
+          cardInstance.destroy().catch(console.error);
+          return;
+        }
+
+        console.log("[PaymentModal] Card attached successfully");
+        cardInstanceRef.current = cardInstance;
+        setCard(cardInstance);
+      } catch (err) {
+        console.error("[PaymentModal] Initialization error:", err);
+        if (mounted) {
+          setError(err.message || "Failed to initialize payment system");
+        }
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
     initializePayment();
+
+    return () => {
+      mounted = false;
+      if (cardInstanceRef.current) {
+        console.log("[PaymentModal] Destroying card instance");
+        cardInstanceRef.current.destroy().catch(console.error);
+        cardInstanceRef.current = null;
+      }
+    };
   }, []);
-
-  const initializePayment = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      // Initialize Square payments
-      const paymentsInstance = await paymentService.initializePayment();
-
-      // Create payment request
-      const request = await paymentService.createPaymentRequest(totalAmount);
-      setPaymentRequest(request);
-
-      // Initialize card
-      const cardInstance = await payments.card({
-        elementId: "card-container",
-        style: {
-          input: {
-            fontSize: "16px",
-            color: "#333333",
-            placeholderColor: "#999999",
-          },
-          "input::placeholder": {
-            color: "#999999",
-          },
-        },
-      });
-
-      setCard(cardInstance);
-    } catch (err) {
-      console.error("Payment initialization error:", err);
-      setError("Failed to initialize payment system");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!card || !paymentRequest) return;
+    if (!card) return;
 
     try {
       setIsLoading(true);
       setError(null);
 
-      // Process payment
-      const result = await paymentService.processPayment(paymentRequest, card);
+      // Get a payment token
+      const result = await card.tokenize();
 
-      if (result.status === "SUCCESS") {
-        onSuccess(result);
+      if (result.status === "OK") {
+        // Include more payment details in the success callback
+        onSuccess({
+          status: "SUCCESS",
+          transactionId: result.token,
+          lastFour: result.details?.card?.last4 || "0000",
+          cardBrand: result.details?.card?.brand || "unknown",
+          token: result.token,
+        });
       } else {
         setError("Payment failed. Please try again.");
       }
@@ -104,8 +134,18 @@ const PaymentModal = ({
           </SummaryItem>
         </PaymentSummary>
 
+        <TestModeNotice>
+          <h4>🧪 Test Mode</h4>
+          <p>Use these test card numbers:</p>
+          <ul>
+            <li>Success: 4111 1111 1111 1111</li>
+            <li>Declined: 4000 0000 0000 0002</li>
+          </ul>
+          <p>Use any future expiry date and any 3 digits for CVV</p>
+        </TestModeNotice>
+
         <PaymentForm onSubmit={handleSubmit}>
-          <CardContainer id="card-container" />
+          <CardContainer ref={cardContainerRef} />
 
           {error && <ErrorText>{error}</ErrorText>}
 
@@ -246,6 +286,35 @@ const ErrorText = styled.div`
   color: ${({ theme }) => theme.colors.error};
   font-size: 0.9rem;
   text-align: center;
+`;
+
+const TestModeNotice = styled.div`
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+
+  h4 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+  }
+
+  ul {
+    margin: 10px 0;
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+    font-style: italic;
+  }
 `;
 
 export default PaymentModal;

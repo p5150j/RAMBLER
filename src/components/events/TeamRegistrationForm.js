@@ -48,23 +48,23 @@ const TeamRegistrationForm = ({ event, onSubmit, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate all members have complete info
-    const isComplete = teamMembers.every(
+    // Validate required fields
+    const hasEmptyFields = teamMembers.some(
       (member) =>
-        member.name &&
-        member.email &&
-        member.phone &&
-        (!event.includesShirt || member.shirtSize)
+        !member.name ||
+        !member.email ||
+        (event.includesShirt && !member.shirtSize)
     );
 
-    if (!isComplete) {
-      setError("Please complete all team member information");
+    if (hasEmptyFields) {
+      setError("Please fill in all required fields for each team member");
       return;
     }
 
+    const total = calculateTotal();
     onSubmit({
-      members: teamMembers,
-      totalAmount: calculateTotal(),
+      teamMembers,
+      totalCost: total,
     });
   };
 
