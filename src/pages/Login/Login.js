@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { userService } from "../../utils/userService";
+import { Helmet } from "react-helmet-async";
 
 import {
   AuthContainer,
@@ -135,81 +136,110 @@ function Login() {
   };
 
   return (
-    <AuthContainer>
-      <AuthCard
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <AuthTitle>Welcome Back</AuthTitle>
-        {action && (
-          <p
-            style={{
-              textAlign: "center",
-              marginBottom: "20px",
-              color: "#B0B0B0",
-            }}
-          >
-            {action === "register"
-              ? "Sign in to register for this event"
-              : "Sign in to add items to your cart"}
-          </p>
-        )}
+    <>
+      <Helmet>
+        <title>Rocky Mountain Rambler 500 | Login</title>
+        <meta
+          name="description"
+          content="Login to your Rocky Mountain Rambler 500 account to manage your registrations, view event details, and access exclusive content."
+        />
+        <meta
+          property="og:title"
+          content="Rocky Mountain Rambler 500 | Login"
+        />
+        <meta
+          property="og:description"
+          content="Login to your Rocky Mountain Rambler 500 account to manage your registrations, view event details, and access exclusive content."
+        />
+        <meta
+          property="og:url"
+          content="https://rockymountainrambler500.com/login"
+        />
+        <meta
+          property="twitter:title"
+          content="Rocky Mountain Rambler 500 | Login"
+        />
+        <meta
+          property="twitter:description"
+          content="Login to your Rocky Mountain Rambler 500 account to manage your registrations, view event details, and access exclusive content."
+        />
+      </Helmet>
+      <AuthContainer>
+        <AuthCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <AuthTitle>Welcome Back</AuthTitle>
+          {action && (
+            <p
+              style={{
+                textAlign: "center",
+                marginBottom: "20px",
+                color: "#B0B0B0",
+              }}
+            >
+              {action === "register"
+                ? "Sign in to register for this event"
+                : "Sign in to add items to your cart"}
+            </p>
+          )}
 
-        <AuthForm onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              autoComplete="email"
+          <AuthForm onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                autoComplete="email"
+                disabled={isLoading || actionLoading}
+              />
+              {errors.email && <ErrorText>{errors.email}</ErrorText>}
+            </FormGroup>
+
+            <FormGroup>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                disabled={isLoading || actionLoading}
+              />
+              {errors.password && <ErrorText>{errors.password}</ErrorText>}
+            </FormGroup>
+
+            {errors.submit && <ErrorText>{errors.submit}</ErrorText>}
+
+            <SubmitButton
+              type="submit"
               disabled={isLoading || actionLoading}
-            />
-            {errors.email && <ErrorText>{errors.email}</ErrorText>}
-          </FormGroup>
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {isLoading
+                ? "Signing in..."
+                : actionLoading
+                ? action === "register"
+                  ? "Registering..."
+                  : "Adding to cart..."
+                : "Sign In"}
+            </SubmitButton>
+          </AuthForm>
 
-          <FormGroup>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              autoComplete="current-password"
-              disabled={isLoading || actionLoading}
-            />
-            {errors.password && <ErrorText>{errors.password}</ErrorText>}
-          </FormGroup>
-
-          {errors.submit && <ErrorText>{errors.submit}</ErrorText>}
-
-          <SubmitButton
-            type="submit"
-            disabled={isLoading || actionLoading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {isLoading
-              ? "Signing in..."
-              : actionLoading
-              ? action === "register"
-                ? "Registering..."
-                : "Adding to cart..."
-              : "Sign In"}
-          </SubmitButton>
-        </AuthForm>
-
-        <AuthLink>
-          Don't have an account? <Link to="/signup">Sign Up</Link>
-        </AuthLink>
-      </AuthCard>
-    </AuthContainer>
+          <AuthLink>
+            Don't have an account? <Link to="/signup">Sign Up</Link>
+          </AuthLink>
+        </AuthCard>
+      </AuthContainer>
+    </>
   );
 }
 

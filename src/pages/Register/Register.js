@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import PaymentForm from "../../components/PaymentForm";
 import { db } from "../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
+import { Helmet } from "react-helmet-async";
 
 const RegisterContainer = styled.div`
   max-width: 1200px;
@@ -176,126 +177,155 @@ function Register() {
   };
 
   return (
-    <RegisterContainer>
-      <RegisterHeader>
-        <Title>Register for the Rocky Mountain Rambler 500</Title>
-        <Subtitle>
-          Join us for the most exciting budget racing event in the Rockies. Fill
-          out your registration details below and secure your spot!
-        </Subtitle>
-      </RegisterHeader>
-
-      <RegistrationForm onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label>Full Name *</Label>
-          <Input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Email *</Label>
-          <Input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Phone Number *</Label>
-          <Input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Car Make *</Label>
-          <Input
-            type="text"
-            name="carMake"
-            value={formData.carMake}
-            onChange={handleInputChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Car Model *</Label>
-          <Input
-            type="text"
-            name="carModel"
-            value={formData.carModel}
-            onChange={handleInputChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Car Year *</Label>
-          <Input
-            type="number"
-            name="carYear"
-            value={formData.carYear}
-            onChange={handleInputChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Team Name (Optional)</Label>
-          <Input
-            type="text"
-            name="teamName"
-            value={formData.teamName}
-            onChange={handleInputChange}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Racing Experience *</Label>
-          <Select
-            name="experience"
-            value={formData.experience}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-          </Select>
-        </FormGroup>
-
-        {formError && <ErrorMessage>{formError}</ErrorMessage>}
-      </RegistrationForm>
-
-      <RegistrationFee>
-        <h2>Registration Fee</h2>
-        <FeeAmount>$100</FeeAmount>
-        <p>
-          Includes event entry, participant t-shirt, and post-race celebration
-        </p>
-      </RegistrationFee>
-
-      {/* Only show payment form if all required fields are filled */}
-      {validateForm() && (
-        <PaymentForm
-          amount={100}
-          onSuccess={handlePaymentSuccess}
-          disabled={isSubmitting}
+    <>
+      <Helmet>
+        <title>Rocky Mountain Rambler 500 | Register</title>
+        <meta
+          name="description"
+          content="Register for the Rocky Mountain Rambler 500 event. Join the ultimate beater car challenge and experience the thrill of budget racing in the Rocky Mountains."
         />
-      )}
-    </RegisterContainer>
+        <meta
+          property="og:title"
+          content="Rocky Mountain Rambler 500 | Register"
+        />
+        <meta
+          property="og:description"
+          content="Register for the Rocky Mountain Rambler 500 event. Join the ultimate beater car challenge and experience the thrill of budget racing in the Rocky Mountains."
+        />
+        <meta
+          property="og:url"
+          content="https://rockymountainrambler500.com/register"
+        />
+        <meta
+          property="twitter:title"
+          content="Rocky Mountain Rambler 500 | Register"
+        />
+        <meta
+          property="twitter:description"
+          content="Register for the Rocky Mountain Rambler 500 event. Join the ultimate beater car challenge and experience the thrill of budget racing in the Rocky Mountains."
+        />
+      </Helmet>
+      <RegisterContainer>
+        <RegisterHeader>
+          <Title>Register for the Rocky Mountain Rambler 500</Title>
+          <Subtitle>
+            Join us for the most exciting budget racing event in the Rockies.
+            Fill out your registration details below and secure your spot!
+          </Subtitle>
+        </RegisterHeader>
+
+        <RegistrationForm onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label>Full Name *</Label>
+            <Input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Email *</Label>
+            <Input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Phone Number *</Label>
+            <Input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Car Make *</Label>
+            <Input
+              type="text"
+              name="carMake"
+              value={formData.carMake}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Car Model *</Label>
+            <Input
+              type="text"
+              name="carModel"
+              value={formData.carModel}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Car Year *</Label>
+            <Input
+              type="number"
+              name="carYear"
+              value={formData.carYear}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Team Name (Optional)</Label>
+            <Input
+              type="text"
+              name="teamName"
+              value={formData.teamName}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Racing Experience *</Label>
+            <Select
+              name="experience"
+              value={formData.experience}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </Select>
+          </FormGroup>
+
+          {formError && <ErrorMessage>{formError}</ErrorMessage>}
+        </RegistrationForm>
+
+        <RegistrationFee>
+          <h2>Registration Fee</h2>
+          <FeeAmount>$100</FeeAmount>
+          <p>
+            Includes event entry, participant t-shirt, and post-race celebration
+          </p>
+        </RegistrationFee>
+
+        {/* Only show payment form if all required fields are filled */}
+        {validateForm() && (
+          <PaymentForm
+            amount={100}
+            onSuccess={handlePaymentSuccess}
+            disabled={isSubmitting}
+          />
+        )}
+      </RegisterContainer>
+    </>
   );
 }
 

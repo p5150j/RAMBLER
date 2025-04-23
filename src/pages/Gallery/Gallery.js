@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { galleryService } from "../../utils/galleryService";
 import { useInView } from "react-intersection-observer";
+import { Helmet } from "react-helmet-async";
 
 const GalleryContainer = styled.div`
   padding: 20px;
@@ -277,69 +278,100 @@ const Gallery = () => {
   };
 
   return (
-    <GalleryContainer>
-      <GalleryGrid>
+    <>
+      <Helmet>
+        <title>Rocky Mountain Rambler 500 | Gallery</title>
+        <meta
+          name="description"
+          content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+        />
+        <meta
+          property="og:title"
+          content="Rocky Mountain Rambler 500 | Gallery"
+        />
+        <meta
+          property="og:description"
+          content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+        />
+        <meta
+          property="og:url"
+          content="https://rockymountainrambler500.com/gallery"
+        />
+        <meta
+          property="twitter:title"
+          content="Rocky Mountain Rambler 500 | Gallery"
+        />
+        <meta
+          property="twitter:description"
+          content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+        />
+      </Helmet>
+      <GalleryContainer>
+        <GalleryGrid>
+          <AnimatePresence>
+            {items.map((item) => (
+              <GalleryItem
+                key={item.id}
+                className={item.size}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {renderMediaContent(item)}
+              </GalleryItem>
+            ))}
+          </AnimatePresence>
+        </GalleryGrid>
+
+        {/* Load more trigger */}
+        <div ref={loadMoreRef}>
+          {isLoading && (
+            <LoadingSpinner
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+          )}
+        </div>
+
+        {/* Modal */}
         <AnimatePresence>
-          {items.map((item) => (
-            <GalleryItem
-              key={item.id}
-              className={item.size}
+          {selectedItem && (
+            <Modal
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              onClick={() => setSelectedItem(null)}
             >
-              {renderMediaContent(item)}
-            </GalleryItem>
-          ))}
+              <ModalContent
+                onClick={(e) => e.stopPropagation()}
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.8 }}
+              >
+                <CloseButton onClick={() => setSelectedItem(null)}>
+                  ×
+                </CloseButton>
+                {selectedItem.type === "video" ? (
+                  <video
+                    src={selectedItem.url}
+                    autoPlay
+                    controls
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={selectedItem.url}
+                    alt={selectedItem.title || "Gallery image"}
+                  />
+                )}
+              </ModalContent>
+            </Modal>
+          )}
         </AnimatePresence>
-      </GalleryGrid>
-
-      {/* Load more trigger */}
-      <div ref={loadMoreRef}>
-        {isLoading && (
-          <LoadingSpinner
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-        )}
-      </div>
-
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedItem && (
-          <Modal
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedItem(null)}
-          >
-            <ModalContent
-              onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            >
-              <CloseButton onClick={() => setSelectedItem(null)}>×</CloseButton>
-              {selectedItem.type === "video" ? (
-                <video
-                  src={selectedItem.url}
-                  autoPlay
-                  controls
-                  loop
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={selectedItem.url}
-                  alt={selectedItem.title || "Gallery image"}
-                />
-              )}
-            </ModalContent>
-          </Modal>
-        )}
-      </AnimatePresence>
-    </GalleryContainer>
+      </GalleryContainer>
+    </>
   );
 };
 
