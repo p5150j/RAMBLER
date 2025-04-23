@@ -194,7 +194,7 @@ function Register() {
         />
         <meta
           property="og:url"
-          content="https://rockymountainrambler500.com/register"
+          content="https://rockymtnrambler.com/register"
         />
         <meta
           property="twitter:title"
@@ -203,6 +203,10 @@ function Register() {
         <meta
           property="twitter:description"
           content="Register for the Rocky Mountain Rambler 500 event. Join the ultimate beater car challenge and experience the thrill of budget racing in the Rocky Mountains."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/register"
         />
       </Helmet>
       <RegisterContainer>

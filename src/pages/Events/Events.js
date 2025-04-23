@@ -303,6 +303,8 @@ function Events() {
           name="description"
           content="Discover upcoming events for the Rocky Mountain Rambler 500. Join us for the ultimate beater car challenge, featuring car shows, adventure courses, and trophy ceremonies."
         />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/events" />
         <meta
           property="og:title"
           content="Rocky Mountain Rambler 500 | Events"
@@ -312,8 +314,16 @@ function Events() {
           content="Discover upcoming events for the Rocky Mountain Rambler 500. Join us for the ultimate beater car challenge, featuring car shows, adventure courses, and trophy ceremonies."
         />
         <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/events"
+          property="og:image"
+          content="https://rockymtnrambler.com/logo512.png"
+        />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:site_name" content="Rocky Mountain Rambler 500" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/events"
         />
         <meta
           property="twitter:title"
@@ -322,6 +332,10 @@ function Events() {
         <meta
           property="twitter:description"
           content="Discover upcoming events for the Rocky Mountain Rambler 500. Join us for the ultimate beater car challenge, featuring car shows, adventure courses, and trophy ceremonies."
+        />
+        <meta
+          property="twitter:image"
+          content="https://rockymtnrambler.com/logo512.png"
         />
       </Helmet>
       <EventsContainer>

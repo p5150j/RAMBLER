@@ -151,10 +151,7 @@ function Login() {
           property="og:description"
           content="Login to your Rocky Mountain Rambler 500 account to manage your registrations, view event details, and access exclusive content."
         />
-        <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/login"
-        />
+        <meta property="og:url" content="https://rockymtnrambler.com/login" />
         <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Login"
@@ -162,6 +159,10 @@ function Login() {
         <meta
           property="twitter:description"
           content="Login to your Rocky Mountain Rambler 500 account to manage your registrations, view event details, and access exclusive content."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/login"
         />
       </Helmet>
       <AuthContainer>

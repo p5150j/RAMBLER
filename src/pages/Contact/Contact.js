@@ -28,10 +28,7 @@ function Contact() {
           property="og:description"
           content="Get in touch with the Rocky Mountain Rambler 500 team. Contact us for event information, sponsorship opportunities, or any questions about our beater car racing series."
         />
-        <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/contact"
-        />
+        <meta property="og:url" content="https://rockymtnrambler.com/contact" />
         <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Contact Us"
@@ -39,6 +36,10 @@ function Contact() {
         <meta
           property="twitter:description"
           content="Get in touch with the Rocky Mountain Rambler 500 team. Contact us for event information, sponsorship opportunities, or any questions about our beater car racing series."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/contact"
         />
       </Helmet>
       <ContactContainer>

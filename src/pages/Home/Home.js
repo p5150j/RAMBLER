@@ -713,22 +713,31 @@ function Home() {
           name="description"
           content="Welcome to the Rocky Mountain Rambler 500 - where automotive passion meets adventure. Join us for an unforgettable experience of beater car racing, creativity, and community."
         />
-        <meta property="og:title" content="Rocky Mountain Rambler 500 | Home" />
+        <meta property="og:title" content="Rocky Mountain Rambler 500" />
         <meta
           property="og:description"
-          content="Welcome to the Rocky Mountain Rambler 500 - where automotive passion meets adventure. Join us for an unforgettable experience of beater car racing, creativity, and community."
+          content="Join the Rocky Mountain Rambler 500 - an annual event where enthusiasts take their beater cars, fix them up just enough to run, and put them to the test. Experience fun, creativity, and the ultimate gearhead challenge."
         />
+        <meta property="og:url" content="https://rockymtnrambler.com/" />
         <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/"
+          property="og:image"
+          content="https://rockymtnrambler.com/logo.png"
         />
-        <meta
-          property="twitter:title"
-          content="Rocky Mountain Rambler 500 | Home"
-        />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:site_name" content="Rocky Mountain Rambler 500" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://rockymtnrambler.com/" />
+        <meta property="twitter:title" content="Rocky Mountain Rambler 500" />
         <meta
           property="twitter:description"
-          content="Welcome to the Rocky Mountain Rambler 500 - where automotive passion meets adventure. Join us for an unforgettable experience of beater car racing, creativity, and community."
+          content="Join the Rocky Mountain Rambler 500 - an annual event where enthusiasts take their beater cars, fix them up just enough to run, and put them to the test. Experience fun, creativity, and the ultimate gearhead challenge."
+        />
+        <meta
+          property="twitter:image"
+          content="https://rockymtnrambler.com/logo.png"
         />
       </Helmet>
       <HeroSection>

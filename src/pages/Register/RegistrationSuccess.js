@@ -93,7 +93,7 @@ function RegistrationSuccess() {
           />
           <meta
             property="og:url"
-            content="https://rockymountainrambler500.com/registration-success"
+            content="https://rockymtnrambler.com/registration-success"
           />
           <meta
             property="twitter:title"
@@ -102,6 +102,10 @@ function RegistrationSuccess() {
           <meta
             property="twitter:description"
             content="Thank you for registering for the Rocky Mountain Rambler 500! Your registration has been successfully processed. We look forward to seeing you at the event."
+          />
+          <meta
+            property="twitter:url"
+            content="https://rockymtnrambler.com/registration-success"
           />
         </Helmet>
         <SuccessContainer>
@@ -139,7 +143,7 @@ function RegistrationSuccess() {
         />
         <meta
           property="og:url"
-          content="https://rockymountainrambler500.com/registration-success"
+          content="https://rockymtnrambler.com/registration-success"
         />
         <meta
           property="twitter:title"
@@ -148,6 +152,10 @@ function RegistrationSuccess() {
         <meta
           property="twitter:description"
           content="Thank you for registering for the Rocky Mountain Rambler 500! Your registration has been successfully processed. We look forward to seeing you at the event."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/registration-success"
         />
       </Helmet>
       <SuccessContainer>

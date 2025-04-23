@@ -293,10 +293,7 @@ const Gallery = () => {
           property="og:description"
           content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
         />
-        <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/gallery"
-        />
+        <meta property="og:url" content="https://rockymtnrambler.com/gallery" />
         <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Gallery"
@@ -304,6 +301,10 @@ const Gallery = () => {
         <meta
           property="twitter:description"
           content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/gallery"
         />
       </Helmet>
       <GalleryContainer>

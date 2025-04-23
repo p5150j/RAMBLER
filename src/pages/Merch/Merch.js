@@ -370,10 +370,7 @@ function Merch() {
           property="og:description"
           content="Shop official Rocky Mountain Rambler 500 merchandise. Show your support with our collection of apparel, accessories, and memorabilia from the ultimate beater car event."
         />
-        <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/merch"
-        />
+        <meta property="og:url" content="https://rockymtnrambler.com/merch" />
         <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Merchandise"
@@ -381,6 +378,10 @@ function Merch() {
         <meta
           property="twitter:description"
           content="Shop official Rocky Mountain Rambler 500 merchandise. Show your support with our collection of apparel, accessories, and memorabilia from the ultimate beater car event."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/merch"
         />
       </Helmet>
       <MerchContainer>
