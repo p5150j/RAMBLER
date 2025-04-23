@@ -1,18 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
-import DefaultMetaTags from "./components/DefaultMetaTags";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <HelmetProvider>
-      <DefaultMetaTags />
-      <App />
-    </HelmetProvider>
+    <App />
   </React.StrictMode>
 );
 
