@@ -333,7 +333,7 @@ const SponsorsSection = styled.section`
 
 const SponsorsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   align-items: center;
   justify-items: center;
@@ -876,14 +876,66 @@ function Home() {
         <Container>
           <SectionTitle>Our Sponsors</SectionTitle>
           <SponsorsGrid>
-            <SponsorLogo
-              src="https://arusimages.s3.us-west-2.amazonaws.com/logo1.png"
-              alt="Sponsor 1"
-            />
-            <SponsorLogo
-              src="https://arusimages.s3.us-west-2.amazonaws.com/logo2.png"
-              alt="Sponsor 2"
-            />
+            <a
+              href="https://www.pineridgeseamlessgutters.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SponsorLogo
+                src="https://arusimages.s3.us-west-2.amazonaws.com/logo2.png"
+                alt="Pine Ridge Seamless Gutters"
+              />
+            </a>
+            <a
+              href="https://www.blackmonarchhotel.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SponsorLogo
+                src="https://arusimages.s3.us-west-2.amazonaws.com/logo1.png"
+                alt="Black Monarch Hotel"
+              />
+            </a>
+            <a
+              href="https://www.squatchdisposal.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SponsorLogo
+                src="https://arusimages.s3.us-west-2.amazonaws.com/sdtranslogo.png"
+                alt="Squatch Disposal"
+              />
+            </a>
+            <a
+              href="https://westernskiesco.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SponsorLogo
+                src="https://arusimages.s3.us-west-2.amazonaws.com/WSDC_Logo_for_Shopify_200x200_96_dpi.png"
+                alt="Western Skies Design Co"
+              />
+            </a>
+            <a
+              href="https://www.facebook.com/people/Taylor-Built-painting-and-remodeling/100063595890182/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SponsorLogo
+                src="https://arusimages.s3.us-west-2.amazonaws.com/tbtranslogo.png"
+                alt="Taylor Built Painting and Remodeling"
+              />
+            </a>
+            <a
+              href="https://rawsonroofing.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SponsorLogo
+                src="https://arusimages.s3.us-west-2.amazonaws.com/rawsontransparent.png"
+                alt="Rawson Roofing"
+              />
+            </a>
           </SponsorsGrid>
         </Container>
       </SponsorsSection>
