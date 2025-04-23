@@ -5,6 +5,23 @@ publish = "build"
 [build.environment]
 NODE_VERSION = "16.20.0"
 
+[build.processing]
+skip_processing = false
+
+[build.processing.html]
+pretty_urls = true
+
+# Prerender specific routes
+[[redirects]]
+from = "/events"
+to = "/events"
+status = 200
+force = true
+
+[redirects.headers]
+X-Robots-Tag = "all"
+cache-control = "public, max-age=0, must-revalidate"
+
 # SPA fallback
 [[redirects]]
 from = "/*"

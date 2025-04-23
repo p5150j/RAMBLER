@@ -143,46 +143,6 @@ const FeaturedEventCard = memo(({ event, onRegister, isRegistered }) => {
   );
 });
 
-// At the top of the file, after imports
-const EventsMetaTags = () => (
-  <Helmet>
-    <title>
-      Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
-    </title>
-    <meta
-      name="description"
-      content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rockymtnrambler.com/events" />
-    <meta
-      property="og:title"
-      content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-    />
-    <meta
-      property="og:description"
-      content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-    />
-    <meta
-      property="og:image"
-      content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-    />
-    <meta
-      name="twitter:description"
-      content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-    />
-    <meta
-      name="twitter:image"
-      content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-    />
-  </Helmet>
-);
-
 function Events() {
   const [events, setEvents] = useState([]);
   const [featuredEvent, setFeaturedEvent] = useState(null);
@@ -334,7 +294,45 @@ function Events() {
   if (isLoading)
     return (
       <>
-        <EventsMetaTags />
+        <Helmet>
+          <title>
+            Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
+          </title>
+          <meta
+            name="description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:url"
+            content="https://rockymtnrambler.com/events"
+          />
+          <meta
+            property="og:title"
+            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+          />
+          <meta
+            property="og:description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta
+            property="og:image"
+            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:title"
+            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+          />
+          <meta
+            name="twitter:description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta
+            name="twitter:image"
+            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          />
+        </Helmet>
         <LoadingState>Loading events...</LoadingState>
       </>
     );
@@ -342,7 +340,45 @@ function Events() {
   if (error)
     return (
       <>
-        <EventsMetaTags />
+        <Helmet>
+          <title>
+            Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
+          </title>
+          <meta
+            name="description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:url"
+            content="https://rockymtnrambler.com/events"
+          />
+          <meta
+            property="og:title"
+            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+          />
+          <meta
+            property="og:description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta
+            property="og:image"
+            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:title"
+            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+          />
+          <meta
+            name="twitter:description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta
+            name="twitter:image"
+            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          />
+        </Helmet>
         <ErrorState>{error}</ErrorState>
       </>
     );
@@ -350,14 +386,87 @@ function Events() {
   if (!events.length)
     return (
       <>
-        <EventsMetaTags />
+        <Helmet>
+          <title>
+            Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
+          </title>
+          <meta
+            name="description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:url"
+            content="https://rockymtnrambler.com/events"
+          />
+          <meta
+            property="og:title"
+            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+          />
+          <meta
+            property="og:description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta
+            property="og:image"
+            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:title"
+            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+          />
+          <meta
+            name="twitter:description"
+            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+          />
+          <meta
+            name="twitter:image"
+            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          />
+        </Helmet>
         <EmptyState>No events found.</EmptyState>
       </>
     );
 
   return (
     <>
-      <EventsMetaTags />
+      <Helmet>
+        <title>
+          Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
+        </title>
+        <meta
+          name="description"
+          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/events" />
+        <meta
+          property="og:title"
+          content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+        />
+        <meta
+          property="og:description"
+          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+        />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
+        />
+        <meta
+          name="twitter:description"
+          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+      </Helmet>
       <EventsContainer>
         {featuredEvent && (
           <FeaturedEvent>
