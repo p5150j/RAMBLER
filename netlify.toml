@@ -1,29 +1,6 @@
-[[plugins]]
-package = "@netlify/plugin-sitemap"
-
 [build]
 command = "npm run build"
 publish = "build"
-environment = { NODE_VERSION = "18.17.0" }
 
-[[plugins]]
-package = "@netlify/plugin-lighthouse"
-
-# Enable prerendering for social media crawlers
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
-
-[context.production]
-environment = { NODE_VERSION = "18.x" }
-
-# Add prerender headers for social media crawlers
-[[headers]]
-for = "/*"
-[headers.values]
-X-Frame-Options = "DENY"
-X-XSS-Protection = "1; mode=block"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"
-Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:;"
+[build.environment]
+NODE_VERSION = "16.20.0"
