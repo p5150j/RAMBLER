@@ -212,10 +212,7 @@ function Signup() {
           property="og:description"
           content="Create your Rocky Mountain Rambler 500 account to register for events, purchase merchandise, and join the ultimate beater car racing community."
         />
-        <meta
-          property="og:url"
-          content="https://rockymountainrambler500.com/signup"
-        />
+        <meta property="og:url" content="https://rockymtnrambler.com/signup" />
         <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Sign Up"
@@ -223,6 +220,10 @@ function Signup() {
         <meta
           property="twitter:description"
           content="Create your Rocky Mountain Rambler 500 account to register for events, purchase merchandise, and join the ultimate beater car racing community."
+        />
+        <meta
+          property="twitter:url"
+          content="https://rockymtnrambler.com/signup"
         />
       </Helmet>
       <AuthContainer>

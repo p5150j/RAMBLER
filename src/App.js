@@ -6,7 +6,6 @@ import { HelmetProvider } from "react-helmet-async";
 
 import ScrollToTop from "./components/ScrollToTop";
 import GlobalStyles from "./GlobalStyles";
-import DefaultMetaTags from "./components/DefaultMetaTags";
 
 // Pages
 import Home from "./pages/Home/Home";
@@ -67,7 +66,6 @@ function App() {
     <HelmetProvider>
       <ThemeProvider theme={theme}>
         <GlobalStyles />
-        <DefaultMetaTags />
         <AuthProvider>
           <Router>
             <ScrollToTop />
