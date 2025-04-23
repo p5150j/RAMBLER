@@ -357,31 +357,27 @@ function Merch() {
   return (
     <>
       <Helmet>
-        <title>Rocky Mountain Rambler 500 | Merchandise</title>
+        <title>Merchandise | Rocky Mountain Rambler 500</title>
         <meta
           name="description"
-          content="Shop official Rocky Mountain Rambler 500 merchandise. Show your support with our collection of apparel, accessories, and memorabilia from the ultimate beater car event."
+          content="Shop official Rocky Mountain Rambler 500 merchandise. Get your event t-shirts, hoodies, and accessories to show your support for the ultimate off-road adventure."
         />
         <meta
           property="og:title"
-          content="Rocky Mountain Rambler 500 | Merchandise"
+          content="Merchandise | Rocky Mountain Rambler 500"
         />
         <meta
           property="og:description"
-          content="Shop official Rocky Mountain Rambler 500 merchandise. Show your support with our collection of apparel, accessories, and memorabilia from the ultimate beater car event."
+          content="Shop official Rocky Mountain Rambler 500 merchandise. Get your event t-shirts, hoodies, and accessories to show your support for the ultimate off-road adventure."
         />
         <meta property="og:url" content="https://rockymtnrambler.com/merch" />
         <meta
-          property="twitter:title"
-          content="Rocky Mountain Rambler 500 | Merchandise"
+          name="twitter:title"
+          content="Merchandise | Rocky Mountain Rambler 500"
         />
         <meta
-          property="twitter:description"
-          content="Shop official Rocky Mountain Rambler 500 merchandise. Show your support with our collection of apparel, accessories, and memorabilia from the ultimate beater car event."
-        />
-        <meta
-          property="twitter:url"
-          content="https://rockymtnrambler.com/merch"
+          name="twitter:description"
+          content="Shop official Rocky Mountain Rambler 500 merchandise. Get your event t-shirts, hoodies, and accessories to show your support for the ultimate off-road adventure."
         />
       </Helmet>
       <MerchContainer>
