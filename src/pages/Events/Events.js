@@ -298,11 +298,17 @@ function Events() {
   return (
     <>
       <Helmet>
-        <title>Events - Rocky Mountain Rambler 500</title>
+        <title>
+          Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
+        </title>
         <meta name="robots" content="all" />
         <meta
+          name="description"
+          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
+        />
+        <meta
           property="og:title"
-          content="Events - Rocky Mountain Rambler 500"
+          content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://rockymtnrambler.com/events" />
@@ -312,16 +318,16 @@ function Events() {
         />
         <meta
           property="og:description"
-          content="View upcoming events and register for the Rocky Mountain Rambler 500. Join us for an unforgettable off-road adventure in the Rocky Mountains."
+          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Events - Rocky Mountain Rambler 500"
+          content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
         />
         <meta
           name="twitter:description"
-          content="View upcoming events and register for the Rocky Mountain Rambler 500. Join us for an unforgettable off-road adventure in the Rocky Mountains."
+          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
         />
         <meta
           name="twitter:image"
