@@ -306,6 +306,7 @@ function Events() {
           name="description"
           content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
         />
+        <meta property="og:locale" content="en_US" />
         <meta
           property="og:title"
           content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"

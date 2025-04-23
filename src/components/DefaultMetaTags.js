@@ -11,8 +11,8 @@ const DefaultMetaTags = () => {
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://rockymtnrambler.com/" />
       <meta property="og:site_name" content="Rocky Mountain Rambler 500" />
+      <meta property="og:url" content="https://rockymtnrambler.com/" />
       <meta
         property="og:title"
         content="Rocky Mountain Rambler 500 - Off-Road Adventure Event"
