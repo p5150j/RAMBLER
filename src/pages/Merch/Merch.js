@@ -356,9 +356,13 @@ function Merch() {
 
   return (
     <>
-      <Helmet>
+      <Helmet prioritizeSeoTags>
         <title>Merchandise - Rocky Mountain Rambler 500</title>
         <meta name="robots" content="all" />
+        <meta
+          name="description"
+          content="Show your support for the Rocky Mountain Rambler 500 with our official merchandise. From t-shirts to hats, represent the ultimate beater car rally in style."
+        />
         <meta
           property="og:title"
           content="Official Merch - Rocky Mountain Rambler 500"

@@ -297,7 +297,7 @@ function Events() {
 
   return (
     <>
-      <Helmet>
+      <Helmet prioritizeSeoTags>
         <title>
           Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
         </title>
