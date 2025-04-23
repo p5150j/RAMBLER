@@ -124,9 +124,9 @@ function Footer() {
         <FooterSection>
           <h3>Resources</h3>
           <FooterLink to="/rules">Race Rules</FooterLink>
-          <FooterLink to="/faq">FAQ</FooterLink>
+          {/* <FooterLink to="/faq">FAQ</FooterLink>
           <FooterLink to="/safety">Safety Guidelines</FooterLink>
-          <FooterLink to="/sponsors">Sponsors</FooterLink>
+          <FooterLink to="/sponsors">Sponsors</FooterLink> */}
         </FooterSection>
 
         <FooterSection>

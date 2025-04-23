@@ -708,36 +708,41 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>Rocky Mountain Rambler 500 | Home</title>
+        <title>
+          Rocky Mountain Rambler 500 - The Ultimate Beater Car Rally Adventure
+        </title>
         <meta
           name="description"
-          content="Welcome to the Rocky Mountain Rambler 500 - where automotive passion meets adventure. Join us for an unforgettable experience of beater car racing, creativity, and community."
+          content="Experience the Rocky Mountain Rambler 500 - an epic beater car rally through Colorado's challenging terrain. Join fellow gearheads for three days of automotive adventure, creativity, and community."
         />
-        <meta property="og:title" content="Rocky Mountain Rambler 500" />
+        <meta
+          property="og:title"
+          content="Rocky Mountain Rambler 500 - The Ultimate Beater Car Rally Adventure"
+        />
         <meta
           property="og:description"
-          content="Join the Rocky Mountain Rambler 500 - an annual event where enthusiasts take their beater cars, fix them up just enough to run, and put them to the test. Experience fun, creativity, and the ultimate gearhead challenge."
+          content="Experience the Rocky Mountain Rambler 500 - an epic beater car rally through Colorado's challenging terrain. Join fellow gearheads for three days of automotive adventure, creativity, and community."
         />
         <meta property="og:url" content="https://rockymtnrambler.com/" />
         <meta
           property="og:image"
           content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
-        <meta property="og:image:width" content="512" />
-        <meta property="og:image:height" content="512" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="Rocky Mountain Rambler 500" />
+        <meta property="og:type" content="website" />
 
         {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://rockymtnrambler.com/" />
-        <meta property="twitter:title" content="Rocky Mountain Rambler 500" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://rockymtnrambler.com/" />
         <meta
-          property="twitter:description"
-          content="Join the Rocky Mountain Rambler 500 - an annual event where enthusiasts take their beater cars, fix them up just enough to run, and put them to the test. Experience fun, creativity, and the ultimate gearhead challenge."
+          name="twitter:title"
+          content="Rocky Mountain Rambler 500 - The Ultimate Beater Car Rally Adventure"
         />
         <meta
-          property="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          name="twitter:description"
+          content="Experience the Rocky Mountain Rambler 500 - an epic beater car rally through Colorado's challenging terrain. Join fellow gearheads for three days of automotive adventure, creativity, and community."
         />
         <meta
           name="twitter:image"

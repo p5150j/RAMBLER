@@ -283,7 +283,7 @@ const Gallery = () => {
         <title>Rocky Mountain Rambler 500 | Gallery</title>
         <meta
           name="description"
-          content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+          content="Experience the thrill of the Rocky Mountain Rambler 500 through our gallery. View photos and videos showcasing epic off-road adventures, beater car challenges, and the spirit of our Colorado rally community."
         />
         <meta
           property="og:title"
@@ -297,7 +297,7 @@ const Gallery = () => {
         />
         <meta
           property="og:description"
-          content="Explore photos and memories from past Rocky Mountain Rambler 500 events. See the epic adventures, challenging terrain, and unforgettable moments from our beater car rally through Colorado."
+          content="Experience the thrill of the Rocky Mountain Rambler 500 through our gallery. View photos and videos showcasing epic off-road adventures, beater car challenges, and the spirit of our Colorado rally community."
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
@@ -306,11 +306,15 @@ const Gallery = () => {
         />
         <meta
           name="twitter:description"
-          content="Explore photos and memories from past Rocky Mountain Rambler 500 events. See the epic adventures, challenging terrain, and unforgettable moments from our beater car rally through Colorado."
+          content="Experience the thrill of the Rocky Mountain Rambler 500 through our gallery. View photos and videos showcasing epic off-road adventures, beater car challenges, and the spirit of our Colorado rally community."
         />
         <meta
           name="twitter:image"
           content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta
+          name="twitter:url"
+          content="https://rockymtnrambler.com/gallery"
         />
       </Helmet>
       <GalleryContainer>
