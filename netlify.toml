@@ -4,3 +4,11 @@ publish = "build"
 
 [build.environment]
 NODE_VERSION = "16.20.0"
+
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+[[headers]]
+for = "/*"
+[headers.values]
+X-Robots-Tag = "all"
