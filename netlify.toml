@@ -4,6 +4,7 @@ package = "@netlify/plugin-sitemap"
 [build]
 command = "npm run build"
 publish = "build"
+environment = { NODE_VERSION = "18.17.0" }
 
 [[plugins]]
 package = "@netlify/plugin-lighthouse"
