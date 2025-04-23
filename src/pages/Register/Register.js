@@ -186,27 +186,33 @@ function Register() {
         />
         <meta
           property="og:title"
-          content="Rocky Mountain Rambler 500 | Register"
+          content="Register - Rocky Mountain Rambler 500"
         />
-        <meta
-          property="og:description"
-          content="Register for the Rocky Mountain Rambler 500 event. Join the ultimate beater car challenge and experience the thrill of budget racing in the Rocky Mountains."
-        />
+        <meta property="og:type" content="website" />
         <meta
           property="og:url"
           content="https://rockymtnrambler.com/register"
         />
         <meta
-          property="twitter:title"
-          content="Rocky Mountain Rambler 500 | Register"
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
         <meta
-          property="twitter:description"
-          content="Register for the Rocky Mountain Rambler 500 event. Join the ultimate beater car challenge and experience the thrill of budget racing in the Rocky Mountains."
+          property="og:description"
+          content="Register for the Rocky Mountain Rambler 500 - the ultimate beater car adventure through Colorado's most challenging terrain. Sign up now to secure your spot!"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Register - Rocky Mountain Rambler 500"
         />
         <meta
-          property="twitter:url"
-          content="https://rockymtnrambler.com/register"
+          name="twitter:description"
+          content="Register for the Rocky Mountain Rambler 500 - the ultimate beater car adventure through Colorado's most challenging terrain. Sign up now to secure your spot!"
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <RegisterContainer>

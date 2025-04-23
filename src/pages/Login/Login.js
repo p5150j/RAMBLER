@@ -153,6 +153,10 @@ function Login() {
         />
         <meta property="og:url" content="https://rockymtnrambler.com/login" />
         <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Login"
         />
@@ -163,6 +167,10 @@ function Login() {
         <meta
           property="twitter:url"
           content="https://rockymtnrambler.com/login"
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <AuthContainer>

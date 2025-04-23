@@ -287,24 +287,30 @@ const Gallery = () => {
         />
         <meta
           property="og:title"
-          content="Rocky Mountain Rambler 500 | Gallery"
+          content="Gallery - Rocky Mountain Rambler 500"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/gallery" />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
         <meta
           property="og:description"
-          content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+          content="Explore photos and memories from past Rocky Mountain Rambler 500 events. See the epic adventures, challenging terrain, and unforgettable moments from our beater car rally through Colorado."
         />
-        <meta property="og:url" content="https://rockymtnrambler.com/gallery" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta
-          property="twitter:title"
-          content="Rocky Mountain Rambler 500 | Gallery"
-        />
-        <meta
-          property="twitter:description"
-          content="Explore the Rocky Mountain Rambler 500 gallery. View photos and videos from past events, featuring amazing beater cars, exciting races, and unforgettable moments."
+          name="twitter:title"
+          content="Gallery - Rocky Mountain Rambler 500"
         />
         <meta
-          property="twitter:url"
-          content="https://rockymtnrambler.com/gallery"
+          name="twitter:description"
+          content="Explore photos and memories from past Rocky Mountain Rambler 500 events. See the epic adventures, challenging terrain, and unforgettable moments from our beater car rally through Colorado."
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <GalleryContainer>

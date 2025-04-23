@@ -298,27 +298,34 @@ function Events() {
   return (
     <>
       <Helmet>
-        <title>Events | Rocky Mountain Rambler 500</title>
-        <meta
-          name="description"
-          content="View upcoming events and register for the Rocky Mountain Rambler 500. Join us for an unforgettable off-road adventure in the Rocky Mountains."
-        />
+        <title>Events - Rocky Mountain Rambler 500</title>
+        <meta name="robots" content="all" />
         <meta
           property="og:title"
-          content="Events | Rocky Mountain Rambler 500"
+          content="Events - Rocky Mountain Rambler 500"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/events" />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
         <meta
           property="og:description"
           content="View upcoming events and register for the Rocky Mountain Rambler 500. Join us for an unforgettable off-road adventure in the Rocky Mountains."
         />
-        <meta property="og:url" content="https://rockymtnrambler.com/events" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Events | Rocky Mountain Rambler 500"
+          content="Events - Rocky Mountain Rambler 500"
         />
         <meta
           name="twitter:description"
           content="View upcoming events and register for the Rocky Mountain Rambler 500. Join us for an unforgettable off-road adventure in the Rocky Mountains."
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <EventsContainer>

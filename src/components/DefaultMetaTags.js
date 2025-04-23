@@ -23,7 +23,7 @@ const DefaultMetaTags = () => {
       />
       <meta
         property="og:image"
-        content="https://rockymtnrambler.com/assets/social-preview.jpg"
+        content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
       />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
@@ -41,7 +41,7 @@ const DefaultMetaTags = () => {
       />
       <meta
         name="twitter:image"
-        content="https://rockymtnrambler.com/assets/social-preview.jpg"
+        content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
       />
 
       {/* Additional SEO */}

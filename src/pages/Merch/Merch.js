@@ -357,27 +357,34 @@ function Merch() {
   return (
     <>
       <Helmet>
-        <title>Merchandise | Rocky Mountain Rambler 500</title>
-        <meta
-          name="description"
-          content="Shop official Rocky Mountain Rambler 500 merchandise. Get your event t-shirts, hoodies, and accessories to show your support for the ultimate off-road adventure."
-        />
+        <title>Merchandise - Rocky Mountain Rambler 500</title>
+        <meta name="robots" content="all" />
         <meta
           property="og:title"
-          content="Merchandise | Rocky Mountain Rambler 500"
+          content="Official Merch - Rocky Mountain Rambler 500"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/merch" />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
         <meta
           property="og:description"
-          content="Shop official Rocky Mountain Rambler 500 merchandise. Get your event t-shirts, hoodies, and accessories to show your support for the ultimate off-road adventure."
+          content="Show your support for the Rocky Mountain Rambler 500 with our official merchandise. From t-shirts to hats, represent the ultimate beater car rally in style."
         />
-        <meta property="og:url" content="https://rockymtnrambler.com/merch" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Merchandise | Rocky Mountain Rambler 500"
+          content="Official Merch - Rocky Mountain Rambler 500"
         />
         <meta
           name="twitter:description"
-          content="Shop official Rocky Mountain Rambler 500 merchandise. Get your event t-shirts, hoodies, and accessories to show your support for the ultimate off-road adventure."
+          content="Show your support for the Rocky Mountain Rambler 500 with our official merchandise. From t-shirts to hats, represent the ultimate beater car rally in style."
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <MerchContainer>

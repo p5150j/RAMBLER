@@ -214,6 +214,10 @@ function Signup() {
         />
         <meta property="og:url" content="https://rockymtnrambler.com/signup" />
         <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta
           property="twitter:title"
           content="Rocky Mountain Rambler 500 | Sign Up"
         />
@@ -224,6 +228,10 @@ function Signup() {
         <meta
           property="twitter:url"
           content="https://rockymtnrambler.com/signup"
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <AuthContainer>

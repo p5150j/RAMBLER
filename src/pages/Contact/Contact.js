@@ -22,24 +22,30 @@ function Contact() {
         />
         <meta
           property="og:title"
-          content="Rocky Mountain Rambler 500 | Contact Us"
+          content="Contact Us - Rocky Mountain Rambler 500"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/contact" />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
         <meta
           property="og:description"
-          content="Get in touch with the Rocky Mountain Rambler 500 team. Contact us for event information, sponsorship opportunities, or any questions about our beater car racing series."
+          content="Get in touch with the Rocky Mountain Rambler 500 team. Have questions about our beater car rally? Need help with registration? We're here to help make your adventure possible."
         />
-        <meta property="og:url" content="https://rockymtnrambler.com/contact" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta
-          property="twitter:title"
-          content="Rocky Mountain Rambler 500 | Contact Us"
-        />
-        <meta
-          property="twitter:description"
-          content="Get in touch with the Rocky Mountain Rambler 500 team. Contact us for event information, sponsorship opportunities, or any questions about our beater car racing series."
+          name="twitter:title"
+          content="Contact Us - Rocky Mountain Rambler 500"
         />
         <meta
-          property="twitter:url"
-          content="https://rockymtnrambler.com/contact"
+          name="twitter:description"
+          content="Get in touch with the Rocky Mountain Rambler 500 team. Have questions about our beater car rally? Need help with registration? We're here to help make your adventure possible."
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <ContactContainer>

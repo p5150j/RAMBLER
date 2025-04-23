@@ -721,7 +721,7 @@ function Home() {
         <meta property="og:url" content="https://rockymtnrambler.com/" />
         <meta
           property="og:image"
-          content="https://rockymtnrambler.com/logo.png"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
         <meta property="og:image:width" content="512" />
         <meta property="og:image:height" content="512" />
@@ -737,7 +737,11 @@ function Home() {
         />
         <meta
           property="twitter:image"
-          content="https://rockymtnrambler.com/logo.png"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <HeroSection>
