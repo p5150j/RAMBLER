@@ -1,5 +1,5 @@
 // pages/Contact/Contact.js
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import {
@@ -9,167 +9,154 @@ import {
   FaFacebook,
   FaTiktok,
 } from "react-icons/fa";
-import { Helmet } from "react-helmet-async";
 
 function Contact() {
   return (
-    <>
-      <Helmet>
-        <title>Rocky Mountain Rambler 500 | Contact Us</title>
-        <meta
-          name="description"
-          content="Get in touch with the Rocky Mountain Rambler 500 team. Contact us for event information, sponsorship opportunities, or any questions about our beater car racing series."
+    <ContactContainer>
+      <MapHero>
+        <Map
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d49878.86066862415!2d-105.20611552089843!3d38.74679!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8714a8a600eb7c37%3A0x7c6c19a9c9c3f330!2sCripple%20Creek%2C%20CO!5e0!3m2!1sen!2sus!4v1707091183577!5m2!1sen!2sus"
+          allowFullScreen=""
+          loading="lazy"
         />
-        <meta
-          property="og:title"
-          content="Contact Us - Rocky Mountain Rambler 500"
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://rockymtnrambler.com/contact" />
-        <meta
-          property="og:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-        <meta
-          property="og:description"
-          content="Get in touch with the Rocky Mountain Rambler 500 team. Have questions about our beater car rally? Need help with registration? We're here to help make your adventure possible."
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Contact Us - Rocky Mountain Rambler 500"
-        />
-        <meta
-          name="twitter:description"
-          content="Get in touch with the Rocky Mountain Rambler 500 team. Have questions about our beater car rally? Need help with registration? We're here to help make your adventure possible."
-        />
-        <meta
-          name="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-      </Helmet>
-      <ContactContainer>
-        <MapHero>
-          <Map
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d49878.86066862415!2d-105.20611552089843!3d38.74679!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8714a8a600eb7c37%3A0x7c6c19a9c9c3f330!2sCripple%20Creek%2C%20CO!5e0!3m2!1sen!2sus!4v1707091183577!5m2!1sen!2sus"
-            allowFullScreen=""
-            loading="lazy"
-          />
-          <MapOverlay>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              <LocationPin />
-            </motion.div>
-            <MapTitle
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              Join The Community
-            </MapTitle>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <MapLocation>Cripple Creek, Colorado</MapLocation>
-            </motion.div>
-          </MapOverlay>
-        </MapHero>
+        <MapOverlay>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <LocationPin />
+          </motion.div>
+          <MapTitle
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            Join The Community
+          </MapTitle>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <MapLocation>Cripple Creek, Colorado</MapLocation>
+          </motion.div>
+        </MapOverlay>
+      </MapHero>
 
-        <ContentSection>
-          <ContactCards>
-            <ContactCard
-              as={motion.div}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+      <ContentSection>
+        <ContactCards>
+          <ContactCard
+            as={motion.div}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <CardIcon>
+              <FaEnvelope />
+            </CardIcon>
+            <CardTitle>Email Us</CardTitle>
+            <CardDescription>
+              Got questions about events or registration? Drop us a line!
+            </CardDescription>
+            <ContactButton
+              as="a"
+              href="mailto:rockymountainrambler500@gmail.com"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <CardIcon>
-                <FaEnvelope />
-              </CardIcon>
-              <CardTitle>Email Us</CardTitle>
-              <CardDescription>
-                Got questions about events or registration? Drop us a line!
-              </CardDescription>
-              <ContactButton
+              <FaEnvelope /> Email
+            </ContactButton>
+          </ContactCard>
+
+          <ContactCard
+            as={motion.div}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <CardIcon>
+              <FaDiscord />
+            </CardIcon>
+            <CardTitle>Join Our Discord</CardTitle>
+            <CardDescription>
+              Connect with other racers, share tips, and stay updated on events.
+            </CardDescription>
+            <ContactButton
+              as="a"
+              href="#"
+              target="_blank"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <FaDiscord /> Join
+            </ContactButton>
+          </ContactCard>
+
+          <ContactCard
+            as={motion.div}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <CardIcon>
+              <FaInstagram />
+            </CardIcon>
+            <CardTitle>Follow Us</CardTitle>
+            <CardDescription>
+              Check out photos and videos from our latest events.
+            </CardDescription>
+            <SocialButtons>
+              <SocialButton
                 as="a"
-                href="mailto:rockymountainrambler500@gmail.com"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                href="https://www.instagram.com/rockymountainrambler500/"
+                target="_blank"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FaEnvelope /> Email
-              </ContactButton>
-            </ContactCard>
-
-            <ContactCard
-              as={motion.div}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <CardIcon>
                 <FaInstagram />
-              </CardIcon>
-              <CardTitle>Follow Us</CardTitle>
-              <CardDescription>
-                Check out photos and videos from our latest events.
-              </CardDescription>
-              <SocialButtons>
-                <SocialButton
-                  as="a"
-                  href="https://www.instagram.com/rockymountainrambler500/"
-                  target="_blank"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaInstagram />
-                </SocialButton>
-                <SocialButton
-                  as="a"
-                  href="https://www.facebook.com/share/15zCpQYa84"
-                  target="_blank"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaFacebook />
-                </SocialButton>
-                <SocialButton
-                  as="a"
-                  href="https://www.tiktok.com/@rockymountainrambler500"
-                  target="_blank"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaTiktok />
-                </SocialButton>
-              </SocialButtons>
-            </ContactCard>
-          </ContactCards>
+              </SocialButton>
+              <SocialButton
+                as="a"
+                href="https://www.facebook.com/share/15zCpQYa84"
+                target="_blank"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FaFacebook />
+              </SocialButton>
+              <SocialButton
+                as="a"
+                href="https://www.tiktok.com/@rockymountainrambler500"
+                target="_blank"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FaTiktok />
+              </SocialButton>
+            </SocialButtons>
+          </ContactCard>
+        </ContactCards>
 
-          <LocationInfo>
-            <motion.h2
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              Based in Cripple Creek, Colorado
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-            >
-              Join us in the heart of the Rocky Mountains for exciting budget
-              racing events.
-            </motion.p>
-          </LocationInfo>
-        </ContentSection>
-      </ContactContainer>
-    </>
+        <LocationInfo>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Based in Cripple Creek, Colorado
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            Join us in the heart of the Rocky Mountains for exciting budget
+            racing events.
+          </motion.p>
+        </LocationInfo>
+      </ContentSection>
+    </ContactContainer>
   );
 }
 

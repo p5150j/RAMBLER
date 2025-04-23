@@ -9,7 +9,6 @@ import TeamRegistrationForm from "../../components/events/TeamRegistrationForm";
 import IndividualRegistrationForm from "../../components/events/IndividualRegistrationForm";
 import EventMap from "../../components/events/EventMap";
 import PaymentModal from "../../components/events/PaymentModal";
-import { Helmet } from "react-helmet-async";
 
 // Memoized Event Card Component
 const EventCard = memo(({ event, onRegister, isRegistered }) => {
@@ -291,358 +290,184 @@ function Events() {
     fetchData();
   }, [currentUser?.uid]); // Re-fetch when user changes
 
-  if (isLoading)
-    return (
-      <>
-        <Helmet>
-          <title>
-            Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
-          </title>
-          <meta
-            name="description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta property="og:type" content="website" />
-          <meta
-            property="og:url"
-            content="https://rockymtnrambler.com/events"
-          />
-          <meta
-            property="og:title"
-            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-          />
-          <meta
-            property="og:description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta
-            property="og:image"
-            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-          />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta
-            name="twitter:title"
-            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-          />
-          <meta
-            name="twitter:description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta
-            name="twitter:image"
-            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-          />
-        </Helmet>
-        <LoadingState>Loading events...</LoadingState>
-      </>
-    );
-
-  if (error)
-    return (
-      <>
-        <Helmet>
-          <title>
-            Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
-          </title>
-          <meta
-            name="description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta property="og:type" content="website" />
-          <meta
-            property="og:url"
-            content="https://rockymtnrambler.com/events"
-          />
-          <meta
-            property="og:title"
-            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-          />
-          <meta
-            property="og:description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta
-            property="og:image"
-            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-          />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta
-            name="twitter:title"
-            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-          />
-          <meta
-            name="twitter:description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta
-            name="twitter:image"
-            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-          />
-        </Helmet>
-        <ErrorState>{error}</ErrorState>
-      </>
-    );
-
-  if (!events.length)
-    return (
-      <>
-        <Helmet>
-          <title>
-            Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
-          </title>
-          <meta
-            name="description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta property="og:type" content="website" />
-          <meta
-            property="og:url"
-            content="https://rockymtnrambler.com/events"
-          />
-          <meta
-            property="og:title"
-            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-          />
-          <meta
-            property="og:description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta
-            property="og:image"
-            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-          />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta
-            name="twitter:title"
-            content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-          />
-          <meta
-            name="twitter:description"
-            content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-          />
-          <meta
-            name="twitter:image"
-            content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-          />
-        </Helmet>
-        <EmptyState>No events found.</EmptyState>
-      </>
-    );
+  if (isLoading) return <LoadingState>Loading events...</LoadingState>;
+  if (error) return <ErrorState>{error}</ErrorState>;
+  if (!events.length) return <EmptyState>No events found.</EmptyState>;
 
   return (
-    <>
-      <Helmet>
-        <title>
-          Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies
-        </title>
-        <meta
-          name="description"
-          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://rockymtnrambler.com/events" />
-        <meta
-          property="og:title"
-          content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-        />
-        <meta
-          property="og:description"
-          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-        />
-        <meta
-          property="og:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Events - Rocky Mountain Rambler 500 | Register for Upcoming Rallies"
-        />
-        <meta
-          name="twitter:description"
-          content="Browse and register for upcoming Rocky Mountain Rambler 500 events. From team rallies to individual challenges, find your next off-road beater car adventure in Colorado."
-        />
-        <meta
-          name="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-      </Helmet>
-      <EventsContainer>
-        {featuredEvent && (
-          <FeaturedEvent>
-            <FeaturedBackground
-              style={{
-                backgroundImage: `url("${featuredEvent.image}")`,
-              }}
-            />
-            <FeaturedContent>
-              <FeaturedContentLayout>
-                <FeaturedMainContent>
-                  <EventStatus $status="active">Featured Event</EventStatus>
-                  <EventDate>
-                    {new Date(featuredEvent.date).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </EventDate>
-                  <h1 style={{ fontSize: "2.5rem", margin: "20px 0" }}>
-                    {featuredEvent.title}
-                  </h1>
-                  <p
-                    style={{
-                      fontSize: "1.1rem",
-                      marginBottom: "20px",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {featuredEvent.description}
-                  </p>
-
-                  <EventStats>
-                    {featuredEvent.eventType === "team" ? (
-                      <>
-                        <StatItem>
-                          <div className="label">Team Size</div>
-                          <div className="value">
-                            {featuredEvent.minTeamSize}-
-                            {featuredEvent.maxTeamSize} members
-                          </div>
-                        </StatItem>
-                        <StatItem>
-                          <div className="label">Base Price</div>
-                          <div className="value">
-                            ${featuredEvent.basePrice}
-                          </div>
-                        </StatItem>
-                        <StatItem>
-                          <div className="label">Teams Registered</div>
-                          <div className="value">
-                            {featuredEvent.registeredTeams} /{" "}
-                            {featuredEvent.capacity}
-                          </div>
-                        </StatItem>
-                      </>
-                    ) : (
-                      <>
-                        <StatItem>
-                          <div className="label">Event Type</div>
-                          <div className="value">Individual</div>
-                        </StatItem>
-                        <StatItem>
-                          <div className="label">Price</div>
-                          <div className="value">
-                            ${featuredEvent.individualPrice}
-                          </div>
-                        </StatItem>
-                        <StatItem>
-                          <div className="label">Spots Filled</div>
-                          <div className="value">
-                            {featuredEvent.registeredTeams} /{" "}
-                            {featuredEvent.capacity}
-                          </div>
-                        </StatItem>
-                      </>
-                    )}
-                  </EventStats>
-                  <h3 style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
-                    Requirements
-                  </h3>
-                  <p style={{ color: "#B0B0B0", lineHeight: "1.6" }}>
-                    {featuredEvent.requirements}
-                  </p>
-
-                  <RegisterButton
-                    whileHover={
-                      !isRegisteredForEvent(featuredEvent.id)
-                        ? { scale: 1.02 }
-                        : {}
-                    }
-                    whileTap={
-                      !isRegisteredForEvent(featuredEvent.id)
-                        ? { scale: 0.98 }
-                        : {}
-                    }
-                    onClick={() =>
-                      !isRegisteredForEvent(featuredEvent.id) &&
-                      handleRegister(featuredEvent)
-                    }
-                    disabled={isRegisteredForEvent(featuredEvent.id)}
-                    $isRegistered={isRegisteredForEvent(featuredEvent.id)}
-                  >
-                    {isRegisteredForEvent(featuredEvent.id)
-                      ? "Registered"
-                      : "Register Now"}
-                  </RegisterButton>
-                </FeaturedMainContent>
-
-                <FeaturedMapSection>
-                  <LocationLabel>📍 {featuredEvent.location}</LocationLabel>
-                  <SquareMapWrapper>
-                    <EventMap
-                      location={featuredEvent.location}
-                      height="100%"
-                      showPin={true}
-                      zoom={12}
-                    />
-                  </SquareMapWrapper>
-                </FeaturedMapSection>
-              </FeaturedContentLayout>
-            </FeaturedContent>
-          </FeaturedEvent>
-        )}
-
-        <EventsGrid>
-          {events
-            .filter((event) => !event.featured)
-            .map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onRegister={handleRegister}
-                isRegistered={isRegisteredForEvent(event.id)}
-              />
-            ))}
-        </EventsGrid>
-
-        {showRegistrationForm &&
-          registrationEvent &&
-          (registrationEvent.eventType === "team" ? (
-            <TeamRegistrationForm
-              event={registrationEvent}
-              onSubmit={handleRegistrationSubmit}
-              onClose={() => {
-                setShowRegistrationForm(false);
-                setRegistrationEvent(null);
-              }}
-            />
-          ) : (
-            <IndividualRegistrationForm
-              event={registrationEvent}
-              onSuccess={handleRegistrationSubmit}
-              onCancel={() => {
-                setShowRegistrationForm(false);
-                setRegistrationEvent(null);
-              }}
-            />
-          ))}
-
-        {showPaymentModal && currentRegistration && (
-          <PaymentModal
-            event={registrationEvent}
-            registrationData={currentRegistration}
-            totalAmount={currentRegistration.totalCost}
-            onSuccess={handlePaymentSuccess}
-            onCancel={() => {
-              console.log("Payment modal cancelled");
-              setShowPaymentModal(false);
-              setCurrentRegistration(null);
+    <EventsContainer>
+      {featuredEvent && (
+        <FeaturedEvent>
+          <FeaturedBackground
+            style={{
+              backgroundImage: `url("${featuredEvent.image}")`,
             }}
           />
-        )}
-      </EventsContainer>
-    </>
+          <FeaturedContent>
+            <FeaturedContentLayout>
+              <FeaturedMainContent>
+                <EventStatus $status="active">Featured Event</EventStatus>
+                <EventDate>
+                  {new Date(featuredEvent.date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </EventDate>
+                <h1 style={{ fontSize: "2.5rem", margin: "20px 0" }}>
+                  {featuredEvent.title}
+                </h1>
+                <p
+                  style={{
+                    fontSize: "1.1rem",
+                    marginBottom: "20px",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  {featuredEvent.description}
+                </p>
+
+                <EventStats>
+                  {featuredEvent.eventType === "team" ? (
+                    <>
+                      <StatItem>
+                        <div className="label">Team Size</div>
+                        <div className="value">
+                          {featuredEvent.minTeamSize}-
+                          {featuredEvent.maxTeamSize} members
+                        </div>
+                      </StatItem>
+                      <StatItem>
+                        <div className="label">Base Price</div>
+                        <div className="value">${featuredEvent.basePrice}</div>
+                      </StatItem>
+                      <StatItem>
+                        <div className="label">Teams Registered</div>
+                        <div className="value">
+                          {featuredEvent.registeredTeams} /{" "}
+                          {featuredEvent.capacity}
+                        </div>
+                      </StatItem>
+                    </>
+                  ) : (
+                    <>
+                      <StatItem>
+                        <div className="label">Event Type</div>
+                        <div className="value">Individual</div>
+                      </StatItem>
+                      <StatItem>
+                        <div className="label">Price</div>
+                        <div className="value">
+                          ${featuredEvent.individualPrice}
+                        </div>
+                      </StatItem>
+                      <StatItem>
+                        <div className="label">Spots Filled</div>
+                        <div className="value">
+                          {featuredEvent.registeredTeams} /{" "}
+                          {featuredEvent.capacity}
+                        </div>
+                      </StatItem>
+                    </>
+                  )}
+                </EventStats>
+                <h3 style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
+                  Requirements
+                </h3>
+                <p style={{ color: "#B0B0B0", lineHeight: "1.6" }}>
+                  {featuredEvent.requirements}
+                </p>
+
+                <RegisterButton
+                  whileHover={
+                    !isRegisteredForEvent(featuredEvent.id)
+                      ? { scale: 1.02 }
+                      : {}
+                  }
+                  whileTap={
+                    !isRegisteredForEvent(featuredEvent.id)
+                      ? { scale: 0.98 }
+                      : {}
+                  }
+                  onClick={() =>
+                    !isRegisteredForEvent(featuredEvent.id) &&
+                    handleRegister(featuredEvent)
+                  }
+                  disabled={isRegisteredForEvent(featuredEvent.id)}
+                  $isRegistered={isRegisteredForEvent(featuredEvent.id)}
+                >
+                  {isRegisteredForEvent(featuredEvent.id)
+                    ? "Registered"
+                    : "Register Now"}
+                </RegisterButton>
+              </FeaturedMainContent>
+
+              <FeaturedMapSection>
+                <LocationLabel>📍 {featuredEvent.location}</LocationLabel>
+                <SquareMapWrapper>
+                  <EventMap
+                    location={featuredEvent.location}
+                    height="100%"
+                    showPin={true}
+                    zoom={12}
+                  />
+                </SquareMapWrapper>
+              </FeaturedMapSection>
+            </FeaturedContentLayout>
+          </FeaturedContent>
+        </FeaturedEvent>
+      )}
+
+      <EventsGrid>
+        {events
+          .filter((event) => !event.featured)
+          .map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              onRegister={handleRegister}
+              isRegistered={isRegisteredForEvent(event.id)}
+            />
+          ))}
+      </EventsGrid>
+
+      {showRegistrationForm &&
+        registrationEvent &&
+        (registrationEvent.eventType === "team" ? (
+          <TeamRegistrationForm
+            event={registrationEvent}
+            onSubmit={handleRegistrationSubmit}
+            onClose={() => {
+              setShowRegistrationForm(false);
+              setRegistrationEvent(null);
+            }}
+          />
+        ) : (
+          <IndividualRegistrationForm
+            event={registrationEvent}
+            onSuccess={handleRegistrationSubmit}
+            onCancel={() => {
+              setShowRegistrationForm(false);
+              setRegistrationEvent(null);
+            }}
+          />
+        ))}
+
+      {showPaymentModal && currentRegistration && (
+        <PaymentModal
+          event={registrationEvent}
+          registrationData={currentRegistration}
+          totalAmount={currentRegistration.totalCost}
+          onSuccess={handlePaymentSuccess}
+          onCancel={() => {
+            console.log("Payment modal cancelled");
+            setShowPaymentModal(false);
+            setCurrentRegistration(null);
+          }}
+        />
+      )}
+    </EventsContainer>
   );
 }
 // Styled Components

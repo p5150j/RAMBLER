@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { merchService } from "../../utils/merchService";
 import { userService } from "../../utils/userService";
 import { useInView } from "react-intersection-observer";
-import { Helmet } from "react-helmet-async";
 
 const MerchContainer = styled.div`
   min-height: 100vh;
@@ -355,153 +354,112 @@ function Merch() {
   }
 
   return (
-    <>
-      <Helmet prioritizeSeoTags>
-        <title>Merchandise - Rocky Mountain Rambler 500</title>
-        <meta name="robots" content="all" />
-        <meta
-          name="description"
-          content="Show your support for the Rocky Mountain Rambler 500 with our official merchandise. From t-shirts to hats, represent the ultimate beater car rally in style."
-        />
-        <meta
-          property="og:title"
-          content="Official Merch - Rocky Mountain Rambler 500"
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://rockymtnrambler.com/merch" />
-        <meta
-          property="og:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-        <meta
-          property="og:description"
-          content="Show your support for the Rocky Mountain Rambler 500 with our official merchandise. From t-shirts to hats, represent the ultimate beater car rally in style."
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Official Merch - Rocky Mountain Rambler 500"
-        />
-        <meta
-          name="twitter:description"
-          content="Show your support for the Rocky Mountain Rambler 500 with our official merchandise. From t-shirts to hats, represent the ultimate beater car rally in style."
-        />
-        <meta
-          name="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-      </Helmet>
-      <MerchContainer>
-        <PageHeader>
-          <h1 style={{ marginBottom: "20px" }}>Rambler Merchandise</h1>
-          <p style={{ color: "#B0B0B0" }}>
-            Rep your favorite $3K racing series with our official merchandise.
-            All products feature premium materials and original designs.
-          </p>
-        </PageHeader>
+    <MerchContainer>
+      <PageHeader>
+        <h1 style={{ marginBottom: "20px" }}>Rambler Merchandise</h1>
+        <p style={{ color: "#B0B0B0" }}>
+          Rep your favorite $3K racing series with our official merchandise. All
+          products feature premium materials and original designs.
+        </p>
+      </PageHeader>
 
-        <ProductGrid>
-          <AnimatePresence>
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProductImage>
-                  {product.badge && (
-                    <ProductBadge>{product.badge}</ProductBadge>
-                  )}
-                  <LazyImage
-                    src={product.image}
-                    alt={product.title}
-                    onClick={() => handleAddToCart(product)}
-                  />
-                </ProductImage>
-                <ProductInfo>
-                  <ProductTitle>{product.title}</ProductTitle>
-                  <ProductDescription>{product.description}</ProductDescription>
-                  <ProductPrice>
-                    <span>
-                      {product.originalPrice && (
-                        <span className="original-price">
-                          ${product.originalPrice}
-                        </span>
-                      )}
-                      <span className="price">${product.price}</span>
-                    </span>
-                    {!product.inStock && (
-                      <span style={{ color: theme.colors.textMuted }}>
-                        Out of Stock
+      <ProductGrid>
+        <AnimatePresence>
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProductImage>
+                {product.badge && <ProductBadge>{product.badge}</ProductBadge>}
+                <LazyImage
+                  src={product.image}
+                  alt={product.title}
+                  onClick={() => handleAddToCart(product)}
+                />
+              </ProductImage>
+              <ProductInfo>
+                <ProductTitle>{product.title}</ProductTitle>
+                <ProductDescription>{product.description}</ProductDescription>
+                <ProductPrice>
+                  <span>
+                    {product.originalPrice && (
+                      <span className="original-price">
+                        ${product.originalPrice}
                       </span>
                     )}
-                  </ProductPrice>
+                    <span className="price">${product.price}</span>
+                  </span>
+                  {!product.inStock && (
+                    <span style={{ color: theme.colors.textMuted }}>
+                      Out of Stock
+                    </span>
+                  )}
+                </ProductPrice>
 
-                  <SizeSelect
-                    value={selectedSizes[product.id] || ""}
-                    onChange={(e) =>
-                      handleSizeChange(product.id, e.target.value)
-                    }
-                    disabled={!product.inStock}
-                  >
-                    <option value="">Select Size</option>
-                    {product.sizes.map((size) => (
-                      <option key={size} value={size}>
-                        {size}
-                      </option>
-                    ))}
-                  </SizeSelect>
+                <SizeSelect
+                  value={selectedSizes[product.id] || ""}
+                  onChange={(e) => handleSizeChange(product.id, e.target.value)}
+                  disabled={!product.inStock}
+                >
+                  <option value="">Select Size</option>
+                  {product.sizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </SizeSelect>
 
-                  <AddToCartButton
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={!product.inStock || !selectedSizes[product.id]}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    {product.inStock ? "Add to Cart" : "Out of Stock"}
-                  </AddToCartButton>
-                </ProductInfo>
-              </ProductCard>
-            ))}
-          </AnimatePresence>
-        </ProductGrid>
+                <AddToCartButton
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={!product.inStock || !selectedSizes[product.id]}
+                  onClick={() => handleAddToCart(product)}
+                >
+                  {product.inStock ? "Add to Cart" : "Out of Stock"}
+                </AddToCartButton>
+              </ProductInfo>
+            </ProductCard>
+          ))}
+        </AnimatePresence>
+      </ProductGrid>
 
-        <div ref={loadMoreRef}>
-          {isLoading && (
-            <LoadingSpinner
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-          )}
-        </div>
+      <div ref={loadMoreRef}>
+        {isLoading && (
+          <LoadingSpinner
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+        )}
+      </div>
 
-        <ComingSoonOverlay>
-          <ComingSoonCard
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+      <ComingSoonOverlay>
+        <ComingSoonCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2>Coming Soon</h2>
+          <p>
+            Our merchandise store is currently under construction. Get ready to
+            rep your favorite $3K racing series with our official gear. Sign up
+            for our newsletter to be notified when we launch!
+          </p>
+          <AddToCartButton
+            as="a"
+            href="mailto:rockymountainrambler500@gmail.com"
+            style={{ display: "inline-block", textDecoration: "none" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <h2>Coming Soon</h2>
-            <p>
-              Our merchandise store is currently under construction. Get ready
-              to rep your favorite $3K racing series with our official gear.
-              Sign up for our newsletter to be notified when we launch!
-            </p>
-            <AddToCartButton
-              as="a"
-              href="mailto:rockymountainrambler500@gmail.com"
-              style={{ display: "inline-block", textDecoration: "none" }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Get Notified
-            </AddToCartButton>
-          </ComingSoonCard>
-        </ComingSoonOverlay>
-      </MerchContainer>
-    </>
+            Get Notified
+          </AddToCartButton>
+        </ComingSoonCard>
+      </ComingSoonOverlay>
+    </MerchContainer>
   );
 }
 

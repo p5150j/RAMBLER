@@ -212,10 +212,9 @@ function Signup() {
           property="og:description"
           content="Create your Rocky Mountain Rambler 500 account to register for events, purchase merchandise, and join the ultimate beater car racing community."
         />
-        <meta property="og:url" content="https://rockymtnrambler.com/signup" />
         <meta
-          property="og:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+          property="og:url"
+          content="https://rockymountainrambler500.com/signup"
         />
         <meta
           property="twitter:title"
@@ -224,14 +223,6 @@ function Signup() {
         <meta
           property="twitter:description"
           content="Create your Rocky Mountain Rambler 500 account to register for events, purchase merchandise, and join the ultimate beater car racing community."
-        />
-        <meta
-          property="twitter:url"
-          content="https://rockymtnrambler.com/signup"
-        />
-        <meta
-          name="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
       <AuthContainer>

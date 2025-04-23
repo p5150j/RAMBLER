@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { galleryService } from "../../utils/galleryService";
 import { useInView } from "react-intersection-observer";
-import { Helmet } from "react-helmet-async";
 
 const GalleryContainer = styled.div`
   padding: 20px;
@@ -278,111 +277,69 @@ const Gallery = () => {
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Rocky Mountain Rambler 500 | Gallery</title>
-        <meta
-          name="description"
-          content="Experience the thrill of the Rocky Mountain Rambler 500 through our gallery. View photos and videos showcasing epic off-road adventures, beater car challenges, and the spirit of our Colorado rally community."
-        />
-        <meta
-          property="og:title"
-          content="Gallery - Rocky Mountain Rambler 500"
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://rockymtnrambler.com/gallery" />
-        <meta
-          property="og:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-        <meta
-          property="og:description"
-          content="Experience the thrill of the Rocky Mountain Rambler 500 through our gallery. View photos and videos showcasing epic off-road adventures, beater car challenges, and the spirit of our Colorado rally community."
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Gallery - Rocky Mountain Rambler 500"
-        />
-        <meta
-          name="twitter:description"
-          content="Experience the thrill of the Rocky Mountain Rambler 500 through our gallery. View photos and videos showcasing epic off-road adventures, beater car challenges, and the spirit of our Colorado rally community."
-        />
-        <meta
-          name="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-        <meta
-          name="twitter:url"
-          content="https://rockymtnrambler.com/gallery"
-        />
-      </Helmet>
-      <GalleryContainer>
-        <GalleryGrid>
-          <AnimatePresence>
-            {items.map((item) => (
-              <GalleryItem
-                key={item.id}
-                className={item.size}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {renderMediaContent(item)}
-              </GalleryItem>
-            ))}
-          </AnimatePresence>
-        </GalleryGrid>
-
-        {/* Load more trigger */}
-        <div ref={loadMoreRef}>
-          {isLoading && (
-            <LoadingSpinner
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-          )}
-        </div>
-
-        {/* Modal */}
+    <GalleryContainer>
+      <GalleryGrid>
         <AnimatePresence>
-          {selectedItem && (
-            <Modal
+          {items.map((item) => (
+            <GalleryItem
+              key={item.id}
+              className={item.size}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedItem(null)}
+              transition={{ duration: 0.3 }}
             >
-              <ModalContent
-                onClick={(e) => e.stopPropagation()}
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8 }}
-              >
-                <CloseButton onClick={() => setSelectedItem(null)}>
-                  ×
-                </CloseButton>
-                {selectedItem.type === "video" ? (
-                  <video
-                    src={selectedItem.url}
-                    autoPlay
-                    controls
-                    loop
-                    playsInline
-                  />
-                ) : (
-                  <img
-                    src={selectedItem.url}
-                    alt={selectedItem.title || "Gallery image"}
-                  />
-                )}
-              </ModalContent>
-            </Modal>
-          )}
+              {renderMediaContent(item)}
+            </GalleryItem>
+          ))}
         </AnimatePresence>
-      </GalleryContainer>
-    </>
+      </GalleryGrid>
+
+      {/* Load more trigger */}
+      <div ref={loadMoreRef}>
+        {isLoading && (
+          <LoadingSpinner
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+        )}
+      </div>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <Modal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedItem(null)}
+          >
+            <ModalContent
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+            >
+              <CloseButton onClick={() => setSelectedItem(null)}>×</CloseButton>
+              {selectedItem.type === "video" ? (
+                <video
+                  src={selectedItem.url}
+                  autoPlay
+                  controls
+                  loop
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={selectedItem.url}
+                  alt={selectedItem.title || "Gallery image"}
+                />
+              )}
+            </ModalContent>
+          </Modal>
+        )}
+      </AnimatePresence>
+    </GalleryContainer>
   );
 };
 

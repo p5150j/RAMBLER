@@ -2,11 +2,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
-import { HelmetProvider } from "react-helmet-async";
 
 import ScrollToTop from "./components/ScrollToTop";
-import GlobalStyles from "./GlobalStyles";
-import DefaultMetaTags from "./components/DefaultMetaTags";
 
 // Pages
 import Home from "./pages/Home/Home";
@@ -64,45 +61,41 @@ const MainContent = styled.main`
 
 function App() {
   return (
-    <HelmetProvider>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <AuthProvider>
-          <Router>
-            <ScrollToTop />
-            <AppWrapper>
-              <DefaultMetaTags />
-              <Header />
-              <MainContent>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/events" element={<Events />} />
-                  <Route path="/gallery" element={<Gallery />} />
-                  <Route path="/merch" element={<Merch />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route
-                    path="/registration-success"
-                    element={<RegistrationSuccess />}
-                  />
-                  <Route
-                    path="/admin"
-                    element={
-                      <ProtectedRoute>
-                        <Admin />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Routes>
-              </MainContent>
-              <Footer />
-            </AppWrapper>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </HelmetProvider>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <Router>
+          <ScrollToTop />
+          <AppWrapper>
+            <Header />
+            <MainContent>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/merch" element={<Merch />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/registration-success"
+                  element={<RegistrationSuccess />}
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <Admin />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </MainContent>
+            <Footer />
+          </AppWrapper>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

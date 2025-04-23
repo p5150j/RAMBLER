@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import {
   motion,
   AnimatePresence,
@@ -707,48 +706,6 @@ function Home() {
 
   return (
     <>
-      <Helmet>
-        <title>
-          Rocky Mountain Rambler 500 - The Ultimate Beater Car Rally Adventure
-        </title>
-        <meta
-          name="description"
-          content="Experience the Rocky Mountain Rambler 500 - an epic beater car rally through Colorado's challenging terrain. Join fellow gearheads for three days of automotive adventure, creativity, and community."
-        />
-        <meta
-          property="og:title"
-          content="Rocky Mountain Rambler 500 - The Ultimate Beater Car Rally Adventure"
-        />
-        <meta
-          property="og:description"
-          content="Experience the Rocky Mountain Rambler 500 - an epic beater car rally through Colorado's challenging terrain. Join fellow gearheads for three days of automotive adventure, creativity, and community."
-        />
-        <meta property="og:url" content="https://rockymtnrambler.com/" />
-        <meta
-          property="og:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:site_name" content="Rocky Mountain Rambler 500" />
-        <meta property="og:type" content="website" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://rockymtnrambler.com/" />
-        <meta
-          name="twitter:title"
-          content="Rocky Mountain Rambler 500 - The Ultimate Beater Car Rally Adventure"
-        />
-        <meta
-          name="twitter:description"
-          content="Experience the Rocky Mountain Rambler 500 - an epic beater car rally through Colorado's challenging terrain. Join fellow gearheads for three days of automotive adventure, creativity, and community."
-        />
-        <meta
-          name="twitter:image"
-          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
-        />
-      </Helmet>
       <HeroSection>
         <HeroBackground
           style={{ y, scale }}
