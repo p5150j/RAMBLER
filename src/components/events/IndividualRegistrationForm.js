@@ -42,6 +42,7 @@ const IndividualRegistrationForm = ({ event, onSuccess, onCancel }) => {
         email: formData.email,
         phone: formData.phone,
         emergencyContact: formData.emergencyContact,
+        totalCost: event.individualPrice,
       };
 
       // Pass the data directly to the success callback

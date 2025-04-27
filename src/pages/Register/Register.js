@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import PaymentForm from "../../components/PaymentForm";
+import PaymentModal from "../../components/events/PaymentModal";
 import { db } from "../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 
@@ -94,6 +94,28 @@ const ErrorMessage = styled.p`
   margin-top: 5px;
 `;
 
+const SubmitButton = styled(motion.button)`
+  width: 100%;
+  padding: 12px;
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.surface};
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryHover};
+  }
+
+  &:disabled {
+    background: ${({ theme }) => theme.colors.disabled};
+    cursor: not-allowed;
+  }
+`;
+
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -108,6 +130,7 @@ function Register() {
   });
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -132,17 +155,14 @@ function Register() {
     return true;
   };
 
-  const handlePaymentSuccess = async (paymentData) => {
+  const handlePaymentSuccess = async (paymentResult) => {
     setIsSubmitting(true);
     try {
-      // Save registration data with payment info
+      // Save registration data
       const registrationData = {
         ...formData,
-        paymentId: paymentData.payment.id,
-        paymentStatus: paymentData.payment.status,
-        amount: paymentData.payment.amount_money.amount / 100,
         registrationDate: new Date().toISOString(),
-        receiptUrl: paymentData.payment.receipt_url,
+        status: "pending",
       };
 
       // Add to Firestore
@@ -155,7 +175,6 @@ function Register() {
       navigate("/registration-success", {
         state: {
           registrationId: docRef.id,
-          receiptUrl: paymentData.payment.receipt_url,
         },
       });
     } catch (error) {
@@ -171,8 +190,7 @@ function Register() {
     if (!validateForm()) {
       return;
     }
-    // Form is valid, continue to payment section
-    // The actual submission happens after successful payment
+    setShowPaymentModal(true);
   };
 
   return (
@@ -277,22 +295,27 @@ function Register() {
         </FormGroup>
 
         {formError && <ErrorMessage>{formError}</ErrorMessage>}
+
+        <SubmitButton
+          type="submit"
+          disabled={isSubmitting}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          {isSubmitting ? "Processing..." : "Register Now"}
+        </SubmitButton>
       </RegistrationForm>
 
-      <RegistrationFee>
-        <h2>Registration Fee</h2>
-        <FeeAmount>$100</FeeAmount>
-        <p>
-          Includes event entry, participant t-shirt, and post-race celebration
-        </p>
-      </RegistrationFee>
-
-      {/* Only show payment form if all required fields are filled */}
-      {validateForm() && (
-        <PaymentForm
-          amount={100}
+      {showPaymentModal && (
+        <PaymentModal
+          event={{
+            title: "Rocky Mountain Rambler 500",
+            eventType: "individual",
+          }}
+          registrationData={formData}
+          totalAmount={100} // TODO: Get actual registration fee
           onSuccess={handlePaymentSuccess}
-          disabled={isSubmitting}
+          onCancel={() => setShowPaymentModal(false)}
         />
       )}
     </RegisterContainer>

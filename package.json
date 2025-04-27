@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@square/web-payments-sdk-types": "^1.69.0",
-    "@square/web-sdk": "^2.1.0",
     "cra-template": "1.2.0",
     "firebase": "^11.2.0",
     "framer-motion": "^11.18.1",

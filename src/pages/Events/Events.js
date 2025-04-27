@@ -238,6 +238,11 @@ function Events() {
       console.log("Current registration data:", currentRegistration);
       console.log("Registration event:", registrationEvent);
 
+      // Verify payment was successful
+      if (paymentResult.status !== "SUCCESS") {
+        throw new Error("Payment was not successful");
+      }
+
       // Now create the registration with payment details
       console.log("Creating registration in eventService...");
       const registration = await eventService.registerTeam(
@@ -279,9 +284,12 @@ function Events() {
         paymentResult,
       });
       alert(
-        "Payment successful but failed to complete registration. Error: " +
+        "Payment failed or registration could not be completed. Error: " +
           error.message
       );
+      // Reset the registration state on failure
+      setShowPaymentModal(false);
+      setCurrentRegistration(null);
     }
   };
 
@@ -405,14 +413,14 @@ function Events() {
 
               <FeaturedMapSection>
                 <LocationLabel>📍 {featuredEvent.location}</LocationLabel>
-                <SquareMapWrapper>
+                <MapWrapper>
                   <EventMap
                     location={featuredEvent.location}
                     height="100%"
                     showPin={true}
                     zoom={12}
                   />
-                </SquareMapWrapper>
+                </MapWrapper>
               </FeaturedMapSection>
             </FeaturedContentLayout>
           </FeaturedContent>
@@ -737,7 +745,7 @@ const CardMapWrapper = styled.div`
   margin-bottom: 12px;
 `;
 
-const SquareMapWrapper = styled.div`
+const MapWrapper = styled.div`
   width: 100%;
   height: 300px;
   overflow: hidden;
