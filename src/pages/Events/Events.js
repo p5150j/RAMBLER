@@ -239,7 +239,7 @@ function Events() {
       console.log("Registration event:", registrationEvent);
 
       // Verify payment was successful
-      if (paymentResult.status !== "SUCCESS") {
+      if (paymentResult.status !== "succeeded") {
         throw new Error("Payment was not successful");
       }
 

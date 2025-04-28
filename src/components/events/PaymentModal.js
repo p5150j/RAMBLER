@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import PaymentForm from "./PaymentForm";
 
 const PaymentModal = ({
   event,
@@ -37,6 +38,11 @@ const PaymentModal = ({
     }
   };
 
+  const handlePaymentSuccess = (paymentResult) => {
+    onSuccess(paymentResult);
+    onCancel();
+  };
+
   return (
     <Modal onClick={onCancel}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -61,38 +67,18 @@ const PaymentModal = ({
           </SummaryItem>
         </PaymentSummary>
 
-        <PaymentForm onSubmit={handleSubmit}>
-          <CardContainer>
-            <p>Payment processing is not implemented yet.</p>
-            <p>Please contact support to complete your registration.</p>
-          </CardContainer>
+        <PaymentForm
+          amount={totalAmount}
+          onSuccess={handlePaymentSuccess}
+          onCancel={onCancel}
+        />
 
-          {error && (
-            <ErrorContainer>
-              <ErrorIcon>⚠️</ErrorIcon>
-              <ErrorText>{error}</ErrorText>
-            </ErrorContainer>
-          )}
-
-          <ButtonGroup>
-            <SubmitButton
-              type="submit"
-              disabled={isLoading}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isLoading ? "Processing..." : "Pay Now"}
-            </SubmitButton>
-            <CancelButton
-              type="button"
-              onClick={onCancel}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Cancel
-            </CancelButton>
-          </ButtonGroup>
-        </PaymentForm>
+        {error && (
+          <ErrorContainer>
+            <ErrorIcon>⚠️</ErrorIcon>
+            <ErrorText>{error}</ErrorText>
+          </ErrorContainer>
+        )}
       </ModalContent>
     </Modal>
   );
@@ -158,59 +144,6 @@ const SummaryItem = styled.div`
   justify-content: space-between;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const PaymentForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const CardContainer = styled.div`
-  width: 100%;
-  min-height: 100px;
-  padding: 20px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 6px;
-  background: ${({ theme }) => theme.colors.background};
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-`;
-
-const SubmitButton = styled(motion.button)`
-  flex: 1;
-  padding: 12px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-`;
-
-const CancelButton = styled(motion.button)`
-  padding: 12px 24px;
-  background: ${({ theme }) => theme.colors.border};
-  color: ${({ theme }) => theme.colors.textPrimary};
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
 `;
 
 const ErrorContainer = styled.div`
