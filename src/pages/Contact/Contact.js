@@ -104,31 +104,6 @@ function Contact() {
               as={motion.div}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <CardIcon>
-                <FaDiscord />
-              </CardIcon>
-              <CardTitle>Join Our Discord</CardTitle>
-              <CardDescription>
-                Connect with other racers, share tips, and stay updated on
-                events.
-              </CardDescription>
-              <ContactButton
-                as="a"
-                href="#"
-                target="_blank"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <FaDiscord /> Join
-              </ContactButton>
-            </ContactCard>
-
-            <ContactCard
-              as={motion.div}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
               <CardIcon>
