@@ -357,14 +357,14 @@ function Merch() {
   return (
     <>
       <Helmet>
-        <title>Merchandise | Rocky Mountain Rambler</title>
+        <title>Rocky Mountain Rambler | Merchandise</title>
         <meta
           name="description"
           content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
         <meta
           property="og:title"
-          content="Merchandise | Rocky Mountain Rambler"
+          content="Rocky Mountain Rambler | Merchandise"
         />
         <meta
           property="og:description"

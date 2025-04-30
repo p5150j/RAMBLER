@@ -2,7 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
-import { HelmetProvider } from "react-helmet-async";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -68,6 +68,26 @@ function App() {
           <Router>
             <ScrollToTop />
             <AppWrapper>
+              <Helmet defaultTitle="Rocky Mountain Rambler">
+                <meta
+                  name="description"
+                  content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
+                />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Rocky Mountain Rambler" />
+                <meta
+                  property="og:description"
+                  content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
+                />
+                <meta property="og:url" content="https://rockymtnrambler.com" />
+                <meta
+                  property="og:image"
+                  content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+                />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta name="twitter:card" content="summary_large_image" />
+              </Helmet>
               <Header />
               <MainContent>
                 <Routes>

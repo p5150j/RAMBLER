@@ -214,12 +214,12 @@ function Gallery() {
   return (
     <>
       <Helmet>
-        <title>Gallery | Rocky Mountain Rambler</title>
+        <title>Rocky Mountain Rambler | Gallery</title>
         <meta
           name="description"
           content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
-        <meta property="og:title" content="Gallery | Rocky Mountain Rambler" />
+        <meta property="og:title" content="Rocky Mountain Rambler | Gallery" />
         <meta
           property="og:description"
           content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
