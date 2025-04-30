@@ -2,6 +2,7 @@
   "name": "lexi",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://rockymtnrambler.com",
   "dependencies": {
     "@stripe/react-stripe-js": "^3.6.0",
     "@stripe/stripe-js": "^7.2.0",
