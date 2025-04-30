@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   motion,
   AnimatePresence,
@@ -706,6 +707,32 @@ function Home() {
 
   return (
     <>
+      <Helmet>
+        <title>Rocky Mountain Rambler | Home</title>
+        <meta
+          name="description"
+          content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
+        />
+        <meta property="og:title" content="Rocky Mountain Rambler 500" />
+        <meta
+          property="og:description"
+          content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com" />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+      </Helmet>
+
       <HeroSection>
         <HeroBackground
           style={{ y, scale }}

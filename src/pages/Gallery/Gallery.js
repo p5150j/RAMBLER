@@ -1,65 +1,42 @@
 // pages/Gallery/Gallery.js
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { galleryService } from "../../utils/galleryService";
+import styled, { useTheme } from "styled-components";
 import { useInView } from "react-intersection-observer";
+import { Helmet } from "react-helmet-async";
+import { galleryService } from "../../utils/galleryService";
 
 const GalleryContainer = styled.div`
-  padding: 20px;
-  margin-top: 60px;
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.background};
+  padding: 100px 20px 60px;
 `;
 
-const GalleryGrid = styled.div`
+const PageHeader = styled.div`
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 60px;
+`;
+
+const ImageGrid = styled.div`
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-auto-rows: 300px;
-    grid-auto-flow: dense;
-
-    .wide {
-      grid-column: span 2;
-    }
-
-    .tall {
-      grid-row: span 2;
-    }
-
-    .large {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr;
-
-    /* Reset all special sizes on mobile */
-    .wide,
-    .tall,
-    .large {
-      grid-column: auto;
-      grid-row: auto;
-    }
-  }
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
-const GalleryItem = styled(motion.div)`
+const ImageCard = styled(motion.div)`
   position: relative;
-  cursor: pointer;
+  aspect-ratio: 1;
   overflow: hidden;
-  background: ${({ theme }) => theme.colors.surface};
   border-radius: 12px;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
-    aspect-ratio: 4/3; /* Consistent aspect ratio on mobile */
-  }
+  cursor: pointer;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-// Update the media components for better mobile handling
-const LazyImage = ({ src, alt, onClick, ...props }) => {
+const LazyImage = ({ src, alt, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const { ref, inView } = useInView({
     threshold: 0,
@@ -68,15 +45,7 @@ const LazyImage = ({ src, alt, onClick, ...props }) => {
   });
 
   return (
-    <div
-      ref={ref}
-      style={{
-        height: "100%",
-        width: "100%",
-        position: "relative",
-      }}
-      onClick={onClick}
-    >
+    <div ref={ref} style={{ height: "100%", width: "100%" }} onClick={onClick}>
       {inView && (
         <>
           <img
@@ -88,9 +57,9 @@ const LazyImage = ({ src, alt, onClick, ...props }) => {
               height: "100%",
               objectFit: "cover",
               opacity: isLoaded ? 1 : 0,
-              transition: "opacity 0.3s ease",
+              transition: "opacity 0.3s ease, transform 0.3s ease",
+              transform: `scale(${isLoaded ? 1.0 : 1.1})`,
             }}
-            {...props}
           />
           {!isLoaded && <LoadingPlaceholder />}
         </>
@@ -100,70 +69,50 @@ const LazyImage = ({ src, alt, onClick, ...props }) => {
   );
 };
 
-const LazyVideo = ({ src, onClick, ...props }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const { ref, inView } = useInView({
-    threshold: 0,
-    triggerOnce: true,
-    rootMargin: "100px",
-  });
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    if (inView && videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Handle autoplay failure silently
-      });
-    }
-  }, [inView]);
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        height: "100%",
-        width: "100%",
-        position: "relative",
-      }}
-      onClick={onClick}
-    >
-      {inView && (
-        <>
-          <video
-            ref={videoRef}
-            src={src}
-            onLoadedData={() => setIsLoaded(true)}
-            muted
-            loop
-            playsInline
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: isLoaded ? 1 : 0,
-              transition: "opacity 0.3s ease",
-            }}
-            {...props}
-          />
-          {!isLoaded && <LoadingPlaceholder />}
-        </>
-      )}
-      {!inView && <LoadingPlaceholder />}
-    </div>
-  );
-};
-
-// Update the LoadingPlaceholder for better mobile display
 const LoadingPlaceholder = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background: ${({ theme }) => theme.colors.surface};
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ImageOverlay = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  ${ImageCard}:hover & {
+    opacity: 1;
+  }
+`;
+
+const ImageTitle = styled.h3`
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+`;
+
+const LoadingSpinner = styled(motion.div)`
+  width: 40px;
+  height: 40px;
+  border: 3px solid ${({ theme }) => theme.colors.surface};
+  border-top: 3px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 50%;
+  margin: 20px auto;
 `;
 
 const Modal = styled(motion.div)`
@@ -180,77 +129,67 @@ const Modal = styled(motion.div)`
   padding: 20px;
 `;
 
-const ModalContent = styled(motion.div)`
-  max-width: 90vw;
+const ModalImage = styled.img`
+  max-width: 90%;
   max-height: 90vh;
-  position: relative;
-
-  img,
-  video {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-  }
+  object-fit: contain;
 `;
 
 const CloseButton = styled.button`
   position: absolute;
-  top: -40px;
-  right: 0;
+  top: 20px;
+  right: 20px;
   background: none;
   border: none;
   color: white;
   font-size: 24px;
   cursor: pointer;
+  padding: 10px;
 `;
 
-const Gallery = () => {
-  const [items, setItems] = useState([]);
+function Gallery() {
+  const theme = useTheme();
+  const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [lastVisible, setLastVisible] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const fetchedRef = useRef(new Set());
   const ITEMS_PER_PAGE = 12;
-  const fetchedRef = useRef(new Set()); // Track fetched pages
 
-  // Fetch gallery items with pagination
-  const fetchItems = useCallback(async (pageNum) => {
-    // Skip if this page was already fetched
-    if (fetchedRef.current.has(pageNum)) {
-      return;
-    }
+  const fetchImages = useCallback(
+    async (pageNum) => {
+      if (fetchedRef.current.has(pageNum)) {
+        return;
+      }
 
-    try {
-      setIsLoading(true);
-      const newItems = await galleryService.getAllItems(
-        pageNum,
-        ITEMS_PER_PAGE
-      );
+      try {
+        setIsLoading(true);
+        const { images: newImages, lastVisible: newLastVisible } =
+          await galleryService.getAllImages(lastVisible, ITEMS_PER_PAGE);
 
-      setItems((prevItems) => {
-        // Filter out any potential duplicates
-        const newItemIds = new Set(newItems.map((item) => item.id));
-        const filteredPrevItems = prevItems.filter(
-          (item) => !newItemIds.has(item.id)
-        );
-        return [...filteredPrevItems, ...newItems];
-      });
+        if (newImages.length === 0) {
+          setHasMore(false);
+          return;
+        }
 
-      setHasMore(newItems.length === ITEMS_PER_PAGE);
-      fetchedRef.current.add(pageNum); // Mark this page as fetched
-    } catch (error) {
-      console.error("Error fetching gallery items:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+        setImages((prevImages) => [...prevImages, ...newImages]);
+        setLastVisible(newLastVisible);
+        fetchedRef.current.add(pageNum);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [lastVisible]
+  );
 
-  // Initial load
   useEffect(() => {
-    fetchItems(1);
-  }, []); // Remove fetchItems from dependencies
+    fetchImages(1);
+  }, [fetchImages]);
 
-  // Infinite scroll detection
   const { ref: loadMoreRef, inView: loadMoreInView } = useInView({
     threshold: 0,
     rootMargin: "200px",
@@ -260,96 +199,115 @@ const Gallery = () => {
     if (loadMoreInView && hasMore && !isLoading) {
       const nextPage = page + 1;
       setPage(nextPage);
-      fetchItems(nextPage);
+      fetchImages(nextPage);
     }
-  }, [loadMoreInView, hasMore, isLoading, page]);
+  }, [loadMoreInView, hasMore, isLoading, page, fetchImages]);
 
-  const renderMediaContent = (item) => {
-    return item.type === "video" ? (
-      <LazyVideo src={item.url} onClick={() => setSelectedItem(item)} />
-    ) : (
-      <LazyImage
-        src={item.url}
-        alt={item.title || "Gallery image"}
-        onClick={() => setSelectedItem(item)}
-      />
-    );
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedImage(null);
   };
 
   return (
-    <GalleryContainer>
-      <GalleryGrid>
+    <>
+      <Helmet>
+        <title>Gallery | Rocky Mountain Rambler</title>
+        <meta
+          name="description"
+          content="Browse our collection of high-quality images showcasing our products and events."
+        />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://lexi.com/gallery" />
+        <meta property="og:title" content="Gallery | Lexi" />
+        <meta
+          property="og:description"
+          content="Browse our collection of high-quality images showcasing our products and events."
+        />
+        <meta
+          property="og:image"
+          content="https://lexi.com/gallery-og-image.jpg"
+        />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://lexi.com/gallery" />
+        <meta name="twitter:title" content="Gallery | Lexi" />
+        <meta
+          name="twitter:description"
+          content="Browse our collection of high-quality images showcasing our products and events."
+        />
+        <meta
+          name="twitter:image"
+          content="https://lexi.com/gallery-og-image.jpg"
+        />
+      </Helmet>
+
+      <GalleryContainer>
+        <PageHeader>
+          <h1 style={{ marginBottom: "20px" }}>Gallery</h1>
+          <p style={{ color: "#B0B0B0" }}>
+            Explore our collection of high-quality images showcasing our
+            products and events.
+          </p>
+        </PageHeader>
+
+        <ImageGrid>
+          <AnimatePresence>
+            {images.map((image) => (
+              <ImageCard
+                key={image.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <LazyImage
+                  src={image.url}
+                  alt={image.title || "Gallery image"}
+                  onClick={() => handleImageClick(image)}
+                />
+                <ImageOverlay>
+                  <ImageTitle>{image.title || "Untitled"}</ImageTitle>
+                </ImageOverlay>
+              </ImageCard>
+            ))}
+          </AnimatePresence>
+        </ImageGrid>
+
+        <div ref={loadMoreRef}>
+          {isLoading && (
+            <LoadingSpinner
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+          )}
+        </div>
+
         <AnimatePresence>
-          {items.map((item) => (
-            <GalleryItem
-              key={item.id}
-              className={item.size}
+          {selectedImage && (
+            <Modal
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              onClick={handleCloseModal}
             >
-              {renderMediaContent(item)}
-            </GalleryItem>
-          ))}
+              <CloseButton onClick={handleCloseModal}>×</CloseButton>
+              <ModalImage
+                src={selectedImage.url}
+                alt={selectedImage.title || "Gallery image"}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </Modal>
+          )}
         </AnimatePresence>
-      </GalleryGrid>
-
-      {/* Load more trigger */}
-      <div ref={loadMoreRef}>
-        {isLoading && (
-          <LoadingSpinner
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-        )}
-      </div>
-
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedItem && (
-          <Modal
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedItem(null)}
-          >
-            <ModalContent
-              onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            >
-              <CloseButton onClick={() => setSelectedItem(null)}>×</CloseButton>
-              {selectedItem.type === "video" ? (
-                <video
-                  src={selectedItem.url}
-                  autoPlay
-                  controls
-                  loop
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={selectedItem.url}
-                  alt={selectedItem.title || "Gallery image"}
-                />
-              )}
-            </ModalContent>
-          </Modal>
-        )}
-      </AnimatePresence>
-    </GalleryContainer>
+      </GalleryContainer>
+    </>
   );
-};
-
-const LoadingSpinner = styled(motion.div)`
-  width: 40px;
-  height: 40px;
-  border: 3px solid ${({ theme }) => theme.colors.surface};
-  border-top: 3px solid ${({ theme }) => theme.colors.primary};
-  border-radius: 50%;
-  margin: 20px auto;
-`;
+}
 
 export default Gallery;

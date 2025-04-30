@@ -8,6 +8,8 @@ import {
   query,
   getDocs,
   orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
@@ -48,5 +50,44 @@ export const galleryService = {
   deleteItem: async (id) => {
     const itemRef = doc(db, GALLERY_COLLECTION, id);
     return await deleteDoc(itemRef);
+  },
+
+  async getAllImages(lastVisible = null, pageSize = 12) {
+    try {
+      let q = query(
+        collection(db, GALLERY_COLLECTION),
+        orderBy("createdAt", "desc"),
+        limit(pageSize)
+      );
+
+      if (lastVisible) {
+        q = query(
+          collection(db, GALLERY_COLLECTION),
+          orderBy("createdAt", "desc"),
+          startAfter(lastVisible),
+          limit(pageSize)
+        );
+      }
+
+      const querySnapshot = await getDocs(q);
+      const images = [];
+      let lastDoc = null;
+
+      querySnapshot.forEach((doc) => {
+        images.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+        lastDoc = doc;
+      });
+
+      return {
+        images,
+        lastVisible: lastDoc,
+      };
+    } catch (error) {
+      console.error("Error fetching gallery images:", error);
+      throw error;
+    }
   },
 };

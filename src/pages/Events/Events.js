@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback, memo } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { eventService } from "../../utils/eventService";
@@ -303,179 +304,209 @@ function Events() {
   if (!events.length) return <EmptyState>No events found.</EmptyState>;
 
   return (
-    <EventsContainer>
-      {featuredEvent && (
-        <FeaturedEvent>
-          <FeaturedBackground
-            style={{
-              backgroundImage: `url("${featuredEvent.image}")`,
-            }}
-          />
-          <FeaturedContent>
-            <FeaturedContentLayout>
-              <FeaturedMainContent>
-                <EventStatus $status="active">Featured Event</EventStatus>
-                <EventDate>
-                  {new Date(featuredEvent.date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </EventDate>
-                <h1 style={{ fontSize: "2.5rem", margin: "20px 0" }}>
-                  {featuredEvent.title}
-                </h1>
-                <p
-                  style={{
-                    fontSize: "1.1rem",
-                    marginBottom: "20px",
-                    lineHeight: "1.6",
-                  }}
-                >
-                  {featuredEvent.description}
-                </p>
+    <>
+      <Helmet>
+        <title>Events | Rocky Mountain Rambler</title>
+        <meta
+          name="description"
+          content="Discover upcoming events at Rocky Mountain Rambler, including the Rocky Mountain Rambler 500 and other automotive adventures."
+        />
+        <meta property="og:title" content="Events - Rocky Mountain Rambler" />
+        <meta
+          property="og:description"
+          content="Join us for exciting automotive events and adventures in the Rocky Mountains."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/events" />
+        <meta
+          property="og:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:image"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
+        />
+      </Helmet>
 
-                <EventStats>
-                  {featuredEvent.eventType === "team" ? (
-                    <>
-                      <StatItem>
-                        <div className="label">Team Size</div>
-                        <div className="value">
-                          {featuredEvent.minTeamSize}-
-                          {featuredEvent.maxTeamSize} members
-                        </div>
-                      </StatItem>
-                      <StatItem>
-                        <div className="label">Base Price</div>
-                        <div className="value">${featuredEvent.basePrice}</div>
-                      </StatItem>
-                      <StatItem>
-                        <div className="label">Teams Registered</div>
-                        <div className="value">
-                          {featuredEvent.registeredTeams} /{" "}
-                          {featuredEvent.capacity}
-                        </div>
-                      </StatItem>
-                    </>
-                  ) : (
-                    <>
-                      <StatItem>
-                        <div className="label">Event Type</div>
-                        <div className="value">Individual</div>
-                      </StatItem>
-                      <StatItem>
-                        <div className="label">Price</div>
-                        <div className="value">
-                          ${featuredEvent.individualPrice}
-                        </div>
-                      </StatItem>
-                      <StatItem>
-                        <div className="label">Spots Filled</div>
-                        <div className="value">
-                          {featuredEvent.registeredTeams} /{" "}
-                          {featuredEvent.capacity}
-                        </div>
-                      </StatItem>
-                    </>
-                  )}
-                </EventStats>
-                <h3 style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
-                  Requirements
-                </h3>
-                <p style={{ color: "#B0B0B0", lineHeight: "1.6" }}>
-                  {featuredEvent.requirements}
-                </p>
+      <EventsContainer>
+        {featuredEvent && (
+          <FeaturedEvent>
+            <FeaturedBackground
+              style={{
+                backgroundImage: `url("${featuredEvent.image}")`,
+              }}
+            />
+            <FeaturedContent>
+              <FeaturedContentLayout>
+                <FeaturedMainContent>
+                  <EventStatus $status="active">Featured Event</EventStatus>
+                  <EventDate>
+                    {new Date(featuredEvent.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </EventDate>
+                  <h1 style={{ fontSize: "2.5rem", margin: "20px 0" }}>
+                    {featuredEvent.title}
+                  </h1>
+                  <p
+                    style={{
+                      fontSize: "1.1rem",
+                      marginBottom: "20px",
+                      lineHeight: "1.6",
+                    }}
+                  >
+                    {featuredEvent.description}
+                  </p>
 
-                <RegisterButton
-                  whileHover={
-                    !isRegisteredForEvent(featuredEvent.id)
-                      ? { scale: 1.02 }
-                      : {}
-                  }
-                  whileTap={
-                    !isRegisteredForEvent(featuredEvent.id)
-                      ? { scale: 0.98 }
-                      : {}
-                  }
-                  onClick={() =>
-                    !isRegisteredForEvent(featuredEvent.id) &&
-                    handleRegister(featuredEvent)
-                  }
-                  disabled={isRegisteredForEvent(featuredEvent.id)}
-                  $isRegistered={isRegisteredForEvent(featuredEvent.id)}
-                >
-                  {isRegisteredForEvent(featuredEvent.id)
-                    ? "Registered"
-                    : "Register Now"}
-                </RegisterButton>
-              </FeaturedMainContent>
+                  <EventStats>
+                    {featuredEvent.eventType === "team" ? (
+                      <>
+                        <StatItem>
+                          <div className="label">Team Size</div>
+                          <div className="value">
+                            {featuredEvent.minTeamSize}-
+                            {featuredEvent.maxTeamSize} members
+                          </div>
+                        </StatItem>
+                        <StatItem>
+                          <div className="label">Base Price</div>
+                          <div className="value">
+                            ${featuredEvent.basePrice}
+                          </div>
+                        </StatItem>
+                        <StatItem>
+                          <div className="label">Teams Registered</div>
+                          <div className="value">
+                            {featuredEvent.registeredTeams} /{" "}
+                            {featuredEvent.capacity}
+                          </div>
+                        </StatItem>
+                      </>
+                    ) : (
+                      <>
+                        <StatItem>
+                          <div className="label">Event Type</div>
+                          <div className="value">Individual</div>
+                        </StatItem>
+                        <StatItem>
+                          <div className="label">Price</div>
+                          <div className="value">
+                            ${featuredEvent.individualPrice}
+                          </div>
+                        </StatItem>
+                        <StatItem>
+                          <div className="label">Spots Filled</div>
+                          <div className="value">
+                            {featuredEvent.registeredTeams} /{" "}
+                            {featuredEvent.capacity}
+                          </div>
+                        </StatItem>
+                      </>
+                    )}
+                  </EventStats>
+                  <h3 style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
+                    Requirements
+                  </h3>
+                  <p style={{ color: "#B0B0B0", lineHeight: "1.6" }}>
+                    {featuredEvent.requirements}
+                  </p>
 
-              <FeaturedMapSection>
-                <LocationLabel>📍 {featuredEvent.location}</LocationLabel>
-                <MapWrapper>
-                  <EventMap
-                    location={featuredEvent.location}
-                    height="100%"
-                    showPin={true}
-                    zoom={12}
-                  />
-                </MapWrapper>
-              </FeaturedMapSection>
-            </FeaturedContentLayout>
-          </FeaturedContent>
-        </FeaturedEvent>
-      )}
+                  <RegisterButton
+                    whileHover={
+                      !isRegisteredForEvent(featuredEvent.id)
+                        ? { scale: 1.02 }
+                        : {}
+                    }
+                    whileTap={
+                      !isRegisteredForEvent(featuredEvent.id)
+                        ? { scale: 0.98 }
+                        : {}
+                    }
+                    onClick={() =>
+                      !isRegisteredForEvent(featuredEvent.id) &&
+                      handleRegister(featuredEvent)
+                    }
+                    disabled={isRegisteredForEvent(featuredEvent.id)}
+                    $isRegistered={isRegisteredForEvent(featuredEvent.id)}
+                  >
+                    {isRegisteredForEvent(featuredEvent.id)
+                      ? "Registered"
+                      : "Register Now"}
+                  </RegisterButton>
+                </FeaturedMainContent>
 
-      <EventsGrid>
-        {events
-          .filter((event) => !event.featured)
-          .map((event) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              onRegister={handleRegister}
-              isRegistered={isRegisteredForEvent(event.id)}
+                <FeaturedMapSection>
+                  <LocationLabel>📍 {featuredEvent.location}</LocationLabel>
+                  <MapWrapper>
+                    <EventMap
+                      location={featuredEvent.location}
+                      height="100%"
+                      showPin={true}
+                      zoom={12}
+                    />
+                  </MapWrapper>
+                </FeaturedMapSection>
+              </FeaturedContentLayout>
+            </FeaturedContent>
+          </FeaturedEvent>
+        )}
+
+        <EventsGrid>
+          {events
+            .filter((event) => !event.featured)
+            .map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onRegister={handleRegister}
+                isRegistered={isRegisteredForEvent(event.id)}
+              />
+            ))}
+        </EventsGrid>
+
+        {showRegistrationForm &&
+          registrationEvent &&
+          (registrationEvent.eventType === "team" ? (
+            <TeamRegistrationForm
+              event={registrationEvent}
+              onSubmit={handleRegistrationSubmit}
+              onClose={() => {
+                setShowRegistrationForm(false);
+                setRegistrationEvent(null);
+              }}
+            />
+          ) : (
+            <IndividualRegistrationForm
+              event={registrationEvent}
+              onSuccess={handleRegistrationSubmit}
+              onCancel={() => {
+                setShowRegistrationForm(false);
+                setRegistrationEvent(null);
+              }}
             />
           ))}
-      </EventsGrid>
 
-      {showRegistrationForm &&
-        registrationEvent &&
-        (registrationEvent.eventType === "team" ? (
-          <TeamRegistrationForm
+        {showPaymentModal && currentRegistration && (
+          <PaymentModal
             event={registrationEvent}
-            onSubmit={handleRegistrationSubmit}
-            onClose={() => {
-              setShowRegistrationForm(false);
-              setRegistrationEvent(null);
-            }}
-          />
-        ) : (
-          <IndividualRegistrationForm
-            event={registrationEvent}
-            onSuccess={handleRegistrationSubmit}
+            registrationData={currentRegistration}
+            totalAmount={currentRegistration.totalCost}
+            onSuccess={handlePaymentSuccess}
             onCancel={() => {
-              setShowRegistrationForm(false);
-              setRegistrationEvent(null);
+              console.log("Payment modal cancelled");
+              setShowPaymentModal(false);
+              setCurrentRegistration(null);
             }}
           />
-        ))}
-
-      {showPaymentModal && currentRegistration && (
-        <PaymentModal
-          event={registrationEvent}
-          registrationData={currentRegistration}
-          totalAmount={currentRegistration.totalCost}
-          onSuccess={handlePaymentSuccess}
-          onCancel={() => {
-            console.log("Payment modal cancelled");
-            setShowPaymentModal(false);
-            setCurrentRegistration(null);
-          }}
-        />
-      )}
-    </EventsContainer>
+        )}
+      </EventsContainer>
+    </>
   );
 }
 // Styled Components
