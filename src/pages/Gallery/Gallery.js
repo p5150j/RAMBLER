@@ -217,33 +217,25 @@ function Gallery() {
         <title>Gallery | Rocky Mountain Rambler</title>
         <meta
           name="description"
-          content="Browse our collection of high-quality images showcasing our products and events."
+          content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://lexi.com/gallery" />
-        <meta property="og:title" content="Gallery | Lexi" />
+        <meta property="og:title" content="Gallery | Rocky Mountain Rambler" />
         <meta
           property="og:description"
-          content="Browse our collection of high-quality images showcasing our products and events."
+          content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
         />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/gallery" />
         <meta
           property="og:image"
-          content="https://lexi.com/gallery-og-image.jpg"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
-
-        {/* Twitter */}
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://lexi.com/gallery" />
-        <meta name="twitter:title" content="Gallery | Lexi" />
-        <meta
-          name="twitter:description"
-          content="Browse our collection of high-quality images showcasing our products and events."
-        />
         <meta
           name="twitter:image"
-          content="https://lexi.com/gallery-og-image.jpg"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
 

@@ -357,39 +357,31 @@ function Merch() {
   return (
     <>
       <Helmet>
-        <title>Merchandise | Official Store</title>
+        <title>Merchandise | Rocky Mountain Rambler</title>
         <meta
           name="description"
-          content="Shop official Lexi merchandise including t-shirts, hoodies, and accessories. High-quality products with unique designs."
+          content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://lexi.com/merch" />
-        <meta property="og:title" content="Lexi Merchandise | Official Store" />
+        <meta
+          property="og:title"
+          content="Merchandise | Rocky Mountain Rambler"
+        />
         <meta
           property="og:description"
-          content="Shop official Lexi merchandise including t-shirts, hoodies, and accessories. High-quality products with unique designs."
+          content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
         />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://rockymtnrambler.com/merch" />
         <meta
           property="og:image"
-          content="https://lexi.com/merch-og-image.jpg"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
-
-        {/* Twitter */}
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://lexi.com/merch" />
-        <meta
-          name="twitter:title"
-          content="Lexi Merchandise | Official Store"
-        />
-        <meta
-          name="twitter:description"
-          content="Shop official Lexi merchandise including t-shirts, hoodies, and accessories. High-quality products with unique designs."
-        />
         <meta
           name="twitter:image"
-          content="https://lexi.com/merch-og-image.jpg"
+          content="https://cdn.midjourney.com/7acc5f35-d99b-4c67-ba76-ed427ee66105/0_0.png"
         />
       </Helmet>
 

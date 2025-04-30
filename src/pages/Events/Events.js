@@ -309,12 +309,12 @@ function Events() {
         <title>Events | Rocky Mountain Rambler</title>
         <meta
           name="description"
-          content="Discover upcoming events at Rocky Mountain Rambler, including the Rocky Mountain Rambler 500 and other automotive adventures."
+          content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
-        <meta property="og:title" content="Events - Rocky Mountain Rambler" />
+        <meta property="og:title" content="Events | Rocky Mountain Rambler" />
         <meta
           property="og:description"
-          content="Join us for exciting automotive events and adventures in the Rocky Mountains."
+          content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://rockymtnrambler.com/events" />
