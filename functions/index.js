@@ -11,7 +11,11 @@ console.log("Function starting...");
 exports.createPaymentIntent = onRequest(
   {
     secrets: [stripeSecret],
-    cors: ["http://localhost:3000", "http://127.0.0.1:3000"],
+    cors: [
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "https://rockymtnrambler.com",
+    ],
   },
   async (req, res) => {
     if (req.method !== "POST") {
