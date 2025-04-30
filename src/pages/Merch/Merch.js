@@ -308,52 +308,6 @@ function Merch() {
     [currentUser, selectedSizes, navigate]
   );
 
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        Loading products...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "red",
-        }}
-      >
-        {error}
-      </div>
-    );
-  }
-
-  if (!products.length) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        No products available.
-      </div>
-    );
-  }
-
   return (
     <>
       <Helmet>
@@ -362,10 +316,7 @@ function Merch() {
           name="description"
           content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
-        <meta
-          property="og:title"
-          content="Rocky Mountain Rambler | Merchandise"
-        />
+        <meta property="og:title" content="Rocky Mountain Rambler 500" />
         <meta
           property="og:description"
           content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
@@ -385,116 +336,154 @@ function Merch() {
         />
       </Helmet>
 
-      <MerchContainer>
-        <PageHeader>
-          <h1 style={{ marginBottom: "20px" }}>Rambler Merchandise</h1>
-          <p style={{ color: "#B0B0B0" }}>
-            Rep your favorite $3K racing series with our official merchandise.
-            All products feature premium materials and original designs.
-          </p>
-        </PageHeader>
+      {isLoading ? (
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Loading products...
+        </div>
+      ) : error ? (
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "red",
+          }}
+        >
+          {error}
+        </div>
+      ) : !products.length ? (
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          No products available.
+        </div>
+      ) : (
+        <MerchContainer>
+          <PageHeader>
+            <h1 style={{ marginBottom: "20px" }}>Rambler Merchandise</h1>
+            <p style={{ color: "#B0B0B0" }}>
+              Rep your favorite $3K racing series with our official merchandise.
+              All products feature premium materials and original designs.
+            </p>
+          </PageHeader>
 
-        <ProductGrid>
-          <AnimatePresence>
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProductImage>
-                  {product.badge && (
-                    <ProductBadge>{product.badge}</ProductBadge>
-                  )}
-                  <LazyImage
-                    src={product.image}
-                    alt={product.title}
-                    onClick={() => handleAddToCart(product)}
-                  />
-                </ProductImage>
-                <ProductInfo>
-                  <ProductTitle>{product.title}</ProductTitle>
-                  <ProductDescription>{product.description}</ProductDescription>
-                  <ProductPrice>
-                    <span>
-                      {product.originalPrice && (
-                        <span className="original-price">
-                          ${product.originalPrice}
+          <ProductGrid>
+            <AnimatePresence>
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ProductImage>
+                    {product.badge && (
+                      <ProductBadge>{product.badge}</ProductBadge>
+                    )}
+                    <LazyImage
+                      src={product.image}
+                      alt={product.title}
+                      onClick={() => handleAddToCart(product)}
+                    />
+                  </ProductImage>
+                  <ProductInfo>
+                    <ProductTitle>{product.title}</ProductTitle>
+                    <ProductDescription>
+                      {product.description}
+                    </ProductDescription>
+                    <ProductPrice>
+                      <span>
+                        {product.originalPrice && (
+                          <span className="original-price">
+                            ${product.originalPrice}
+                          </span>
+                        )}
+                        <span className="price">${product.price}</span>
+                      </span>
+                      {!product.inStock && (
+                        <span style={{ color: theme.colors.textMuted }}>
+                          Out of Stock
                         </span>
                       )}
-                      <span className="price">${product.price}</span>
-                    </span>
-                    {!product.inStock && (
-                      <span style={{ color: theme.colors.textMuted }}>
-                        Out of Stock
-                      </span>
-                    )}
-                  </ProductPrice>
+                    </ProductPrice>
 
-                  <SizeSelect
-                    value={selectedSizes[product.id] || ""}
-                    onChange={(e) =>
-                      handleSizeChange(product.id, e.target.value)
-                    }
-                    disabled={!product.inStock}
-                  >
-                    <option value="">Select Size</option>
-                    {product.sizes.map((size) => (
-                      <option key={size} value={size}>
-                        {size}
-                      </option>
-                    ))}
-                  </SizeSelect>
+                    <SizeSelect
+                      value={selectedSizes[product.id] || ""}
+                      onChange={(e) =>
+                        handleSizeChange(product.id, e.target.value)
+                      }
+                      disabled={!product.inStock}
+                    >
+                      <option value="">Select Size</option>
+                      {product.sizes.map((size) => (
+                        <option key={size} value={size}>
+                          {size}
+                        </option>
+                      ))}
+                    </SizeSelect>
 
-                  <AddToCartButton
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={!product.inStock || !selectedSizes[product.id]}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    {product.inStock ? "Add to Cart" : "Out of Stock"}
-                  </AddToCartButton>
-                </ProductInfo>
-              </ProductCard>
-            ))}
-          </AnimatePresence>
-        </ProductGrid>
+                    <AddToCartButton
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      disabled={!product.inStock || !selectedSizes[product.id]}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      {product.inStock ? "Add to Cart" : "Out of Stock"}
+                    </AddToCartButton>
+                  </ProductInfo>
+                </ProductCard>
+              ))}
+            </AnimatePresence>
+          </ProductGrid>
 
-        <div ref={loadMoreRef}>
-          {isLoading && (
-            <LoadingSpinner
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-          )}
-        </div>
+          <div ref={loadMoreRef}>
+            {isLoading && (
+              <LoadingSpinner
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+            )}
+          </div>
 
-        <ComingSoonOverlay>
-          <ComingSoonCard
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <h2>Coming Soon</h2>
-            <p>
-              Our merchandise store is currently under construction. Get ready
-              to rep your favorite $3K racing series with our official gear.
-              Sign up for our newsletter to be notified when we launch!
-            </p>
-            <AddToCartButton
-              as="a"
-              href="mailto:rockymountainrambler500@gmail.com"
-              style={{ display: "inline-block", textDecoration: "none" }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+          <ComingSoonOverlay>
+            <ComingSoonCard
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              Get Notified
-            </AddToCartButton>
-          </ComingSoonCard>
-        </ComingSoonOverlay>
-      </MerchContainer>
+              <h2>Coming Soon</h2>
+              <p>
+                Our merchandise store is currently under construction. Get ready
+                to rep your favorite $3K racing series with our official gear.
+                Sign up for our newsletter to be notified when we launch!
+              </p>
+              <AddToCartButton
+                as="a"
+                href="mailto:rockymountainrambler500@gmail.com"
+                style={{ display: "inline-block", textDecoration: "none" }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Get Notified
+              </AddToCartButton>
+            </ComingSoonCard>
+          </ComingSoonOverlay>
+        </MerchContainer>
+      )}
     </>
   );
 }

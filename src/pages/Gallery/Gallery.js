@@ -219,7 +219,7 @@ function Gallery() {
           name="description"
           content="Join the Rocky Mountain Rambler 500 - A unique automotive adventure combining car shows, adventure courses, and community events in the Rocky Mountains."
         />
-        <meta property="og:title" content="Rocky Mountain Rambler | Gallery" />
+        <meta property="og:title" content="Rocky Mountain Rambler 500" />
         <meta
           property="og:description"
           content="Join us for an unforgettable automotive adventure in the Rocky Mountains."
@@ -239,65 +239,81 @@ function Gallery() {
         />
       </Helmet>
 
-      <GalleryContainer>
-        <PageHeader>
-          <h1 style={{ marginBottom: "20px" }}>Gallery</h1>
-          <p style={{ color: "#B0B0B0" }}>
-            Explore our collection of high-quality images showcasing our
-            products and events.
-          </p>
-        </PageHeader>
-
-        <ImageGrid>
-          <AnimatePresence>
-            {images.map((image) => (
-              <ImageCard
-                key={image.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <LazyImage
-                  src={image.url}
-                  alt={image.title || "Gallery image"}
-                  onClick={() => handleImageClick(image)}
-                />
-                <ImageOverlay>
-                  <ImageTitle>{image.title || "Untitled"}</ImageTitle>
-                </ImageOverlay>
-              </ImageCard>
-            ))}
-          </AnimatePresence>
-        </ImageGrid>
-
-        <div ref={loadMoreRef}>
-          {isLoading && (
-            <LoadingSpinner
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-          )}
+      {isLoading ? (
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <LoadingSpinner
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
         </div>
+      ) : (
+        <GalleryContainer>
+          <PageHeader>
+            <h1 style={{ marginBottom: "20px" }}>Gallery</h1>
+            <p style={{ color: "#B0B0B0" }}>
+              Explore our collection of high-quality images showcasing our
+              products and events.
+            </p>
+          </PageHeader>
 
-        <AnimatePresence>
-          {selectedImage && (
-            <Modal
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={handleCloseModal}
-            >
-              <CloseButton onClick={handleCloseModal}>×</CloseButton>
-              <ModalImage
-                src={selectedImage.url}
-                alt={selectedImage.title || "Gallery image"}
-                onClick={(e) => e.stopPropagation()}
+          <ImageGrid>
+            <AnimatePresence>
+              {images.map((image) => (
+                <ImageCard
+                  key={image.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <LazyImage
+                    src={image.url}
+                    alt={image.title || "Gallery image"}
+                    onClick={() => handleImageClick(image)}
+                  />
+                  <ImageOverlay>
+                    <ImageTitle>{image.title || "Untitled"}</ImageTitle>
+                  </ImageOverlay>
+                </ImageCard>
+              ))}
+            </AnimatePresence>
+          </ImageGrid>
+
+          <div ref={loadMoreRef}>
+            {isLoading && (
+              <LoadingSpinner
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               />
-            </Modal>
-          )}
-        </AnimatePresence>
-      </GalleryContainer>
+            )}
+          </div>
+
+          <AnimatePresence>
+            {selectedImage && (
+              <Modal
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={handleCloseModal}
+              >
+                <CloseButton onClick={handleCloseModal}>×</CloseButton>
+                <ModalImage
+                  src={selectedImage.url}
+                  alt={selectedImage.title || "Gallery image"}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </Modal>
+            )}
+          </AnimatePresence>
+        </GalleryContainer>
+      )}
     </>
   );
 }
