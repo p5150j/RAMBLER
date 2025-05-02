@@ -101,6 +101,32 @@ export const eventService = {
       throw new Error("Event is at capacity");
     }
 
+    // Only validate team members if this is a team event with additional members
+    if (
+      eventData.eventType === "team" &&
+      registrationData.teamMembers?.length > eventData.minTeamSize
+    ) {
+      console.log(
+        "Validating additional team members:",
+        registrationData.teamMembers
+      );
+      // Ensure all additional members have required fields
+      const validatedTeamMembers = registrationData.teamMembers.map(
+        (member) => {
+          if (!member.name || !member.email) {
+            throw new Error("Additional team members must have name and email");
+          }
+          return {
+            name: member.name,
+            email: member.email,
+            phone: member.phone || "",
+            shirtSize: eventData.includesShirt ? member.shirtSize || "" : "",
+          };
+        }
+      );
+      registrationData.teamMembers = validatedTeamMembers;
+    }
+
     // Calculate total cost based on event type
     let totalCost = registrationData.totalCost;
 
