@@ -332,15 +332,43 @@ const SponsorsSection = styled.section`
   background: ${({ theme }) => theme.colors.surface};
 `;
 
-const SponsorsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  align-items: center;
-  justify-items: center;
+const SponsorsContainer = styled.div`
   max-width: 1200px;
   margin: 40px auto 0;
   padding: 0 20px;
+`;
+
+const TierOneSponsors = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+  }
+`;
+
+const TierTwoSponsors = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+`;
+
+const SponsorsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  align-items: center;
+  justify-items: center;
+  max-width: 800px;
+  margin: 0 auto;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -351,12 +379,17 @@ const SponsorsGrid = styled.div`
 const SponsorLogo = styled.img`
   height: auto;
   width: 100%;
-  max-width: 260px;
+  max-width: ${props => props.$tier === 'one' ? '400px' : props.$tier === 'two' ? '250px' : '150px'};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.border};
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 
   @media (max-width: 768px) {
-    max-width: 100%;
+    max-width: ${props => props.$tier === 'one' ? '280px' : props.$tier === 'two' ? '160px' : '120px'};
   }
 `;
 
@@ -902,68 +935,129 @@ function Home() {
       <SponsorsSection>
         <Container>
           <SectionTitle>Our Sponsors</SectionTitle>
-          <SponsorsGrid>
-            <a
-              href="https://www.pineridgeseamlessgutters.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SponsorLogo
-                src="https://arusimages.s3.us-west-2.amazonaws.com/logo2.png"
-                alt="Pine Ridge Seamless Gutters"
-              />
-            </a>
-            <a
-              href="https://www.blackmonarchhotel.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SponsorLogo
-                src="https://arusimages.s3.us-west-2.amazonaws.com/logo1.png"
-                alt="Black Monarch Hotel"
-              />
-            </a>
-            <a
-              href="https://www.squatchdisposal.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SponsorLogo
-                src="https://arusimages.s3.us-west-2.amazonaws.com/sdtranslogo.png"
-                alt="Squatch Disposal"
-              />
-            </a>
-            <a
-              href="https://westernskiesco.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SponsorLogo
-                src="https://arusimages.s3.us-west-2.amazonaws.com/WSDC_Logo_for_Shopify_200x200_96_dpi.png"
-                alt="Western Skies Design Co"
-              />
-            </a>
-            <a
-              href="https://www.facebook.com/people/Taylor-Built-painting-and-remodeling/100063595890182/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SponsorLogo
-                src="https://arusimages.s3.us-west-2.amazonaws.com/tbtranslogo.png"
-                alt="Taylor Built Painting and Remodeling"
-              />
-            </a>
-            <a
-              href="https://rawsonroofing.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SponsorLogo
-                src="https://arusimages.s3.us-west-2.amazonaws.com/rawsontransparent.png"
-                alt="Rawson Roofing"
-              />
-            </a>
-          </SponsorsGrid>
+          <SponsorsContainer>
+            {/* Tier 1 - Largest Sponsor */}
+            <TierOneSponsors>
+              <a
+                href="https://tellerwifi.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="/sponsors/tellerwifi.png"
+                  alt="TellerWifi"
+                  $tier="one"
+                />
+              </a>
+            </TierOneSponsors>
+
+            {/* Tier 2 - Pine Ridge alone */}
+            <TierTwoSponsors>
+              <a
+                href="https://www.pineridgeseamlessgutters.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="/sponsors/pineridge.png"
+                  alt="Pine Ridge Seamless Gutters"
+                  $tier="two"
+                />
+              </a>
+            </TierTwoSponsors>
+
+            {/* Tier 3 - Regular Sponsors Grid (2 per row) */}
+            <SponsorsGrid>
+              <a
+                href="https://www.squatchdisposal.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="https://arusimages.s3.us-west-2.amazonaws.com/sdtranslogo.png"
+                  alt="Squatch Disposal"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://westernskiesco.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="https://arusimages.s3.us-west-2.amazonaws.com/WSDC_Logo_for_Shopify_200x200_96_dpi.png"
+                  alt="Western Skies Design Co"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://www.nomadcruisers.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="/sponsors/nomadcrusiers.png"
+                  alt="Nomad Cruisers"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://dreamlegacysolutionsllc.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="/sponsors/dreamLegacy.png"
+                  alt="Dream Legacy Solutions"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=100084838143256"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="/sponsors/4mile.png"
+                  alt="4 Mile Septic"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://www.facebook.com/people/Taylor-Built-painting-and-remodeling/100063595890182/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="https://arusimages.s3.us-west-2.amazonaws.com/tbtranslogo.png"
+                  alt="Taylor Built Painting and Remodeling"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://rawsonroofing.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="https://arusimages.s3.us-west-2.amazonaws.com/rawsontransparent.png"
+                  alt="Rawson Roofing"
+                  $tier="three"
+                />
+              </a>
+              <a
+                href="https://www.elks.org/lodges/home.cfm?LodgeNumber=367"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SponsorLogo
+                  src="/sponsors/elks.png"
+                  alt="Elks Victor Lodge #367"
+                  $tier="three"
+                />
+              </a>
+            </SponsorsGrid>
+          </SponsorsContainer>
         </Container>
       </SponsorsSection>
 
