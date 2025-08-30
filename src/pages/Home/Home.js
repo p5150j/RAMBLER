@@ -944,7 +944,7 @@ function Home() {
                 rel="noopener noreferrer"
               >
                 <SponsorLogo
-                  src="/sponsors/tellerwifi.png"
+                  src="/sponsors/tellerwifinew.png"
                   alt="TellerWifi"
                   $tier="one"
                 />
