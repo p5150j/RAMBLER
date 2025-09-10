@@ -342,7 +342,7 @@ const TierOneSponsors = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
-  
+
   @media (max-width: 768px) {
     margin-bottom: 30px;
   }
@@ -354,7 +354,7 @@ const TierTwoSponsors = styled.div`
   gap: 40px;
   margin-bottom: 40px;
   flex-wrap: wrap;
-  
+
   @media (max-width: 768px) {
     gap: 20px;
     margin-bottom: 30px;
@@ -379,7 +379,12 @@ const SponsorsGrid = styled.div`
 const SponsorLogo = styled.img`
   height: auto;
   width: 100%;
-  max-width: ${props => props.$tier === 'one' ? '400px' : props.$tier === 'two' ? '250px' : '150px'};
+  max-width: ${(props) =>
+    props.$tier === "one"
+      ? "400px"
+      : props.$tier === "two"
+      ? "250px"
+      : "150px"};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   transition: transform 0.3s ease;
@@ -389,7 +394,12 @@ const SponsorLogo = styled.img`
   }
 
   @media (max-width: 768px) {
-    max-width: ${props => props.$tier === 'one' ? '280px' : props.$tier === 'two' ? '160px' : '120px'};
+    max-width: ${(props) =>
+      props.$tier === "one"
+        ? "280px"
+        : props.$tier === "two"
+        ? "160px"
+        : "120px"};
   }
 `;
 
@@ -944,7 +954,7 @@ function Home() {
                 rel="noopener noreferrer"
               >
                 <SponsorLogo
-                  src="/sponsors/tellerwifinew.png"
+                  src="/sponsors/oldtellerwifi.png"
                   alt="TellerWifi"
                   $tier="one"
                 />

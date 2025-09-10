@@ -38,8 +38,10 @@ const Logo = styled(motion(Link))`
   text-decoration: none;
 
   img {
-    height: 55px;
+    height: 45px;
     width: auto;
+    max-width: 180px;
+    object-fit: contain;
     filter: ${({ $scrolled }) => ($scrolled ? "none" : "brightness(1.2)")};
     transition: filter 0.3s ease;
   }
@@ -226,7 +228,7 @@ function Header() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <img src="./logo.png" alt="Rambler 500 Logo" />
+          <img src="/sponsors/tellerwifinew.png" alt="Rambler 500 Logo" />
         </Logo>
 
         <NavLinks>
