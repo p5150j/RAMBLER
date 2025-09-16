@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import styled, { useTheme } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaDownload } from "react-icons/fa";
 import EventForm from "./EventForm";
 import { eventService } from "../../utils/eventService";
+import { exportToCSV, formatEventRegistrationsForCSV } from "../../utils/csvExport";
 
 function EventsManager() {
   const theme = useTheme();
@@ -13,6 +15,7 @@ function EventsManager() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Fetch events on component mount
   useEffect(() => {
@@ -84,6 +87,51 @@ function EventsManager() {
     } catch (err) {
       console.error("Error deleting event:", err);
       setError("Failed to delete event");
+    }
+  };
+
+  const handleExportRegistrations = async (event) => {
+    try {
+      setIsExporting(true);
+      console.log('Exporting registrations for event:', event.id, event.title);
+
+      // Fetch all registrations for this event
+      const registrations = await eventService.getEventRegistrations(event.id);
+      console.log('Fetched registrations:', registrations);
+
+      if (!registrations || registrations.length === 0) {
+        alert("No registrations found for this event");
+        return;
+      }
+
+      // Filter for paid registrations only
+      const paidRegistrations = registrations.filter(
+        reg => reg.paymentStatus === 'paid'
+      );
+
+      if (paidRegistrations.length === 0) {
+        const confirmExport = window.confirm(
+          "No paid registrations found. Do you want to export all registrations instead?"
+        );
+        if (confirmExport) {
+          const formattedData = formatEventRegistrationsForCSV(registrations);
+          const filename = `${event.title.replace(/[^a-z0-9]/gi, '_')}_all_registrations_${new Date().toISOString().split('T')[0]}.csv`;
+          exportToCSV(formattedData, filename);
+        }
+      } else {
+        const formattedData = formatEventRegistrationsForCSV(paidRegistrations);
+        const filename = `${event.title.replace(/[^a-z0-9]/gi, '_')}_paid_registrations_${new Date().toISOString().split('T')[0]}.csv`;
+        exportToCSV(formattedData, filename);
+
+        // Show summary
+        alert(`Exported ${paidRegistrations.length} paid registrations (${registrations.length} total)`);
+      }
+    } catch (err) {
+      console.error("Error exporting registrations:", err);
+      console.error("Error details:", err.message, err.stack);
+      alert(`Failed to export registrations: ${err.message || 'Unknown error'}. Please check the console for details.`);
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -168,6 +216,16 @@ function EventsManager() {
             </EventContent>
 
             <ActionButtons>
+              <ActionButton
+                variant="export"
+                onClick={() => handleExportRegistrations(event)}
+                disabled={isExporting}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <FaDownload style={{ marginRight: "5px" }} />
+                Export CSV
+              </ActionButton>
               <ActionButton
                 variant="edit"
                 onClick={() => {
@@ -345,7 +403,7 @@ const Badge = styled.span`
 
 const ActionButtons = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1px;
   background: ${({ theme }) => theme.colors.border};
   margin-top: auto;
@@ -358,21 +416,37 @@ const ActionButton = styled(motion.button)`
       ? theme.colors.error
       : variant === "edit"
       ? theme.colors.surface
+      : variant === "export"
+      ? theme.colors.success
       : theme.colors.surface};
   color: ${({ variant, theme }) =>
     variant === "delete"
       ? "black"
       : variant === "edit"
       ? theme.colors.primary
+      : variant === "export"
+      ? "white"
       : theme.colors.textPrimary};
   border: none;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background: ${({ variant, theme }) =>
-      variant === "delete" ? theme.colors.errorDark : theme.colors.surfaceAlt};
+      variant === "delete"
+        ? theme.colors.errorDark
+        : variant === "export"
+        ? theme.colors.successDark || "#00A044"
+        : theme.colors.surfaceAlt};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
