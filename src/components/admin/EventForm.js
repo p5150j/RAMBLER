@@ -11,10 +11,10 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
       date: "",
       location: "",
       eventType: "team", // Default to team event type
-      basePrice: "", // Base price for 2 members
+      basePrice: "", // Base price for minimum team size
       extraMemberPrice: "", // Price per extra member
       maxTeamSize: 4, // Default max team size
-      minTeamSize: 2, // Default min team size (base team)
+      minTeamSize: 1, // Default min team size (base team)
       individualPrice: "", // Price for individual events
       status: "active",
       description: "",
@@ -160,9 +160,9 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 name="minTeamSize"
                 value={formData.minTeamSize}
                 onChange={handleChange}
-                placeholder="2"
+                placeholder="1"
                 type="number"
-                min="2"
+                min="1"
                 style={{ width: "80px" }}
                 required
               />
